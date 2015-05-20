@@ -2,12 +2,17 @@
 
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
 
-res=$(readlink -f results/$(date "+%F-%T"))
+now=$(date "+%F-%T")
+res=$(readlink -f results/$now)
 
 mkdir -p $res
 
-./benchs/linux.sh $res
-./benchs/vpes.sh $res
-./benchs/filereader.sh $res
-./benchs/filewriter.sh $res
+benchs="linux vpes filereader filewriter"
+for b in $benchs; do
+    ./benchs/$b.sh $res
+done
 
+plots="basic"
+for p in $plots; do
+    ./plots/$p/generate.sh $res
+done

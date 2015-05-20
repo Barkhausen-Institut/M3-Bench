@@ -15,7 +15,7 @@ function stddev(vals, avg) {
 
 END {
     for(i in vals) {
-        printf "%d %d ", total[i] / count[i], stddev(vals[i], total[i] / count[i])
+        printf "%d ", stddev(vals[i], total[i] / count[i])
     }
     printf "\n"
 }
