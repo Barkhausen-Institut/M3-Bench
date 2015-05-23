@@ -62,6 +62,25 @@ lx_stddev() {
     get_line $1 $2 | cut -d ':' -f 2 | sed -e 's/[^\(]*(\([[:digit:]]*\))/\1/' | tr -d '[[:space:]]'
 }
 
+lx_rem_time() {
+    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
+    lx13=`lx_avg $1/lx-13cycles.txt "$2"`
+    lx30mc=`lx_avg $1/lx-30cycles.txt "$3"`
+    lx13mc=`lx_avg $1/lx-13cycles.txt "$3"`
+    rem30=$(($lx30 - $lx30mc))
+    rem13=$(($lx13 - $lx13mc))
+    cm=`cache_misses $rem13 $rem30`
+    echo $rem30 $(($rem13 - $cm))
+}
+
+lx_copy_time() {
+    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
+    lx30mc=`lx_avg $1/lx-30cycles.txt "$3"`
+    lx13mc=`lx_avg $1/lx-13cycles.txt "$3"`
+    cm=`cache_misses $lx13mc $lx30mc`
+    echo $lx30mc $(($lx30mc - $cm))
+}
+
 lx_times() {
     lx30=`lx_avg $1/lx-30cycles.txt "$2"`
     lx13=`lx_avg $1/lx-13cycles.txt "$2"`
