@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 get_line() {
     php -- $1 $2 <<'EOF'

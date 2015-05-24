@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 read_avgs=$1/fs-read-times.dat
 read_stddev=$1/fs-read-stddevs.dat

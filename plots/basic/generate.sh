@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sctimes=$1/sysc-times.dat
 thtimes=$1/thread-times.dat
