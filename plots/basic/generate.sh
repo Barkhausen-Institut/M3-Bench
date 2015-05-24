@@ -1,58 +1,55 @@
 #!/bin/sh
 
+sctimes=$1/sysc-times.dat
+thtimes=$1/thread-times.dat
+extimes=$1/exec-times.dat
+
+scstddev=$1/sysc-stddev.dat
+thstddev=$1/thread-stddev.dat
+exstddev=$1/exec-stddev.dat
+
 avgs=$1/basic-times.dat
 stddev=$1/basic-stddevs.dat
 
 source tools/linux.sh
 
-# -- averages --
-echo "M3 Linux LinuxCM" > $avgs
-
 # syscall
-echo -n "`./tools/m3-avg.awk < $1/m3-syscall.txt`" >> $avgs
-echo `lx_times $1 IDX_SYSCALL` >> $avgs
+echo "M3 Linux" > $sctimes
+echo "`./tools/m3-avg.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
+    "`lx_base_time $1 IDX_SYSCALL`" >> $sctimes
+echo 0 \
+    "`lx_cachemiss_time $1 IDX_SYSCALL`" >> $sctimes
 
-# pthread
-m3run=`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $2 }'`
-echo $m3run `lx_times $1 IDX_PTHREAD` >> $avgs
+echo "`./tools/m3-stddev.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
+    "`lx_stddev $1/lx-30cycles.txt IDX_SYSCALL`" > $scstddev
 
-# clone
-echo $m3run `lx_times $1 IDX_CLONE` >> $avgs
+# thread
+echo "M3-run clone fork" > $thtimes
+echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $2 }'`" \
+    "`lx_base_time $1 IDX_CLONE`" \
+    "`lx_base_time $1 IDX_FORK`" >> $thtimes
+echo 0 \
+    "`lx_cachemiss_time $1 IDX_CLONE`" \
+    "`lx_cachemiss_time $1 IDX_FORK`" >> $thtimes
 
-# fork
-echo $m3run `lx_times $1 IDX_FORK` >> $avgs
+echo "`grep 0001 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" \
+    "`lx_stddev $1/lx-30cycles.txt IDX_CLONE`" \
+    "`lx_stddev $1/lx-30cycles.txt IDX_FORK`" > $thstddev
 
 # exec
-m3exec=`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $4 }'`
-echo $m3exec `lx_times $1 IDX_EXEC` >> $avgs
-
-# vfork
-echo $m3exec `lx_times $1 IDX_VEXEC` >> $avgs
-echo >> $avgs
-
-
-# -- std deviation --
-echo "Syscall Thread Exec" > $stddev
-
-# row 1 (m3 syscall, m3 run, m3 exec)
-echo "`./tools/m3-stddev.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
-    "`grep 0001 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" \
-    "`grep 0003 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" >> $stddev
-
-# row 2 (lx syscall, lx pthread, lx exec)
-echo "`lx_stddev $1/lx-30cycles.txt IDX_SYSCALL`" \
-    "`lx_stddev $1/lx-30cycles.txt IDX_PTHREAD`" \
-    "`lx_stddev $1/lx-30cycles.txt IDX_EXEC`" >> $stddev
-
-# row 3 (0, lx clone, lx vfork)
+echo "M3-exec exec vfork" > $extimes
+echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $4 }'`" \
+    "`lx_base_time $1 IDX_EXEC`" \
+    "`lx_base_time $1 IDX_VEXEC`" >> $extimes
 echo 0 \
-    `lx_stddev $1/lx-30cycles.txt IDX_CLONE` \
-    `lx_stddev $1/lx-30cycles.txt IDX_VEXEC` >> $stddev
+    "`lx_cachemiss_time $1 IDX_EXEC`" \
+    "`lx_cachemiss_time $1 IDX_VEXEC`" >> $extimes
 
-# row 4 (0, lx fork, 0)
-echo 0 \
-    `lx_stddev $1/lx-30cycles.txt IDX_FORK` \
-    0 >> $stddev
-echo >> $stddev
+echo "`grep 0003 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" \
+    "`lx_stddev $1/lx-30cycles.txt IDX_EXEC`" \
+    "`lx_stddev $1/lx-30cycles.txt IDX_VEXEC`" > $exstddev
 
-Rscript plots/basic/plot.R $avgs $stddev $1/basic.pdf
+Rscript plots/basic/plot.R $1/basic.pdf \
+    $sctimes $scstddev \
+    $thtimes $thstddev \
+    $extimes $exstddev

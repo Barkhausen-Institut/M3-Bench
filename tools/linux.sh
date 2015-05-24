@@ -81,9 +81,15 @@ lx_copy_time() {
     echo $lx30mc $(($lx30mc - $cm))
 }
 
-lx_times() {
+lx_base_time() {
     lx30=`lx_avg $1/lx-30cycles.txt "$2"`
     lx13=`lx_avg $1/lx-13cycles.txt "$2"`
     cm=`cache_misses $lx13 $lx30`
-    echo $(($lx30 - $cm)) $cm
+    echo $(($lx30 - $cm))
+}
+
+lx_cachemiss_time() {
+    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
+    lx13=`lx_avg $1/lx-13cycles.txt "$2"`
+    echo `cache_misses $lx13 $lx30`
 }
