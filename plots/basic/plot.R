@@ -26,7 +26,7 @@ exstddevs <- read.table(as.character(args[7]), header=FALSE, sep=" ")
 pdf(as.character(args[1]), width=7, height=5)
 
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
-    widths=c(1,1.3,1), heights=c(1,1))
+    widths=c(1,1.05,1), heights=c(1,1))
 
 par(mar=c(3,5,3,3))
 

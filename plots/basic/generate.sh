@@ -37,7 +37,7 @@ echo "`grep 0001 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" 
     "`lx_stddev $1/lx-30cycles.txt IDX_FORK`" > $thstddev
 
 # exec
-echo "M3-exec Lx-exe Lx-vfork" > $extimes
+echo "M3-exec Lx-exec Lx-vfork" > $extimes
 echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $4 }'`" \
     "`lx_base_time $1 IDX_EXEC`" \
     "`lx_base_time $1 IDX_VEXEC`" >> $extimes
