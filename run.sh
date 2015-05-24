@@ -3,8 +3,9 @@
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
 
 now=$(date "+%F-%T")
-res=$(readlink -f results/$now)
 
+mkdir -p results
+res=$(readlink -f results/$now)
 mkdir -p $res
 
 benchs="linux vpes filereader filewriter"
