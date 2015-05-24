@@ -14,7 +14,7 @@ stddev=$1/basic-stddevs.dat
 source tools/linux.sh
 
 # syscall
-echo "M3 Linux" > $sctimes
+echo "M3-sys Lx-sys" > $sctimes
 echo "`./tools/m3-avg.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
     "`lx_base_time $1 IDX_SYSCALL`" >> $sctimes
 echo 0 \
@@ -24,7 +24,7 @@ echo "`./tools/m3-stddev.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
     "`lx_stddev $1/lx-30cycles.txt IDX_SYSCALL`" > $scstddev
 
 # thread
-echo "M3-run clone fork" > $thtimes
+echo "M3-run Lx-clone Lx-fork" > $thtimes
 echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $2 }'`" \
     "`lx_base_time $1 IDX_CLONE`" \
     "`lx_base_time $1 IDX_FORK`" >> $thtimes
@@ -37,7 +37,7 @@ echo "`grep 0001 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" 
     "`lx_stddev $1/lx-30cycles.txt IDX_FORK`" > $thstddev
 
 # exec
-echo "M3-exec exec vfork" > $extimes
+echo "M3-exec Lx-exe Lx-vfork" > $extimes
 echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $4 }'`" \
     "`lx_base_time $1 IDX_EXEC`" \
     "`lx_base_time $1 IDX_VEXEC`" >> $extimes

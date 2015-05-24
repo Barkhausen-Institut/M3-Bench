@@ -32,8 +32,7 @@ par(mar=c(3,5,3,3))
 
 barx <- barplot(as.matrix(sctimes), col=gray.colors(2), ylab="Time (cycles)",
     space=0, ylim=c(0,1000),
-    cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
-    names.arg=c("               Syscall", ""))
+    cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale)
 
 error.bar(barx, colSums(sctimes), as.integer(scstddevs))
 box(col = 'black')
