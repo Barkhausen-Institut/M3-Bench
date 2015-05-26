@@ -43,11 +43,6 @@ echo "" > $write_stddev
 echo "" > $copy_stddev
 echo "" > $pipe_stddev
 
-cat $read_avgs
-cat $pipe_avgs
-cat $write_avgs
-cat $copy_avgs
-
 Rscript plots/fs/plot.R $1/fs.pdf \
     $read_avgs $read_stddev \
     $write_avgs $write_stddev \
