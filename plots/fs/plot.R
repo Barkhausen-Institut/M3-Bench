@@ -20,8 +20,6 @@ barplot(as.matrix(rdtimes), beside=F,
     names.arg=c("M3","Lx","Lx-$"), sub="Read")
 box(col = 'black')
 
-legend("topleft", c("Remaining", "Data transfers", "Pagefaults"), cex=1, fill=gray.colors(3))
-
 par(mar=c(6,0,2,2))
 
 barplot(as.matrix(wrtimes), beside=F,
@@ -45,6 +43,8 @@ barplot(as.matrix(pitimes), beside=F,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
     names.arg=c("M3","Lx","Lx-$"), sub="Pipe")
 box(col = 'black')
+
+legend("topright", c("Remaining", "Data transfers", "Pagefaults"), cex=1, fill=gray.colors(3))
 
 par(mar=c(6,0,2,2))
 
