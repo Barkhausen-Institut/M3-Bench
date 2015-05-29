@@ -15,6 +15,9 @@ gen_timedtrace() {
 
 gen_timedtrace $1/lx-fstrace-30cycles.txt
 
+awk '{ print $1, $2, $4 - $3 }' $1/lx-fstrace-30cycles.txt-timings \
+    > $1/lx-fstrace-30cycles.txt-timings-human
+
 cd -
 cd m3/XTSC
 export M3_TARGET=t3 M3_BUILD=bench M3_FS=bench.img
