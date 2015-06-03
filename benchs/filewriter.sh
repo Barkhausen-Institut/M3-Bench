@@ -1,7 +1,7 @@
 #!/bin/bash
 
-parallel="1 2 4 6 8"
-dat=$1/filewriter.dat
+# global vars
+parallel="1 2 4 8 16"
 declare -A scr
 
 gen_filewriter() {
@@ -26,11 +26,14 @@ EOF
 
 source tools/file-helper.sh
 
+t3par=`readlink -f tools/t3-parallel.sh`
+
 cd m3/XTSC
-export M3_TARGET=t3 M3_BUILD=bench
+export M3_TARGET=t3 M3_MACHINE=sim M3_BUILD=bench M3_FSBLKS=$((48 * 1024))
 
 build_source
-run_scripts filewriter gen_filewriter
-extract_results
-generate_plot $dat $1/filewriter.eps "Time for writing 2MB to a file" 800000
+run_scripts $t3par "$1/" filewriter gen_filewriter
 
+cd -
+
+extract_results $1/filewriter.dat

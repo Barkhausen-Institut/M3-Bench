@@ -1,7 +1,7 @@
 #!/bin/bash
 
+# global vars
 parallel="1 2 4 8 16"
-dat=$1/filereader.dat
 declare -A scr
 
 gen_filereader() {
@@ -26,10 +26,14 @@ EOF
 
 source tools/file-helper.sh
 
+t3par=`readlink -f tools/t3-parallel.sh`
+
 cd m3/XTSC
-export M3_TARGET=t3 M3_BUILD=bench
+export M3_TARGET=t3 M3_MACHINE=sim M3_BUILD=bench
 
 build_source
-run_scripts filereader gen_filereader
-extract_results
-generate_plot $dat $1/filereader.eps "Time for reading a 2MB file from the FS" 500000
+run_scripts $t3par "$1/" filereader gen_filereader
+
+cd -
+
+extract_results $1/filereader.dat
