@@ -3,20 +3,20 @@
 build_source() {
     # don't actually read, but just pretend to do it to measure SW scalability, not HW scalability
     oldread=`grep -m 1 "_lastmem.read_sync" libs/m3/vfs/RegularFile.cc`
-    sed --in-place -e 's/_lastmem.read_sync.*/for(volatile int i = 0; i < 26; ++i) ;/' libs/m3/vfs/RegularFile.cc
+    sed --in-place -e 's/_lastmem.read_sync.*/for(volatile int i = 0; i < 40; ++i) ;/' libs/m3/vfs/RegularFile.cc
 
     # don't actually write, but just pretend to do it to measure SW scalability, not HW scalability
     oldwrite=`grep -m 1 "_lastmem.write_sync" libs/m3/vfs/RegularFile.cc`
-    sed --in-place -e 's/_lastmem.write_sync.*/for(volatile int i = 0; i < 26; ++i);/' libs/m3/vfs/RegularFile.cc
+    sed --in-place -e 's/_lastmem.write_sync.*/for(volatile int i = 0; i < 40; ++i);/' libs/m3/vfs/RegularFile.cc
 
     # build everything and undo the changes
     ./b
 
     logread=$(echo $oldread | sed -e 's/\//\\\//g')
-    sed --in-place -e "s/for(volatile int i = 0; i < 26; ++i) ;/$logread/" libs/m3/vfs/RegularFile.cc
+    sed --in-place -e "s/for(volatile int i = 0; i < 40; ++i) ;/$logread/" libs/m3/vfs/RegularFile.cc
 
     logwrite=$(echo $oldwrite | sed -e 's/\//\\\//g')
-    sed --in-place -e "s/for(volatile int i = 0; i < 26; ++i);/$logwrite/" libs/m3/vfs/RegularFile.cc
+    sed --in-place -e "s/for(volatile int i = 0; i < 40; ++i);/$logwrite/" libs/m3/vfs/RegularFile.cc
 }
 
 run_scripts() {
