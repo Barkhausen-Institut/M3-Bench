@@ -28,7 +28,7 @@ echo $((m3write - $m3trans)) `lx_rem_time $1 IDX_WRITE IDX_WRITE_MEMCPY` >> $wri
 echo $m3trans `lx_copy_time $1 IDX_WRITE IDX_WRITE_MEMCPY` >> $write_avgs
 echo 0 0 0 >> $write_avgs
 
-m3copy=914064
+m3copy=`grep 0001 $1/m3-fscopy.txt | ./tools/m3-avg.awk`
 echo $((m3copy - $m3trans * 2)) 0 0 >> $copy_avgs
 echo $(($m3trans * 2)) `lx_copy_time $1 IDX_COPY_MMAP IDX_COPY_MMAP_AGAIN` >> $copy_avgs
 echo 0 `lx_rem_time $1 IDX_COPY_MMAP IDX_COPY_MMAP_AGAIN` >> $copy_avgs
