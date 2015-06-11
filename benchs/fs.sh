@@ -15,3 +15,6 @@ export M3_TARGET=t3 M3_BUILD=bench M3_FS=bench.img
 
 ./b run $cpcfg
 ./tools/bench.sh xtsc.log > $1/m3-fscopy.txt
+
+./b run boot/bench-pipe.cfg
+./tools/bench.sh xtsc.log > $1/m3-pipe.txt

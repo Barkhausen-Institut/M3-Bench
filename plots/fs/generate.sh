@@ -33,7 +33,7 @@ echo $((m3copy - $m3trans * 2)) 0 0 >> $copy_avgs
 echo $(($m3trans * 2)) `lx_copy_time $1 IDX_COPY_MMAP IDX_COPY_MMAP_AGAIN` >> $copy_avgs
 echo 0 `lx_rem_time $1 IDX_COPY_MMAP IDX_COPY_MMAP_AGAIN` >> $copy_avgs
 
-m3pipe=1000000
+m3pipe=`grep 0000 $1/m3-pipe.txt | ./tools/m3-avg.awk`
 echo $((m3pipe - $m3trans * 2)) `lx_rem_time $1 IDX_PIPE IDX_PIPE_MEMCPY` >> $pipe_avgs
 echo $(($m3trans * 2)) `lx_copy_time $1 IDX_PIPE IDX_PIPE_MEMCPY` >> $pipe_avgs
 echo 0 0 0 >> $pipe_avgs
