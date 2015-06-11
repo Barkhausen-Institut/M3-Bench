@@ -18,12 +18,12 @@ echo "M3 Lx Lxnc" > $pipe_avgs
 
 m3trans=$((2048 * 1024 / 8))
 
-m3read=350000
+m3read=`grep 0001 $1/m3-fsread.txt | ./tools/m3-avg.awk`
 echo $((m3read - $m3trans)) `lx_rem_time $1 IDX_READ IDX_READ_MEMCPY` >> $read_avgs
 echo $m3trans `lx_copy_time $1 IDX_READ IDX_READ_MEMCPY` >> $read_avgs
 echo 0 0 0 >> $read_avgs
 
-m3write=550834
+m3write=`grep 0001 $1/m3-fswrite.txt | ./tools/m3-avg.awk`
 echo $((m3write - $m3trans)) `lx_rem_time $1 IDX_WRITE IDX_WRITE_MEMCPY` >> $write_avgs
 echo $m3trans `lx_copy_time $1 IDX_WRITE IDX_WRITE_MEMCPY` >> $write_avgs
 echo 0 0 0 >> $write_avgs
