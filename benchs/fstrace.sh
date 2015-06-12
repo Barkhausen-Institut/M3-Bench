@@ -34,3 +34,24 @@ cp $1/lx-fstrace-30cycles.txt-opcodes.c apps/fstrace/m3fs/trace.c
 
 ./b run boot/fstrace.cfg
 ./tools/bench.sh xtsc.log > $1/m3-fstrace.txt
+
+awk 'BEGIN {
+    start = 0
+}
+
+END {
+    print "Total:", end - start
+}
+
+/Copied/ {
+    print "Memcpy:", $5
+}
+
+/^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*66/ {
+    start = $3
+}
+
+/^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*/ {
+    end = $3
+}
+' $1/lx-fstrace-30cycles.txt-timings > $1/lx-fstrace-result.txt
