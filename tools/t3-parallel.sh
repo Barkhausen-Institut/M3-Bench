@@ -74,7 +74,7 @@ while true; do
 
     # move $i (number of jobs) lines upwards
     /bin/echo -e -n "\r\033["$i"A"
-    sleep 1
+    sleep 2
 done
 
 # extract results
