@@ -7,18 +7,19 @@ cd xtensa-linux
 ./b mkbr
 LX_THCMP=1 ./b fsbench > $1/lx-fstrace-30cycles.txt
 
+cd -
+
 gen_timedtrace() {
     grep -B10000 "===" $1 | grep -v "===" > $1-strace
     grep -A10000 "===" $1 | grep -v "===" > $1-timings
-    ./tools/timedstrace.php $1-strace $1-timings > $1-timedstrace
+    ./tools/timedstrace.php trace $1-strace $1-timings > $1-timedstrace
 }
 
 gen_timedtrace $1/lx-fstrace-30cycles.txt
 
 awk '{ print $1, $2, $4 - $3 }' $1/lx-fstrace-30cycles.txt-timings \
-    > $1/lx-fstrace-30cycles.txt-timings-human
+   > $1/lx-fstrace-30cycles.txt-timings-human
 
-cd -
 cd m3/XTSC
 export M3_TARGET=t3 M3_BUILD=bench M3_FS=bench.img
 
@@ -48,10 +49,17 @@ END {
 }
 
 /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*66/ {
-    start = $3
+    if(start == 0) {
+        start = $3
+    }
 }
 
 /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*/ {
     end = $3
 }
 ' $1/lx-fstrace-30cycles.txt-timings > $1/lx-fstrace-result.txt
+
+cd -
+echo -n "Wait: " >> $1/lx-fstrace-result.txt
+./tools/timedstrace.php waittime $1/lx-fstrace-30cycles.txt-strace \
+    $1/lx-fstrace-30cycles.txt-timings >> $1/lx-fstrace-result.txt
