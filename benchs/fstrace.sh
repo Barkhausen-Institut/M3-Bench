@@ -72,3 +72,5 @@ cd xtensa-linux
 cd -
 
 FSBENCH_CMD="find /default -name test" run_bench $1 find
+
+FSBENCH_CMD="tar -cf /tmp/test.tar /tardata" run_bench $1 tar
