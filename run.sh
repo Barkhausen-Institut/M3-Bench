@@ -2,18 +2,23 @@
 
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
 
-now=$(date "+%F-%T")
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <name> <benchs> <plots>" 1>&2
+    exit 1
+fi
+
+name=$1
+benchs=$2
+plots=$3
 
 mkdir -p results
-res=$(readlink -f results/$now)
+res=$(readlink -f results/$name)
 mkdir -p $res
 
-benchs="linux vpes filereader filewriter"
 for b in $benchs; do
     ./benchs/$b.sh $res
 done
 
-plots="basic"
 for p in $plots; do
     ./plots/$p/generate.sh $res
 done
