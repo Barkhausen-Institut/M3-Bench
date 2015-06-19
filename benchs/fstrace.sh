@@ -50,6 +50,8 @@ run_bench() {
     cd xtensa-linux
 
     ./b fsbench > $1/lx-fstrace-$2-13cycles.txt
+    # better regenerate the filesystem image, in case it is broken
+    ./b mkbr
     LX_THCMP=1 ./b fsbench > $1/lx-fstrace-$2-30cycles.txt
 
     cd -
