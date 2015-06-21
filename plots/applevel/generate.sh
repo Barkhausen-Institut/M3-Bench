@@ -22,25 +22,25 @@ m3catwctrans=$((64 * 1024 / 8))
 m3tartrans=$((2 * 1216000 / 8))
 
 m3catwc=`grep 000a $1/m3-catwc.txt | ./tools/m3-avg.awk`
-echo $((m3catwc - $m3catwctrans)) `lx_rem_time $1/lx IDX_EXECPIPE IDX_EXECPIPE_MEMCPY` >> $catwc_avgs
+echo $(($m3catwc - $m3catwctrans)) `lx_rem_time $1/lx IDX_EXECPIPE IDX_EXECPIPE_MEMCPY` >> $catwc_avgs
 echo $m3catwctrans `lx_copy_time $1/lx IDX_EXECPIPE_MEMCPY` >> $catwc_avgs
 echo 0 0 0 >> $catwc_avgs
 
 m3tar=`grep 0000 $1/m3-fstrace.tar-txt | ./tools/m3-avg.awk`
 m3wait=`get_m3_waittime $1/m3-fstrace.tar-txt`
-echo $((m3tar - $m3tartrans - $m3wait)) `lx_fstrace_total $1/lx-fstrace-tar-result` >> $tar_avgs
+echo $(($m3tar - $m3tartrans - $m3wait)) `lx_fstrace_total $1/lx-fstrace-tar-result` >> $tar_avgs
 echo $m3tartrans `lx_copy_time $1/lx-fstrace-tar-result IDX_FSTRACE_MEMCPY` >> $tar_avgs
 echo $m3wait `lx_copy_time $1/lx-fstrace-tar-result IDX_FSTRACE_WAIT` >> $tar_avgs
 
 m3untar=`grep 0000 $1/m3-fstrace.untar-txt | ./tools/m3-avg.awk`
 m3wait=`get_m3_waittime $1/m3-fstrace.untar-txt`
-echo $((m3untar - $m3tartrans - $m3wait)) `lx_fstrace_total $1/lx-fstrace-untar-result` >> $untar_avgs
+echo $(($m3untar - $m3tartrans - $m3wait)) `lx_fstrace_total $1/lx-fstrace-untar-result` >> $untar_avgs
 echo $(($m3tartrans)) `lx_copy_time $1/lx-fstrace-untar-result IDX_FSTRACE_MEMCPY` >> $untar_avgs
 echo $m3wait `lx_copy_time $1/lx-fstrace-untar-result IDX_FSTRACE_WAIT` >> $untar_avgs
 
 m3find=`grep 0000 $1/m3-fstrace.find-txt | ./tools/m3-avg.awk`
 m3wait=`get_m3_waittime $1/m3-fstrace.find-txt`
-echo $((m3find - $m3wait)) `lx_fstrace_total $1/lx-fstrace-find-result` >> $find_avgs
+echo $(($m3find - $m3wait)) `lx_fstrace_total $1/lx-fstrace-find-result` >> $find_avgs
 echo 0 `lx_copy_time $1/lx-fstrace-find-result IDX_FSTRACE_MEMCPY` >> $find_avgs
 echo $m3wait `lx_copy_time $1/lx-fstrace-find-result IDX_FSTRACE_WAIT` >> $find_avgs
 
