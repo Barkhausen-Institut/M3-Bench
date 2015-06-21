@@ -30,6 +30,14 @@ $indices['IDX_COPY_MMAP'] =           $i++;
 $indices['IDX_COPY_MMAP_AGAIN'] =     $i++;
 $indices['IDX_PIPE'] =                $i++;
 $indices['IDX_PIPE_MEMCPY'] =         $i++;
+$indices['IDX_CAT'] =                 $i++;
+$indices['IDX_EXECPIPE'] =            $i++;
+$indices['IDX_EXECPIPE_MEMCPY'] =     $i++;
+
+# for the fstrace files
+$indices['IDX_FSTRACE_MEMCPY']        = 0;
+$indices['IDX_FSTRACE_TOTAL']         = 1;
+$indices['IDX_FSTRACE_WAIT']          = 2;
 
 $lines = file($argv[1]);
 echo $lines[$indices[$argv[2]]];
@@ -60,6 +68,19 @@ lx_avg() {
 lx_stddev() {
     # tr to remove the \r
     get_line $1 $2 | cut -d ':' -f 2 | sed -e 's/[^\(]*(\([[:digit:]]*\))/\1/' | tr -d '[[:space:]]'
+}
+
+lx_fstrace_total() {
+    lx30=`lx_avg $1-30cycles.txt "IDX_FSTRACE_TOTAL"`
+    lx13=`lx_avg $1-13cycles.txt "IDX_FSTRACE_TOTAL"`
+    lx30mc=`lx_avg $1-30cycles.txt "IDX_FSTRACE_MEMCPY"`
+    lx13mc=`lx_avg $1-13cycles.txt "IDX_FSTRACE_MEMCPY"`
+    lx30w=`lx_avg $1-30cycles.txt "IDX_FSTRACE_WAIT"`
+    lx13w=`lx_avg $1-13cycles.txt "IDX_FSTRACE_WAIT"`
+    rem30=$(($lx30 - $lx30mc - $lx30w))
+    rem13=$(($lx13 - $lx13mc - $lx13w))
+    cm=`cache_misses $rem13 $rem30`
+    echo $rem30 $(($rem13 - $cm))
 }
 
 lx_rem_time() {

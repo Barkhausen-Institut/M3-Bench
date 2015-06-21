@@ -17,16 +17,16 @@ gen_timedtrace() {
 }
 
 extract_result() {
-    awk 'BEGIN {
+    awk -v name=$2 'BEGIN {
         start = 0
     }
 
     END {
-        print "Total:", end - start
+        printf("[%s] Total: %d\n", name, end - start)
     }
 
     /Copied/ {
-        print "Memcpy:", $5
+        printf("[%s] Memcpy: %d\n", name, $5)
     }
 
     /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*66/ {
@@ -42,8 +42,8 @@ extract_result() {
 }
 
 wait_time() {
-    echo -n "Wait: " >> $2
-    ./tools/timedstrace.php waittime $1-strace $1-timings >> $2
+    echo -n "[$2] Wait: "
+    ./tools/timedstrace.php waittime $1-strace $1-timings
 }
 
 run_bench() {
@@ -72,13 +72,13 @@ run_bench() {
     ./b run boot/fstrace.cfg
     ./tools/bench.sh xtsc.log > $1/m3-fstrace.$2-txt
 
-    extract_result $1/lx-fstrace-$2-13cycles.txt-timings > $1/lx-fstrace-$2-13cycles-result.txt
-    extract_result $1/lx-fstrace-$2-30cycles.txt-timings > $1/lx-fstrace-$2-30cycles-result.txt
+    extract_result $1/lx-fstrace-$2-13cycles.txt-timings $2 > $1/lx-fstrace-$2-result-13cycles.txt
+    extract_result $1/lx-fstrace-$2-30cycles.txt-timings $2 > $1/lx-fstrace-$2-result-30cycles.txt
 
     cd -
 
-    wait_time $1/lx-fstrace-$2-13cycles.txt $1/lx-fstrace-$2-13cycles-result.txt
-    wait_time $1/lx-fstrace-$2-30cycles.txt $1/lx-fstrace-$2-30cycles-result.txt
+    wait_time $1/lx-fstrace-$2-13cycles.txt $2 >> $1/lx-fstrace-$2-result-13cycles.txt
+    wait_time $1/lx-fstrace-$2-30cycles.txt $2 >> $1/lx-fstrace-$2-result-30cycles.txt
 }
 
 cd xtensa-linux
