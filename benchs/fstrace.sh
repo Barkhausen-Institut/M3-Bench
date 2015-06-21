@@ -49,6 +49,7 @@ wait_time() {
 run_bench() {
     cd xtensa-linux
 
+    ./b mkbr
     ./b fsbench > $1/lx-fstrace-$2-13cycles.txt
     # better regenerate the filesystem image, in case it is broken
     ./b mkbr
@@ -84,7 +85,6 @@ cd xtensa-linux
 
 ./b mklx
 ./b mkapps
-./b mkbr
 
 cd -
 
