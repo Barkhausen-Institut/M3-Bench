@@ -63,10 +63,10 @@ lx_stddev() {
 }
 
 lx_rem_time() {
-    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
-    lx13=`lx_avg $1/lx-13cycles.txt "$2"`
-    lx30mc=`lx_avg $1/lx-30cycles.txt "$3"`
-    lx13mc=`lx_avg $1/lx-13cycles.txt "$3"`
+    lx30=`lx_avg $1-30cycles.txt "$2"`
+    lx13=`lx_avg $1-13cycles.txt "$2"`
+    lx30mc=`lx_avg $1-30cycles.txt "$3"`
+    lx13mc=`lx_avg $1-13cycles.txt "$3"`
     rem30=$(($lx30 - $lx30mc))
     rem13=$(($lx13 - $lx13mc))
     cm=`cache_misses $rem13 $rem30`
@@ -74,22 +74,21 @@ lx_rem_time() {
 }
 
 lx_copy_time() {
-    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
-    lx30mc=`lx_avg $1/lx-30cycles.txt "$3"`
-    lx13mc=`lx_avg $1/lx-13cycles.txt "$3"`
+    lx30mc=`lx_avg $1-30cycles.txt "$2"`
+    lx13mc=`lx_avg $1-13cycles.txt "$2"`
     cm=`cache_misses $lx13mc $lx30mc`
     echo $lx30mc $(($lx30mc - $cm))
 }
 
 lx_base_time() {
-    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
-    lx13=`lx_avg $1/lx-13cycles.txt "$2"`
+    lx30=`lx_avg $1-30cycles.txt "$2"`
+    lx13=`lx_avg $1-13cycles.txt "$2"`
     cm=`cache_misses $lx13 $lx30`
     echo $(($lx30 - $cm))
 }
 
 lx_cachemiss_time() {
-    lx30=`lx_avg $1/lx-30cycles.txt "$2"`
-    lx13=`lx_avg $1/lx-13cycles.txt "$2"`
+    lx30=`lx_avg $1-30cycles.txt "$2"`
+    lx13=`lx_avg $1-13cycles.txt "$2"`
     echo `cache_misses $lx13 $lx30`
 }

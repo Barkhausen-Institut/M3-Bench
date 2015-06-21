@@ -16,9 +16,9 @@ source tools/linux.sh
 # syscall
 echo "M3-sys Lx-sys" > $sctimes
 echo "`./tools/m3-avg.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
-    "`lx_base_time $1 IDX_SYSCALL`" >> $sctimes
+    "`lx_base_time $1/lx IDX_SYSCALL`" >> $sctimes
 echo 0 \
-    "`lx_cachemiss_time $1 IDX_SYSCALL`" >> $sctimes
+    "`lx_cachemiss_time $1/lx IDX_SYSCALL`" >> $sctimes
 
 echo "`./tools/m3-stddev.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
     "`lx_stddev $1/lx-30cycles.txt IDX_SYSCALL`" > $scstddev
@@ -26,11 +26,11 @@ echo "`./tools/m3-stddev.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
 # thread
 echo "M3-run Lx-clone Lx-fork" > $thtimes
 echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $2 }'`" \
-    "`lx_base_time $1 IDX_CLONE`" \
-    "`lx_base_time $1 IDX_FORK`" >> $thtimes
+    "`lx_base_time $1/lx IDX_CLONE`" \
+    "`lx_base_time $1/lx IDX_FORK`" >> $thtimes
 echo 0 \
-    "`lx_cachemiss_time $1 IDX_CLONE`" \
-    "`lx_cachemiss_time $1 IDX_FORK`" >> $thtimes
+    "`lx_cachemiss_time $1/lx IDX_CLONE`" \
+    "`lx_cachemiss_time $1/lx IDX_FORK`" >> $thtimes
 
 echo "`grep 0001 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" \
     "`lx_stddev $1/lx-30cycles.txt IDX_CLONE`" \
@@ -39,11 +39,11 @@ echo "`grep 0001 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" 
 # exec
 echo "M3-exec Lx-exec Lx-vfork" > $extimes
 echo "`./tools/m3-avg.awk < $1/m3-vpes.txt | awk '{ print $1 + $4 }'`" \
-    "`lx_base_time $1 IDX_EXEC`" \
-    "`lx_base_time $1 IDX_VEXEC`" >> $extimes
+    "`lx_base_time $1/lx IDX_EXEC`" \
+    "`lx_base_time $1/lx IDX_VEXEC`" >> $extimes
 echo 0 \
-    "`lx_cachemiss_time $1 IDX_EXEC`" \
-    "`lx_cachemiss_time $1 IDX_VEXEC`" >> $extimes
+    "`lx_cachemiss_time $1/lx IDX_EXEC`" \
+    "`lx_cachemiss_time $1/lx IDX_VEXEC`" >> $extimes
 
 echo "`grep 0003 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" \
     "`lx_stddev $1/lx-30cycles.txt IDX_EXEC`" \
