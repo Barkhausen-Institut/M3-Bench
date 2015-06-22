@@ -15,7 +15,7 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 par(mar=c(6,5,2,2))
 
 barplot(as.matrix(rdtimes), beside=F,
-    ylim=c(0,10000000), space=c(0.3, 0, 0), ylab="Time (cycles)",
+    ylim=c(0,6000000), space=c(0.3, 0, 0), ylab="Time (cycles)",
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
     names.arg=c("M3","Lx","Lx-$"), sub="cat | wc")
 box(col = 'black')
@@ -23,7 +23,7 @@ box(col = 'black')
 par(mar=c(6,0,2,2))
 
 barplot(as.matrix(wrtimes), beside=F,
-    ylim=c(0,10000000), space=c(0.3, 0, 0), axes=F,
+    ylim=c(0,6000000), space=c(0.3, 0, 0), axes=F,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
     names.arg=c("M3","Lx","Lx-$"), sub="tar")
 box(col = 'black')
@@ -31,7 +31,7 @@ box(col = 'black')
 par(mar=c(6,0,2,2))
 
 barplot(as.matrix(cptimes), beside=F,
-    ylim=c(0,10000000), space=c(0.3, 0, 0), axes=F,
+    ylim=c(0,6000000), space=c(0.3, 0, 0), axes=F,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
     names.arg=c("M3","Lx","Lx-$"), sub="untar")
 box(col = 'black')
@@ -39,7 +39,7 @@ box(col = 'black')
 par(mar=c(6,0,2,2))
 
 barplot(as.matrix(pitimes), beside=F,
-    ylim=c(0,10000000), space=c(0.3, 0, 0), axes=F,
+    ylim=c(0,6000000), space=c(0.3, 0, 0), axes=F,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
     names.arg=c("M3","Lx","Lx-$"), sub="find")
 box(col = 'black')
