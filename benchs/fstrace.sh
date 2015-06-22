@@ -4,8 +4,8 @@ gen_timedtrace() {
     grep -B10000 "===" $1 | grep -v "===" > $1-strace
     grep -A10000 "===" $1 | grep -v "===" > $1-timings
 
-    # for untar: prefix relative paths with /tardata/
-    sed --in-place -e 's/("\([^/]\)/("\/tardata\/\1/g' $1-strace
+    # for untar: prefix relative paths with /tmp/
+    sed --in-place -e 's/("\([^/]\)/("\/tmp\/\1/g' $1-strace
 
     ./tools/timedstrace.php trace $1-strace $1-timings > $1-timedstrace
 
@@ -92,4 +92,4 @@ FSBENCH_CMD="find /default -name test" run_bench $1 find
 
 FSBENCH_CMD="tar -cf /tmp/test.tar /tardata" run_bench $1 tar
 
-FSBENCH_CMD="tar -xf /test.tar -C /tardata" run_bench $1 untar
+FSBENCH_CMD="tar -xf /test.tar -C /tmp" run_bench $1 untar
