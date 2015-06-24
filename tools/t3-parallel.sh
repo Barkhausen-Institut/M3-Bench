@@ -34,7 +34,7 @@ for b in $@; do
 
     # start and remember job-id
     echo "Starting `basename $b` (logging to `basename $log`)..."
-    M3_FS=bench.img M3_NOTRACE=1 ./b run $b -n >$log-stdout 2>&1 &
+    M3_NOTRACE=1 ./b run $b -n >$log-stdout 2>&1 &
 
     # we assume here that job ids are 1...n
     i=$((i+2))
