@@ -1,6 +1,6 @@
 #!/bin/bash
 
-build_source() {
+build_wo_fsrdwr() {
     # don't actually read, but just pretend to do it to measure SW scalability, not HW scalability
     oldread=`grep -m 1 "_lastmem.read_sync" libs/m3/vfs/RegularFile.cc`
     sed --in-place -e 's/_lastmem.read_sync.*/for(volatile int i = 0; i < 40; ++i) ;/' libs/m3/vfs/RegularFile.cc

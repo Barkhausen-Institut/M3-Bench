@@ -31,7 +31,7 @@ t3par=`readlink -f tools/t3-parallel.sh`
 cd m3/XTSC
 export M3_TARGET=t3 M3_MACHINE=sim M3_BUILD=bench M3_FS=bench.img
 
-build_source
+build_wo_fsrdwr
 run_scripts $t3par "$1/" filereader gen_filereader
 
 cd -
