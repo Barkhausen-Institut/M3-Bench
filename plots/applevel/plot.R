@@ -17,7 +17,7 @@ par(mar=c(6,5,2,2))
 barplot(as.matrix(rdtimes), beside=F,
     ylim=c(0,6000000), space=c(0.3, 0, 0), ylab="Time (cycles)",
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale,
-    names.arg=c("M3","Lx","Lx-$"), sub="cat | wc")
+    names.arg=c("M3","Lx","Lx-$"), sub="cat | tr")
 box(col = 'black')
 
 par(mar=c(6,0,2,2))
