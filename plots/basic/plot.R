@@ -53,7 +53,7 @@ barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
     space=c(0, 0), ylim=c(0,700), names.arg=c("M3.exec","Lx.f+e","Lx.vf+e"),
     cex.names=namescale)
 
-legend("topright", c("Remaining", "Cache-misses"), cex=1, fill=gray.colors(2))
+legend("topright", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)))
 error.bar(barx, colSums(extimes), as.integer(exstddevs))
 axis(side = 2, labels = TRUE, cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 box(col = 'black')

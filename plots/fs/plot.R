@@ -44,7 +44,7 @@ barplot(as.matrix(pitimes), beside=F,
     names.arg=c("M3","Lx","Lx-$"), sub="Pipe")
 box(col = 'black')
 
-legend("topright", c("Remaining", "Data transfers", "Pagefaults"), cex=1, fill=gray.colors(3))
+legend("topright", c("Pagefaults", "Data transfers", "Remaining"), cex=1, fill=rev(gray.colors(3)))
 
 par(mar=c(6,0,2,2))
 
