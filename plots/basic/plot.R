@@ -14,14 +14,14 @@ args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.3
 namescale <- 1.15
 
-sctimes <- read.table(as.character(args[2]), header=TRUE, sep=" ")
-scstddevs <- read.table(as.character(args[3]), header=FALSE, sep=" ")
+sctimes <- read.table(as.character(args[2]), header=TRUE, sep=" ")      / 1000
+scstddevs <- read.table(as.character(args[3]), header=FALSE, sep=" ")   / 1000
 
-thtimes <- read.table(as.character(args[4]), header=TRUE, sep=" ")
-thstddevs <- read.table(as.character(args[5]), header=FALSE, sep=" ")
+thtimes <- read.table(as.character(args[4]), header=TRUE, sep=" ")      / 1000
+thstddevs <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
 
-extimes <- read.table(as.character(args[6]), header=TRUE, sep=" ")
-exstddevs <- read.table(as.character(args[7]), header=FALSE, sep=" ")
+extimes <- read.table(as.character(args[6]), header=TRUE, sep=" ")      / 1000
+exstddevs <- read.table(as.character(args[7]), header=FALSE, sep=" ")   / 1000
 
 pdf(as.character(args[1]), width=7, height=5)
 
@@ -30,17 +30,17 @@ layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
 
 par(mar=c(3,5,3,3))
 
-barx <- barplot(as.matrix(sctimes), col=gray.colors(2), ylab="Time (cycles)",
-    space=0, ylim=c(0,1000),
+barx <- barplot(as.matrix(sctimes), col=gray.colors(2), ylab="Time (K cycles)",
+    space=0, ylim=c(0.0,1.0),
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale)
 
-error.bar(barx, colSums(sctimes), as.integer(scstddevs))
+error.bar(barx, colSums(sctimes), as.double(scstddevs))
 box(col = 'black')
 
 par(mar=c(3,2,3,2))
 
 barx <- barplot(as.matrix(thtimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,200000),
+    space=c(0, 0), ylim=c(0,200),
     cex.names=namescale)
 
 error.bar(barx, colSums(thtimes), as.integer(thstddevs))
@@ -50,7 +50,7 @@ box(col = 'black')
 par(mar=c(3,2,3,1))
 
 barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,700000),
+    space=c(0, 0), ylim=c(0,700),
     cex.names=namescale)
 
 legend("topright", c("Remaining", "Cache-misses"), cex=1, fill=gray.colors(2))

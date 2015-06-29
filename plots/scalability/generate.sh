@@ -6,7 +6,7 @@ get_values() {
     fi
     for i in 1 2 4 8 16; do
         val=`grep 0000 $1/scale-$2-$i.cfg-result.txt | ./tools/m3-avg.awk`
-        echo -n $(($val / 1000)) " "
+        echo -n $val " "
     done
 }
 

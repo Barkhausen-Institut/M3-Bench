@@ -2,10 +2,10 @@ args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.1
 namescale <- 1.15
 
-pipewc_times <- read.table(as.character(args[2]), header=FALSE, sep=" ")
-tar_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")
-untar_times <- read.table(as.character(args[4]), header=FALSE, sep=" ")
-find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")
+pipewc_times <- read.table(as.character(args[2]), header=FALSE, sep=" ") / 1000
+tar_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")    / 1000
+untar_times <- read.table(as.character(args[4]), header=FALSE, sep=" ")  / 1000
+find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
 
 pdf(as.character(args[1]), width=7, height=5)
 
