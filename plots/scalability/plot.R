@@ -10,7 +10,7 @@ find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")
 pdf(as.character(args[1]), width=7, height=5)
 
 # Graph cars using blue points overlayed by a line
-plot(as.integer(pipewc_times), ylim=c(0,2500), type="o", pch=0, lty=1, axes=FALSE, ylab="Time (K cycles)", xlab="# of Applications")
+plot(as.integer(pipewc_times), ylim=c(0,2500), type="o", pch=0, lty=1, axes=FALSE, ylab="Time (K cycles)", xlab="# of Application PEs")
 lines(as.integer(tar_times), ylim=c(0,2500), type="o", pch=1, lty=2)
 lines(as.integer(untar_times), ylim=c(0,2500), type="o", pch=2, lty=3)
 lines(as.integer(find_times), ylim=c(0,2500), type="o", pch=3, lty=4)
