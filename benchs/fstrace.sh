@@ -93,3 +93,5 @@ FSBENCH_CMD="find /default -name test" run_bench $1 find
 FSBENCH_CMD="tar -cf /tmp/test.tar /tardata" run_bench $1 tar
 
 FSBENCH_CMD="tar -xf /test.tar -C /tmp" run_bench $1 untar
+
+FSBENCH_CMD="/bench/sqlite /tmp/test.db" run_bench $1 sqlite
