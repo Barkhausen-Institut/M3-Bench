@@ -50,7 +50,7 @@ box(col = 'black')
 par(mar=c(3,2,3,1))
 
 barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,700),
+    space=c(0, 0), ylim=c(0,700), names.arg=c("M3.exec","Lx.f+e","Lx.vf+e"),
     cex.names=namescale)
 
 legend("topright", c("Remaining", "Cache-misses"), cex=1, fill=gray.colors(2))
