@@ -43,3 +43,4 @@ source tools/file-helper.sh
 run_bench $1 tar
 run_bench $1 untar
 run_bench $1 find
+run_bench $1 sqlite

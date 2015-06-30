@@ -6,6 +6,7 @@ pipewc_times <- read.table(as.character(args[2]), header=FALSE, sep=" ") / 1000
 tar_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")    / 1000
 untar_times <- read.table(as.character(args[4]), header=FALSE, sep=" ")  / 1000
 find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
+sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ") / 1000
 
 pdf(as.character(args[1]), width=7, height=5)
 
@@ -14,15 +15,16 @@ plot(as.integer(pipewc_times), ylim=c(0,2500), type="o", pch=0, lty=1, axes=FALS
 lines(as.integer(tar_times), ylim=c(0,2500), type="o", pch=1, lty=2)
 lines(as.integer(untar_times), ylim=c(0,2500), type="o", pch=2, lty=3)
 lines(as.integer(find_times), ylim=c(0,2500), type="o", pch=3, lty=4)
+lines(as.integer(sqlite_times), ylim=c(0,2500), type="o", pch=4, lty=5)
 
 axis(side = 1, at = 1:5, lab = c("1","2","4","8","16"),
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 axis(side = 2, at = seq(0, 2500, by = 300), labels = TRUE,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
-linetype <- c(1:4)
-plotchar <- seq(0, 4, 1)
-legend("topleft", c("cat | tr", "tar", "untar", "find"), cex=1, pch=plotchar, lty=linetype)
+linetype <- c(1:5)
+plotchar <- seq(0, 5, 1)
+legend("topleft", c("cat | tr", "tar", "untar", "find", "sqlite"), cex=1, pch=plotchar, lty=linetype)
 
 box(col = 'black')
 
