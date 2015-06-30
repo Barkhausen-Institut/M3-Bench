@@ -63,7 +63,7 @@ while true; do
             fi
             c=$((c+1))
         else
-            printf "%-20s: done             \n" $b
+            printf "%-20s: done             \n" `basename $b`
         fi
     done
 
