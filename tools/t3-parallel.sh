@@ -53,7 +53,7 @@ while true; do
     for b in $@; do
         # if the job still exists
         if jobs ${jids[$b]} >/dev/null 2>&1; then
-            printf "%-20s: " $b
+            printf "%-20s: " `basename $b`
             # extract current cycle-counter. take care that the file may still be empty
             if [ `stat --format=%s ${logs[$b]}` -eq 0 ]; then
                 printf "starting\n";
