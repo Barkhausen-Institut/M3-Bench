@@ -31,8 +31,10 @@ layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
 par(mar=c(3,5,3,3))
 
 barx <- barplot(as.matrix(sctimes), col=gray.colors(2), ylab="Time (K cycles)",
-    space=0, ylim=c(0.0,1.0),
+    space=0, ylim=c(0.0,0.5),
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale)
+
+legend("topleft", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)))
 
 error.bar(barx, colSums(sctimes), as.double(scstddevs))
 box(col = 'black')
@@ -50,10 +52,9 @@ box(col = 'black')
 par(mar=c(3,2,3,1))
 
 barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,700), names.arg=c("M3.exec","Lx.f+e","Lx.vf+e"),
+    space=c(0, 0), ylim=c(0,600), names.arg=c("M3.exec","Lx.f+e","Lx.vf+e"),
     cex.names=namescale)
 
-legend("topright", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)))
 error.bar(barx, colSums(extimes), as.integer(exstddevs))
 axis(side = 2, labels = TRUE, cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 box(col = 'black')
