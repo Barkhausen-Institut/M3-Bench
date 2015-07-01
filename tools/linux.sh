@@ -35,6 +35,8 @@ $indices['IDX_EXECPIPE'] =            $i++;
 $indices['IDX_EXECPIPE_MEMCPY'] =     $i++;
 $indices['IDX_PIPETR'] =              $i++;
 $indices['IDX_PIPETR_MEMCPY'] =       $i++;
+$indices['IDX_FFT'] =                 $i++;
+$indices['IDX_FFT_MEMCPY'] =          $i++;
 
 # for the fstrace files
 $indices['IDX_FSTRACE_MEMCPY']        = 0;
