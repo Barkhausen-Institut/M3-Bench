@@ -38,10 +38,21 @@ echo $((m3pipe - $m3trans * 2)) `lx_rem_time $1/lx IDX_PIPE IDX_PIPE_MEMCPY` >> 
 echo $(($m3trans * 2)) `lx_copy_time $1/lx IDX_PIPE_MEMCPY` >> $pipe_avgs
 echo 0 0 0 >> $pipe_avgs
 
-echo "" > $read_stddev
-echo "" > $write_stddev
-echo "" > $copy_stddev
-echo "" > $pipe_stddev
+echo 0 \
+    "`lx_stddev $1/lx-30cycles.txt IDX_READ`" \
+    "`lx_stddev $1/lx-13cycles.txt IDX_READ`" > $read_stddev
+
+echo 0 \
+    "`lx_stddev $1/lx-30cycles.txt IDX_WRITE`" \
+    "`lx_stddev $1/lx-13cycles.txt IDX_WRITE`" > $write_stddev
+
+echo 0 \
+    "`lx_stddev $1/lx-30cycles.txt IDX_COPY_MMAP`" \
+    "`lx_stddev $1/lx-13cycles.txt IDX_COPY_MMAP`" > $copy_stddev
+
+echo 0 \
+    "`lx_stddev $1/lx-30cycles.txt IDX_PIPE`" \
+    "`lx_stddev $1/lx-13cycles.txt IDX_PIPE`" > $pipe_stddev
 
 Rscript plots/fs/plot.R $1/fs.pdf \
     $read_avgs $read_stddev \
