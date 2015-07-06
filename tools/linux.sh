@@ -30,7 +30,6 @@ $indices['IDX_COPY_MMAP'] =           $i++;
 $indices['IDX_COPY_MMAP_AGAIN'] =     $i++;
 $indices['IDX_PIPE'] =                $i++;
 $indices['IDX_PIPE_MEMCPY'] =         $i++;
-$indices['IDX_CAT'] =                 $i++;
 $indices['IDX_EXECPIPE'] =            $i++;
 $indices['IDX_EXECPIPE_MEMCPY'] =     $i++;
 $indices['IDX_PIPETR'] =              $i++;
