@@ -24,6 +24,7 @@ extimes <- read.table(as.character(args[6]), header=TRUE, sep=" ")      / 1000
 exstddevs <- read.table(as.character(args[7]), header=FALSE, sep=" ")   / 1000
 
 pdf(as.character(args[1]), width=7, height=5)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
     widths=c(1,1.05,1), heights=c(1,1))
@@ -32,12 +33,11 @@ par(mar=c(3,5,3,3))
 
 barx <- barplot(as.matrix(sctimes), col=gray.colors(2), ylab="Time (K cycles)",
     space=0, ylim=c(0.0,0.5),
-    cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, cex.names=namescale)
-
-legend("topleft", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)))
+    cex.names=namescale)
 
 error.bar(barx, colSums(sctimes), as.double(scstddevs))
 box(col = 'black')
+legend("topleft", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)))
 
 par(mar=c(3,2,3,2))
 
@@ -46,7 +46,7 @@ barx <- barplot(as.matrix(thtimes), col=gray.colors(2), axes = FALSE,
     cex.names=namescale)
 
 error.bar(barx, colSums(thtimes), as.integer(thstddevs))
-axis(side = 2, labels = TRUE, cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+axis(side = 2, labels = TRUE)
 box(col = 'black')
 
 par(mar=c(3,2,3,1))
@@ -56,7 +56,7 @@ barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
     cex.names=namescale)
 
 error.bar(barx, colSums(extimes), as.integer(exstddevs))
-axis(side = 2, labels = TRUE, cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+axis(side = 2, labels = TRUE)
 box(col = 'black')
 
 dev.off()
