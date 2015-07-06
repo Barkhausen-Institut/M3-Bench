@@ -26,7 +26,7 @@ cpstddev <- read.table(as.character(args[7]), header=FALSE, sep=" ") / 1000000
 pitimes <- read.table(as.character(args[8]), header=TRUE, sep=" ") / 1000000
 pistddev <- read.table(as.character(args[9]), header=FALSE, sep=" ") / 1000000
 
-pdf(as.character(args[1]), width=7, height=5)
+pdf(as.character(args[1]), width=7, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),

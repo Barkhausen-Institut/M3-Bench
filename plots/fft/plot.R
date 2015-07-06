@@ -1,10 +1,10 @@
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.3
+scaling <- 1.1
 namescale <- 1.15
 
 times <- read.table(as.character(args[2]), header=TRUE, sep=" ") / 1000
 
-pdf(as.character(args[1]), width=7, height=5)
+pdf(as.character(args[1]), width=7, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 barplot(as.matrix(times), beside=F,

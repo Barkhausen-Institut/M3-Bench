@@ -5,7 +5,7 @@ namescale <- 1.15
 read_times <- read.table(as.character(args[2]), header=FALSE, sep=" ")
 write_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")
 
-pdf(as.character(args[1]), width=7, height=5)
+pdf(as.character(args[1]), width=7, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 # Graph cars using blue points overlayed by a line

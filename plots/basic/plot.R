@@ -23,7 +23,7 @@ thstddevs <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
 extimes <- read.table(as.character(args[6]), header=TRUE, sep=" ")      / 1000
 exstddevs <- read.table(as.character(args[7]), header=FALSE, sep=" ")   / 1000
 
-pdf(as.character(args[1]), width=7, height=5)
+pdf(as.character(args[1]), width=7, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
@@ -42,7 +42,7 @@ legend("topleft", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)
 par(mar=c(3,2,3,2))
 
 barx <- barplot(as.matrix(thtimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,200),
+    space=c(0, 0), ylim=c(0,170),
     cex.names=namescale)
 
 error.bar(barx, colSums(thtimes), as.integer(thstddevs))
