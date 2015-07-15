@@ -8,7 +8,7 @@ cptimes <- read.table(as.character(args[4]), header=TRUE, sep=" ") / 1000000
 pitimes <- read.table(as.character(args[5]), header=TRUE, sep=" ") / 1000000
 sqtimes <- read.table(as.character(args[6]), header=TRUE, sep=" ") / 1000000
 
-pdf(as.character(args[1]), width=7, height=4)
+pdf(as.character(args[1]), width=7, height=3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),

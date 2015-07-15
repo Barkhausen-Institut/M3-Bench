@@ -8,7 +8,7 @@ untar_times <- read.table(as.character(args[4]), header=FALSE, sep=" ")  / 1000
 find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
 sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ") / 1000
 
-pdf(as.character(args[1]), width=7, height=5)
+pdf(as.character(args[1]), width=7, height=4.5)
 
 # Graph cars using blue points overlayed by a line
 plot(as.integer(pipewc_times), ylim=c(0,2500), type="o", pch=0, lty=1, axes=FALSE, ylab="Time (K cycles)", xlab="# of Application PEs")
