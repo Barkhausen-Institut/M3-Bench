@@ -2,7 +2,7 @@
 
 get_values() {
     for i in 16 32 64 128 256 512 1024 2048; do
-        val=`grep 0001 $1/m3-$2-$i.txt | ./tools/m3-avg.awk`
+        val=`grep "TIME: 0001 :" $1/m3-$2-$i.txt | ./tools/m3-avg.awk`
         echo -n $(($val / 1000)) " "
     done
 }
