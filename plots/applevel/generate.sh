@@ -53,6 +53,14 @@ echo $(($m3sqlite - $m3sqlitetrans - $m3wait)) `lx_fstrace_total $1/lx-fstrace-s
 echo $(($m3sqlitetrans)) `lx_copy_time $1/lx-fstrace-sqlite-result IDX_FSTRACE_MEMCPY` >> $sqlite_avgs
 echo $m3wait `lx_copy_time $1/lx-fstrace-sqlite-result IDX_FSTRACE_WAIT` >> $sqlite_avgs
 
+lxtar=`lx_avg $1/lx-fstrace-tar-result-30cycles.txt "IDX_FSTRACE_TOTAL"`
+lxuntar=`lx_avg $1/lx-fstrace-untar-result-30cycles.txt "IDX_FSTRACE_TOTAL"`
+
+eq=`printf 'printf("%%f",100 / (%f / %f));' $lxtar $m3tar`
+echo $m3tar $lxtar "->" $(php -r "$eq") "%" > $1/applevel-lxm3.dat
+eq=`printf 'printf("%%f",100 / (%f / %f));' $lxuntar $m3untar`
+echo $m3untar $lxuntar "->" $(php -r "$eq") "%" >> $1/applevel-lxm3.dat
+
 Rscript plots/applevel/plot.R $1/applevel.pdf \
     $pipetr_avgs \
     $tar_avgs \
