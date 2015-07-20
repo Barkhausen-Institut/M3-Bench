@@ -4,6 +4,13 @@ get_m3_waittime() {
     grep 'TIME: aaaa' $1 | awk '{ sum += $4 } END { print sum }'
 }
 
+if [ "$BLIND" != "" ]; then
+    osname="XY"
+    suffix="-blind"
+else
+    osname="M3"
+fi
+
 pipetr_avgs=$1/applevel-pipetr-times.dat
 tar_avgs=$1/applevel-tar-times.dat
 untar_avgs=$1/applevel-untar-times.dat
@@ -61,7 +68,7 @@ echo $m3tar $lxtar "->" $(php -r "$eq") "%" > $1/applevel-lxm3.dat
 eq=`printf 'printf("%%f",100 / (%f / %f));' $lxuntar $m3untar`
 echo $m3untar $lxuntar "->" $(php -r "$eq") "%" >> $1/applevel-lxm3.dat
 
-Rscript plots/applevel/plot.R $1/applevel.pdf \
+Rscript plots/applevel/plot.R $1/applevel$suffix.pdf $osname \
     $pipetr_avgs \
     $tar_avgs \
     $untar_avgs \

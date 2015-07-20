@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "$BLIND" != "" ]; then
+    osname="XY"
+    suffix="-blind"
+else
+    osname="M3"
+fi
+
 sctimes=$1/sysc-times.dat
 thtimes=$1/thread-times.dat
 extimes=$1/exec-times.dat
@@ -49,7 +56,7 @@ echo "`grep 0003 $1/m3-vpes.txt | ./tools/m3-stddev.awk | tr -d '[[:space:]]'`" 
     "`lx_stddev $1/lx-30cycles.txt IDX_EXEC`" \
     "`lx_stddev $1/lx-30cycles.txt IDX_VEXEC`" > $exstddev
 
-Rscript plots/basic/plot.R $1/basic.pdf \
+Rscript plots/basic/plot.R $1/basic$suffix.pdf $osname \
     $sctimes $scstddev \
     $thtimes $thstddev \
     $extimes $exstddev

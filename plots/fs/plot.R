@@ -14,17 +14,19 @@ args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.3
 namescale <- 1.15
 
-rdtimes <- read.table(as.character(args[2]), header=TRUE, sep=" ") / 1000000
-rdstddev <- read.table(as.character(args[3]), header=FALSE, sep=" ") / 1000000
+osname <- as.character(args[2])
 
-wrtimes <- read.table(as.character(args[4]), header=TRUE, sep=" ") / 1000000
-wrstddev <- read.table(as.character(args[5]), header=FALSE, sep=" ") / 1000000
+rdtimes <- read.table(as.character(args[3]), header=TRUE, sep=" ") / 1000000
+rdstddev <- read.table(as.character(args[4]), header=FALSE, sep=" ") / 1000000
 
-cptimes <- read.table(as.character(args[6]), header=TRUE, sep=" ") / 1000000
-cpstddev <- read.table(as.character(args[7]), header=FALSE, sep=" ") / 1000000
+wrtimes <- read.table(as.character(args[5]), header=TRUE, sep=" ") / 1000000
+wrstddev <- read.table(as.character(args[6]), header=FALSE, sep=" ") / 1000000
 
-pitimes <- read.table(as.character(args[8]), header=TRUE, sep=" ") / 1000000
-pistddev <- read.table(as.character(args[9]), header=FALSE, sep=" ") / 1000000
+cptimes <- read.table(as.character(args[7]), header=TRUE, sep=" ") / 1000000
+cpstddev <- read.table(as.character(args[8]), header=FALSE, sep=" ") / 1000000
+
+pitimes <- read.table(as.character(args[9]), header=TRUE, sep=" ") / 1000000
+pistddev <- read.table(as.character(args[10]), header=FALSE, sep=" ") / 1000000
 
 pdf(as.character(args[1]), width=7, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
@@ -37,7 +39,7 @@ par(mar=c(6,5,2,2))
 barx <- barplot(as.matrix(rdtimes), beside=F,
     ylim=c(0,11), space=c(0.3, 0, 0), axes=F, ylab="Time (M cycles)",
     cex.names=namescale,
-    names.arg=c("M3","Lx","Lx-$"), sub="Read")
+    names.arg=c(osname,"Lx","Lx-$"), sub="Read")
 error.bar(barx, colSums(rdtimes), as.double(rdstddev))
 box(col = 'black')
 
@@ -55,7 +57,7 @@ par(mar=c(6,0,2,2))
 barx <- barplot(as.matrix(wrtimes), beside=F,
     ylim=c(0,11), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c("M3","Lx","Lx-$"), sub="Write")
+    names.arg=c(osname,"Lx","Lx-$"), sub="Write")
 error.bar(barx, colSums(wrtimes), as.double(wrstddev))
 box(col = 'black')
 axis.break(axis=2, breakpos=8, style="gap")
@@ -65,7 +67,7 @@ par(mar=c(6,0,2,2))
 barx <- barplot(cpvals, beside=F,
     ylim=c(0,11), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c("M3","Lx","Lx-$"), sub="Copy")
+    names.arg=c(osname,"Lx","Lx-$"), sub="Copy")
 error.bar(barx, colSums(cpvals), as.double(cpstddev))
 box(col = 'black')
 axis.break(axis=2, breakpos=8, style="gap")
@@ -75,7 +77,7 @@ par(mar=c(6,0,2,2))
 barx <- barplot(as.matrix(pitimes), beside=F,
     ylim=c(0,11), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c("M3","Lx","Lx-$"), sub="Pipe")
+    names.arg=c(osname,"Lx","Lx-$"), sub="Pipe")
 error.bar(barx, colSums(pitimes), as.double(pistddev))
 box(col = 'black')
 axis.break(axis=2, breakpos=8, style="gap")

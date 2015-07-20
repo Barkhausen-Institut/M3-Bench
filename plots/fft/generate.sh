@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "$BLIND" != "" ]; then
+    osname="XY"
+    suffix="-blind"
+else
+    osname="M3"
+fi
+
 get_m3_ffttime() {
     grep -v 'TIME: 0000' $1 | awk '{ sum += $4 } END { print sum }'
 }
@@ -27,4 +34,4 @@ echo $((`lx_avg $1/lx-30cycles.txt IDX_FFT` - $lxcp - $m3fft)) \
 echo $lxcp $m3trans $m3trans  >> $avgs
 echo $m3fft $m3fft $m3tiefft >> $avgs
 
-Rscript plots/fft/plot.R $1/fft.pdf $avgs
+Rscript plots/fft/plot.R $1/fft$suffix.pdf $osname $avgs

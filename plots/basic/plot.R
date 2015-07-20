@@ -14,14 +14,16 @@ args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.3
 namescale <- 1.15
 
-sctimes <- read.table(as.character(args[2]), header=TRUE, sep=" ")      / 1000
-scstddevs <- read.table(as.character(args[3]), header=FALSE, sep=" ")   / 1000
+osname <- as.character(args[2])
 
-thtimes <- read.table(as.character(args[4]), header=TRUE, sep=" ")      / 1000
-thstddevs <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
+sctimes <- read.table(as.character(args[3]), header=TRUE, sep=" ")      / 1000
+scstddevs <- read.table(as.character(args[4]), header=FALSE, sep=" ")   / 1000
 
-extimes <- read.table(as.character(args[6]), header=TRUE, sep=" ")      / 1000
-exstddevs <- read.table(as.character(args[7]), header=FALSE, sep=" ")   / 1000
+thtimes <- read.table(as.character(args[5]), header=TRUE, sep=" ")      / 1000
+thstddevs <- read.table(as.character(args[6]), header=FALSE, sep=" ")   / 1000
+
+extimes <- read.table(as.character(args[7]), header=TRUE, sep=" ")      / 1000
+exstddevs <- read.table(as.character(args[8]), header=FALSE, sep=" ")   / 1000
 
 pdf(as.character(args[1]), width=7, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
@@ -32,7 +34,7 @@ layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
 par(mar=c(3,5,3,3))
 
 barx <- barplot(as.matrix(sctimes), col=gray.colors(2), ylab="Time (K cycles)",
-    space=0, ylim=c(0.0,0.5),
+    space=0, ylim=c(0.0,0.5), names.arg=c(paste(osname,"sys",sep="."),"Lx.sys"),
     cex.names=namescale)
 
 error.bar(barx, colSums(sctimes), as.double(scstddevs))
@@ -42,7 +44,7 @@ legend("topleft", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)
 par(mar=c(3,2,3,2))
 
 barx <- barplot(as.matrix(thtimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,170),
+    space=c(0, 0), ylim=c(0,170), names.arg=c(paste(osname,"run",sep="."),"Lx.clone","Lx.fork"),
     cex.names=namescale)
 
 error.bar(barx, colSums(thtimes), as.integer(thstddevs))
@@ -52,7 +54,7 @@ box(col = 'black')
 par(mar=c(3,2,3,1))
 
 barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,600), names.arg=c("M3.exec","Lx.f+e","Lx.vf+e"),
+    space=c(0, 0), ylim=c(0,600), names.arg=c(paste(osname,"exec",sep="."),"Lx.f+e","Lx.vf+e"),
     cex.names=namescale)
 
 error.bar(barx, colSums(extimes), as.integer(exstddevs))

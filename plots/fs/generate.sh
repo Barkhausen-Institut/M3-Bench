@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "$BLIND" != "" ]; then
+    osname="XY"
+    suffix="-blind"
+else
+    osname="M3"
+fi
+
 read_avgs=$1/fs-read-times.dat
 read_stddev=$1/fs-read-stddevs.dat
 write_avgs=$1/fs-write-times.dat
@@ -54,7 +61,7 @@ echo 0 \
     "`lx_stddev $1/lx-30cycles.txt IDX_PIPE`" \
     "`lx_stddev $1/lx-13cycles.txt IDX_PIPE`" > $pipe_stddev
 
-Rscript plots/fs/plot.R $1/fs.pdf \
+Rscript plots/fs/plot.R $1/fs$suffix.pdf $osname \
     $read_avgs $read_stddev \
     $write_avgs $write_stddev \
     $copy_avgs $copy_stddev \
