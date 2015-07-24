@@ -2,24 +2,29 @@ args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.1
 namescale <- 1.15
 
-pipewc_times <- read.table(as.character(args[2]), header=FALSE, sep=" ") / 1000
-tar_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")    / 1000
-untar_times <- read.table(as.character(args[4]), header=FALSE, sep=" ")  / 1000
-find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")   / 1000
-sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ") / 1000
+pipewc_times <- read.table(as.character(args[2]), header=FALSE, sep=" ")
+pipewc_times <- pipewc_times / pipewc_times$V2
+tar_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")
+tar_times <- tar_times / tar_times$V1
+untar_times <- read.table(as.character(args[4]), header=FALSE, sep=" ")
+untar_times <- untar_times / untar_times$V1
+find_times <- read.table(as.character(args[5]), header=FALSE, sep=" ")
+find_times <- find_times / find_times$V1
+sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ")
+sqlite_times <- sqlite_times / sqlite_times$V1
 
-pdf(as.character(args[1]), width=7, height=4.5)
+pdf(as.character(args[1]), width=7, height=4)
 
 # Graph cars using blue points overlayed by a line
-plot(as.integer(pipewc_times), ylim=c(0,2500), type="o", pch=0, lty=1, axes=FALSE, ylab="Time (K cycles)", xlab="# of Application PEs")
-lines(as.integer(tar_times), ylim=c(0,2500), type="o", pch=1, lty=2)
-lines(as.integer(untar_times), ylim=c(0,2500), type="o", pch=2, lty=3)
-lines(as.integer(find_times), ylim=c(0,2500), type="o", pch=3, lty=4)
-lines(as.integer(sqlite_times), ylim=c(0,2500), type="o", pch=4, lty=5)
+plot(as.double(pipewc_times), ylim=c(0.75,2.5), type="o", pch=0, lty=1, axes=FALSE, ylab="Time (normalized)", xlab="# of Application PEs")
+lines(as.double(tar_times), ylim=c(0.75,2.5), type="o", pch=1, lty=2)
+lines(as.double(untar_times), ylim=c(0.75,2.5), type="o", pch=2, lty=3)
+lines(as.double(find_times), ylim=c(0.75,2.5), type="o", pch=3, lty=4)
+lines(as.double(sqlite_times), ylim=c(0.75,2.5), type="o", pch=4, lty=5)
 
 axis(side = 1, at = 1:5, lab = c("1","2","4","8","16"),
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
-axis(side = 2, at = seq(0, 2500, by = 300), labels = TRUE,
+axis(side = 2, at = seq(1, 2.5, by = 0.5), labels = TRUE,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 linetype <- c(1:5)
