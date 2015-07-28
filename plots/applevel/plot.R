@@ -20,7 +20,7 @@ par(mar=c(6,5,2,2))
 barplot(as.matrix(rdtimes), beside=F,
     ylim=c(0,6), space=c(0.3, 0, 0), ylab="Time (M cycles)",
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="cat | tr")
+    names.arg=c(osname,"Lx","Lx-$"), sub="cat+tr")
 box(col = 'black')
 
 legend("topleft", c("Wait", "Data xfers", "Remaining"), cex=1, fill=rev(gray.colors(3)))

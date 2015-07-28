@@ -29,7 +29,7 @@ axis(side = 2, at = seq(1, 2.5, by = 0.5), labels = TRUE,
 
 linetype <- c(1:5)
 plotchar <- seq(0, 5, 1)
-legend("topleft", c("cat | tr", "tar", "untar", "find", "sqlite"), cex=1, pch=plotchar, lty=linetype)
+legend("topleft", c("cat+tr", "tar", "untar", "find", "sqlite"), cex=1, pch=plotchar, lty=linetype)
 
 box(col = 'black')
 
