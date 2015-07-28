@@ -23,7 +23,7 @@ barplot(as.matrix(rdtimes), beside=F,
     names.arg=c(osname,"Lx","Lx-$"), sub="cat+tr")
 box(col = 'black')
 
-legend("topleft", c("Wait", "Data xfers", "Remaining"), cex=1, fill=rev(gray.colors(3)))
+legend("topleft", c("Application", "Data xfers", "OS overhead"), cex=1, fill=rev(gray.colors(3)))
 
 par(mar=c(6,0,2,2))
 

@@ -33,6 +33,7 @@ $indices['IDX_PIPE_MEMCPY'] =         $i++;
 $indices['IDX_EXECPIPE'] =            $i++;
 $indices['IDX_EXECPIPE_MEMCPY'] =     $i++;
 $indices['IDX_PIPETR'] =              $i++;
+$indices['IDX_PIPETR_APP'] =          $i++;
 $indices['IDX_PIPETR_MEMCPY'] =       $i++;
 $indices['IDX_FFT'] =                 $i++;
 $indices['IDX_FFT_MEMCPY'] =          $i++;
@@ -71,6 +72,19 @@ lx_avg() {
 lx_stddev() {
     # tr to remove the \r
     get_line $1 $2 | cut -d ':' -f 2 | sed -e 's/[^\(]*(\([[:digit:]]*\))/\1/' | tr -d '[[:space:]]'
+}
+
+lx_pipetr_total() {
+    lx30=`lx_avg $1-30cycles.txt "IDX_PIPETR"`
+    lx13=`lx_avg $1-13cycles.txt "IDX_PIPETR"`
+    lx30mc=`lx_avg $1-30cycles.txt "IDX_PIPETR_MEMCPY"`
+    lx13mc=`lx_avg $1-13cycles.txt "IDX_PIPETR_MEMCPY"`
+    lx30w=`lx_avg $1-30cycles.txt "IDX_PIPETR_APP"`
+    lx13w=`lx_avg $1-13cycles.txt "IDX_PIPETR_APP"`
+    rem30=$(($lx30 - $lx30mc - $lx30w))
+    rem13=$(($lx13 - $lx13mc - $lx13w))
+    cm=`cache_misses $rem13 $rem30`
+    echo $rem30 $(($rem13 - $cm))
 }
 
 lx_fstrace_total() {

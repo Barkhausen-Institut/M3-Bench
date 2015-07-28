@@ -32,9 +32,10 @@ m3tartrans=$((2 * 1216000 / 8))
 m3sqlitetrans=$((57704 / 8))
 
 m3pipetr=`grep 0000 $1/m3-pipetr-1.cfg-result.txt | ./tools/m3-avg.awk`
-echo $(($m3pipetr - $m3pipetrtrans)) `lx_rem_time $1/lx IDX_PIPETR IDX_PIPETR_MEMCPY` >> $pipetr_avgs
+m3wait=`get_m3_waittime $1/m3-pipetr-1.cfg-result.txt`
+echo $(($m3pipetr - $m3pipetrtrans - $m3wait)) `lx_pipetr_total $1/lx` >> $pipetr_avgs
 echo $m3pipetrtrans `lx_copy_time $1/lx IDX_PIPETR_MEMCPY` >> $pipetr_avgs
-echo 0 0 0 >> $pipetr_avgs
+echo $m3wait `lx_copy_time $1/lx IDX_PIPETR_APP` >> $pipetr_avgs
 
 m3tar=`grep 0000 $1/m3-fstrace.tar-txt | ./tools/m3-avg.awk`
 m3wait=`get_m3_waittime $1/m3-fstrace.tar-txt`
