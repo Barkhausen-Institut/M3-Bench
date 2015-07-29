@@ -15,6 +15,6 @@ barplot(as.matrix(times), beside=F,
     names.arg=c("Linux",osname,paste(osname,"accelerator",sep="+")))
 box(col = 'black')
 
-legend("topright", c("FFT", "Data xfers", "Remaining"), cex=1, fill=rev(gray.colors(3)))
+legend("topright", c("FFT", "Data xfers", "OS overhead"), cex=1, fill=rev(gray.colors(3)))
 
 dev.off()
