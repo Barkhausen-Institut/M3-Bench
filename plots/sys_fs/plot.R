@@ -11,8 +11,8 @@ error.bar <- function(mp, means, stddevs) {
 }
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.3
-namescale <- 1.15
+scaling <- 1.8
+namescale <- 1.8
 
 osname <- as.character(args[2])
 
@@ -28,28 +28,28 @@ wrstddev <- read.table(as.character(args[8]), header=FALSE, sep=" ")  / 1000000
 pitimes <- read.table(as.character(args[9]), header=TRUE, sep=" ")    / 1000000
 pistddev <- read.table(as.character(args[10]), header=FALSE, sep=" ")  / 1000000
 
-pdf(as.character(args[1]), width=7, height=3.5)
+pdf(as.character(args[1]), width=8, height=5.3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
-    widths=c(1.5,1.4,1,1), heights=c(1,1))
+    widths=c(1.5,1.5,1.1,1.1), heights=c(1,1))
 
 par(mar=c(6,5,2,2))
 
 barx <- barplot(as.matrix(sctimes), beside=F,
     ylim=c(0.0,500), space=0, axes=T, ylab="Time (cycles)",
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="Syscall")
+    names.arg=c(osname,"Lx","Lx*"), sub="Syscall")
 
 error.bar(barx, colSums(sctimes), as.double(scstddevs))
 box(col = 'black')
 
-par(mar=c(6,4,2,2))
+par(mar=c(6,4.5,2,2))
 
 barx <- barplot(as.matrix(rdtimes), beside=F,
     ylim=c(0,9), space=c(0.3, 0, 0), axes=T, ylab="Time (M cycles)",
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="Read")
+    names.arg=c(osname,"Lx","Lx*"), sub="Read")
 error.bar(barx, colSums(rdtimes), as.double(rdstddev))
 box(col = 'black')
 
@@ -58,7 +58,7 @@ par(mar=c(6,0,2,2))
 barx <- barplot(as.matrix(wrtimes), beside=F,
     ylim=c(0,9), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="Write")
+    names.arg=c(osname,"Lx","Lx*"), sub="Write")
 error.bar(barx, colSums(wrtimes), as.double(wrstddev))
 box(col = 'black')
 
@@ -67,11 +67,11 @@ par(mar=c(6,0,2,2))
 barx <- barplot(as.matrix(pitimes), beside=F,
     ylim=c(0,9), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="Pipe")
+    names.arg=c(osname,"Lx","Lx*"), sub="Pipe")
 error.bar(barx, colSums(pitimes), as.double(pistddev))
 box(col = 'black')
 
-legend("topright", c("Data transfers", "Remaining"), cex=1, fill=rev(gray.colors(2)))
+legend("topright", c("Data xfers", "Remaining"), cex=namescale, fill=rev(gray.colors(2)))
 
 par(mar=c(6,0,2,2))
 

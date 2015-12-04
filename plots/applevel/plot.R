@@ -1,6 +1,6 @@
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.3
-namescale <- 1.15
+scaling <- 1.6
+namescale <- 1.3
 
 osname <- as.character(args[2])
 rdtimes <- read.table(as.character(args[3]), header=TRUE, sep=" ") / 1000000
@@ -20,17 +20,17 @@ par(mar=c(6,5,2,2))
 barplot(as.matrix(rdtimes), beside=F,
     ylim=c(0,6), space=c(0.3, 0, 0), ylab="Time (M cycles)",
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="cat+tr")
+    names.arg=c(osname,"Lx","Lx*"), sub="cat+tr")
 box(col = 'black')
 
-legend("topleft", c("Application", "Data xfers", "OS overhead"), cex=1, fill=rev(gray.colors(3)))
+legend("topleft", c("App", "Data xfers", "OS"), cex=namescale, fill=rev(gray.colors(3)))
 
 par(mar=c(6,0,2,2))
 
 barplot(as.matrix(wrtimes), beside=F,
     ylim=c(0,6), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="tar")
+    names.arg=c(osname,"Lx","Lx*"), sub="tar")
 box(col = 'black')
 
 par(mar=c(6,0,2,2))
@@ -38,7 +38,7 @@ par(mar=c(6,0,2,2))
 barplot(as.matrix(cptimes), beside=F,
     ylim=c(0,6), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="untar")
+    names.arg=c(osname,"Lx","Lx*"), sub="untar")
 box(col = 'black')
 
 par(mar=c(6,0,2,2))
@@ -46,7 +46,7 @@ par(mar=c(6,0,2,2))
 barplot(as.matrix(pitimes), beside=F,
     ylim=c(0,6), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="find")
+    names.arg=c(osname,"Lx","Lx*"), sub="find")
 box(col = 'black')
 
 par(mar=c(6,0,2,2))
@@ -54,7 +54,7 @@ par(mar=c(6,0,2,2))
 barplot(as.matrix(sqtimes), beside=F,
     ylim=c(0,6), space=c(0.3, 0, 0), axes=F,
     cex.names=namescale,
-    names.arg=c(osname,"Lx","Lx-$"), sub="sqlite")
+    names.arg=c(osname,"Lx","Lx*"), sub="sqlite")
 box(col = 'black')
 
 par(mar=c(6,0,2,2))
