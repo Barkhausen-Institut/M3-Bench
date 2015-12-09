@@ -1,11 +1,12 @@
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.1
+scaling <- 1.3
 namescale <- 1.15
 
 read_times <- read.table(as.character(args[2]), header=FALSE, sep=" ")
 write_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")
 
 pdf(as.character(args[1]), width=7, height=3.5)
+par(mar=c(5.1,5.1,2.1,2.1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 # Graph cars using blue points overlayed by a line
@@ -17,7 +18,7 @@ axis(side = 2, at = seq(0, 1500, by = 300), labels = TRUE)
 
 linetype <- c(1:2)
 plotchar <- seq(0, 2, 1)
-legend("topright", c("Reading", "Writing"), cex=1, pch=plotchar, lty=linetype)
+legend("topright", c("Reading", "Writing"), cex=namescale, pch=plotchar, lty=linetype)
 
 box(col = 'black')
 

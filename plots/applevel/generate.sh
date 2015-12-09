@@ -4,11 +4,9 @@ get_m3_waittime() {
     grep 'TIME: aaaa' $1 | awk '{ sum += $4 } END { print sum }'
 }
 
+osname="A"
 if [ "$BLIND" != "" ]; then
-    osname="XY"
     suffix="-blind"
-else
-    osname="M3"
 fi
 
 pipetr_avgs=$1/applevel-pipetr-times.dat

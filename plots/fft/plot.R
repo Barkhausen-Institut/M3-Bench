@@ -1,12 +1,14 @@
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.1
-namescale <- 1.15
+scaling <- 1.4
+namescale <- 1.4
 
 osname <- as.character(args[2])
 
 times <- read.table(as.character(args[3]), header=TRUE, sep=" ") / 1000000
 
 pdf(as.character(args[1]), width=7, height=3.5)
+
+par(mar=c(3.1,5.1,2.1,2.1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 barplot(as.matrix(times), beside=F,
@@ -15,6 +17,6 @@ barplot(as.matrix(times), beside=F,
     names.arg=c("Linux",osname,paste(osname,"accelerator",sep="+")))
 box(col = 'black')
 
-legend("topright", c("FFT", "Data xfers", "OS overhead"), cex=1, fill=rev(gray.colors(3)))
+legend("topright", c("FFT", "Xfers", "OS"), cex=namescale, fill=rev(gray.colors(3)))
 
 dev.off()

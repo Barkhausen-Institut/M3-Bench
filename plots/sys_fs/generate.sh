@@ -1,10 +1,8 @@
 #!/bin/bash
 
+osname="A"
 if [ "$BLIND" != "" ]; then
-    osname="XY"
     suffix="-blind"
-else
-    osname="M3"
 fi
 
 sctimes=$1/sys_fs-sysc-times.dat
