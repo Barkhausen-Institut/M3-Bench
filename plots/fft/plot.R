@@ -12,7 +12,7 @@ par(mar=c(3.1,5.1,2.1,2.1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 barplot(as.matrix(times), beside=F,
-    ylim=c(0,3), space=c(0.3, 0, 0), ylab="Time (M cycles)",
+    ylim=c(0,3), space=c(0.3, 0.05, 0.05), ylab="Time (M cycles)",
     cex.names=namescale,
     names.arg=c("Linux",osname,paste(osname,"accelerator",sep="+")))
 box(col = 'black')
