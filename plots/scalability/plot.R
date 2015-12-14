@@ -1,6 +1,6 @@
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.5
-namescale <- 1.3
+scaling <- 1.3
+namescale <- 1.2
 
 pipewc_times <- read.table(as.character(args[2]), header=FALSE, sep=" ")
 pipewc_times <- pipewc_times / pipewc_times$V2
@@ -13,7 +13,7 @@ find_times <- find_times / find_times$V1
 sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ")
 sqlite_times <- sqlite_times / sqlite_times$V1
 
-pdf(as.character(args[1]), width=7, height=4)
+pdf(as.character(args[1]), width=7, height=3.5)
 
 par(mar=c(5.1,5.1,3.1,2.1))
 

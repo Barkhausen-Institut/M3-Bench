@@ -1,12 +1,12 @@
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.4
-namescale <- 1.4
+scaling <- 1.2
+namescale <- 1.2
 
 osname <- as.character(args[2])
 
 times <- read.table(as.character(args[3]), header=TRUE, sep=" ") / 1000000
 
-pdf(as.character(args[1]), width=7, height=3.5)
+pdf(as.character(args[1]), width=7, height=2.75)
 
 par(mar=c(3.1,5.1,2.1,2.1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)

@@ -28,7 +28,7 @@ wrstddev <- read.table(as.character(args[8]), header=FALSE, sep=" ")  / 1000000
 pitimes <- read.table(as.character(args[9]), header=TRUE, sep=" ")    / 1000000
 pistddev <- read.table(as.character(args[10]), header=FALSE, sep=" ")  / 1000000
 
-pdf(as.character(args[1]), width=8, height=6.2)
+pdf(as.character(args[1]), width=8, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
@@ -62,6 +62,8 @@ barx <- barplot(as.matrix(wrtimes), beside=F,
 error.bar(barx, colSums(wrtimes), as.double(wrstddev))
 box(col = 'black')
 
+legend("topright", c("Xfers", "Other"), cex=namescale, fill=rev(gray.colors(2)))
+
 par(mar=c(6,0,2,2))
 
 barx <- barplot(as.matrix(pitimes), beside=F,
@@ -70,8 +72,6 @@ barx <- barplot(as.matrix(pitimes), beside=F,
     names.arg=c(osname,"B","C"), sub="Pipe")
 error.bar(barx, colSums(pitimes), as.double(pistddev))
 box(col = 'black')
-
-legend("topright", c("Xfers", "Other"), cex=namescale, fill=rev(gray.colors(2)))
 
 par(mar=c(6,0,2,2))
 
