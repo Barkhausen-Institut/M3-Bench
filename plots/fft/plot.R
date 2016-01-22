@@ -6,7 +6,7 @@ osname <- as.character(args[2])
 
 times <- read.table(as.character(args[3]), header=TRUE, sep=" ") / 1000000
 
-pdf(as.character(args[1]), width=7, height=2.75)
+pdf(as.character(args[1]), width=7, height=2.5)
 
 par(mar=c(3.1,5.1,2.1,2.1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
