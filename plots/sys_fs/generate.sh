@@ -1,6 +1,6 @@
 #!/bin/bash
 
-osname="A"
+osname="M3"
 if [ "$BLIND" != "" ]; then
     suffix="-blind"
 fi

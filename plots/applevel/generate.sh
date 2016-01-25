@@ -4,7 +4,7 @@ get_m3_waittime() {
     grep 'TIME: aaaa' $1 | awk '{ sum += $4 } END { print sum }'
 }
 
-osname="A"
+osname="M3"
 if [ "$BLIND" != "" ]; then
     suffix="-blind"
 fi
