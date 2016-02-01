@@ -1,3 +1,5 @@
+library(extrafont)
+
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.3
 namescale <- 1.2
@@ -13,7 +15,7 @@ find_times <- find_times / find_times$V1
 sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ")
 sqlite_times <- sqlite_times / sqlite_times$V1
 
-pdf(as.character(args[1]), width=7, height=3.5)
+pdf(as.character(args[1]), width=7, height=3.5, useDingbats=FALSE)
 
 par(mar=c(5.1,5.1,3.1,2.1))
 
@@ -37,3 +39,4 @@ legend("topleft", c("cat+tr", "tar", "untar", "find", "sqlite"), cex=namescale, 
 box(col = 'black')
 
 dev.off()
+embed_fonts(as.character(args[1]))

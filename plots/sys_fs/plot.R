@@ -1,3 +1,5 @@
+library(extrafont)
+
 error.bar <- function(mp, means, stddevs) {
     stDevs <- matrix(stddevs, length(stddevs))
     # Plot the vertical lines of the error bars
@@ -79,3 +81,4 @@ box(col = 'black')
 par(mar=c(6,0,2,2))
 
 dev.off()
+embed_fonts(as.character(args[1]))

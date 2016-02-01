@@ -1,3 +1,5 @@
+library(extrafont)
+
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.2
 namescale <- 1.1
@@ -5,7 +7,7 @@ namescale <- 1.1
 read_times <- read.table(as.character(args[2]), header=FALSE, sep=" ")
 write_times <- read.table(as.character(args[3]), header=FALSE, sep=" ")
 
-pdf(as.character(args[1]), width=7, height=3)
+pdf(as.character(args[1]), width=7, height=3, useDingbats=FALSE)
 par(mar=c(5.1,5.1,2.1,2.1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
@@ -23,3 +25,4 @@ legend("topright", c("Reading", "Writing"), cex=namescale, pch=plotchar, lty=lin
 box(col = 'black')
 
 dev.off()
+embed_fonts(as.character(args[1]))

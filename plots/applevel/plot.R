@@ -1,3 +1,5 @@
+library(extrafont)
+
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 2
 namescale <- 1.8
@@ -61,3 +63,4 @@ box(col = 'black')
 par(mar=c(7.5,0,2,2))
 
 dev.off()
+embed_fonts(as.character(args[1]))

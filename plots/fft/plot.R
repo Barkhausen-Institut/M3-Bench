@@ -1,3 +1,5 @@
+library(extrafont)
+
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.2
 namescale <- 1.2
@@ -20,3 +22,4 @@ box(col = 'black')
 legend("topright", c("FFT", "Xfers", "OS"), cex=namescale, fill=rev(gray.colors(3)))
 
 dev.off()
+embed_fonts(as.character(args[1]))
