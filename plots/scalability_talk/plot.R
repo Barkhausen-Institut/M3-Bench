@@ -33,11 +33,16 @@ axis(side = 1, at = 1:5, lab = c("1","2","4","8","16"),
 axis(side = 2, at = seq(1, 2.5, by = 0.5), labels = TRUE,
     cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
+box(col = 'black')
+
+# legend
+par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
+
+plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
 linetype <- c(1:5)
 plotchar <- seq(0, 5, 1)
-legend("topleft", c("tar", "untar", "find", "sqlite"), cex=namescale, pch=plotchar, lty=linetype, col=colors)
-
-box(col = 'black')
+legend("top", c("tar", "untar", "find", "sqlite"), xpd=TRUE, horiz=TRUE, bty="n",
+    inset=c(0,0), cex=namescale, pch=plotchar, lty=linetype, col=colors)
 
 dev.off()
 embed_fonts(as.character(args[1]))
