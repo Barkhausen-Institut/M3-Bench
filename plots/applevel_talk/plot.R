@@ -21,6 +21,7 @@ pitimes <- pitimes[c("M3","Lx")]
 sqtimes <- sqtimes[c("M3","Lx")]
 
 pdf(as.character(args[1]), width=7, height=3.8)
+svg(paste(as.character(args[1]), ".svg"), width=7, height=3.8)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),

@@ -18,12 +18,13 @@ sqlite_times <- read.table(as.character(args[6]), header=FALSE, sep=" ")
 sqlite_times <- sqlite_times / sqlite_times$V1
 
 pdf(as.character(args[1]), width=7, height=3.5, useDingbats=FALSE)
+svg(paste(as.character(args[1]), ".svg"), width=7, height=3.5)
 
 par(mar=c(5.1,5.1,3.1,2.1))
 
 # Graph cars using blue points overlayed by a line
 plot(as.double(tar_times), ylim=c(0.75,2.5), type="o", pch=0, lty=1, col=colors[1],
-     cex.lab=namescale, axes=FALSE, ylab="Time per instance (norm.)", xlab="# of benchmark instances")
+     cex.lab=namescale, axes=FALSE, ylab="Time per client (norm.)", xlab="# of clients")
 lines(as.double(untar_times), ylim=c(0.75,2.5), type="o", pch=1, lty=2, col=colors[2])
 lines(as.double(find_times), ylim=c(0.75,2.5), type="o", pch=2, lty=3, col=colors[3])
 lines(as.double(sqlite_times), ylim=c(0.75,2.5), type="o", pch=3, lty=4, col=colors[4])
