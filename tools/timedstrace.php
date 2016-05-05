@@ -1,34 +1,63 @@
 #!/usr/bin/php
 <?php
-$names = array(
-    8 => "open",
-    9 => "close",
-    12 => "read",
-    13 => "write",
-    15 => "lseek",
-    23 => "ftruncate",
-    26 => "fsync",
-    30 => "pread",
-    31 => "pwrite",
-    33 => "rename",
-    38 => "unlink",
-    39 => "rmdir",
-    40 => "mkdir",
-    46 => "stat",
-    50 => "lstat64",
-    54 => "fstat",
-    60 => "getdents64",
-    113 => "sendfile",
-    114 => "sendfile64",
+$allnames = array(
+    'xtensa' => array(
+        8 => "open",
+        9 => "close",
+        12 => "read",
+        13 => "write",
+        15 => "lseek",
+        23 => "ftruncate",
+        26 => "fsync",
+        30 => "pread",
+        31 => "pwrite",
+        33 => "rename",
+        38 => "unlink",
+        39 => "rmdir",
+        40 => "mkdir",
+        46 => "stat",
+        50 => "lstat64",
+        54 => "fstat",
+        55 => "fstat",
+        60 => "getdents64",
+        113 => "sendfile",
+        114 => "sendfile64",
+    ),
+    'x86_64' => array(
+        2 => "open",
+        3 => "close",
+        0 => "read",
+        1 => "write",
+        8 => "lseek",
+        77 => "ftruncate",
+        74 => "fsync",
+        17 => "pread",
+        18 => "pwrite",
+        82 => "rename",
+        87 => "unlink",
+        84 => "rmdir",
+        83 => "mkdir",
+        4 => "stat",
+        6 => "lstat",
+        5 => "fstat",
+        217 => "getdents64",
+        40 => "sendfile",
+    ),
 );
-$numbers = array_flip($names);
+$allnumbers = array();
+foreach($allnames as $k => $v)
+    $allnumbers[$k] = array_flip($v);
 
-if($argc != 4)
-    exit("Usage: {$argv[0]} (trace|waittime) <strace> <timings>\n");
+if($argc != 5)
+    exit("Usage: {$argv[0]} (xtensa|x86) (trace|waittime) <strace> <timings>\n");
 
-$mode = $argv[1];
-$strace = file($argv[2]);
-$times = file($argv[3]);
+$arch = $argv[1];
+$mode = $argv[2];
+$strace = file($argv[3]);
+$times = file($argv[4]);
+
+$numbers = $allnumbers[$arch];
+$names = $allnames[$arch];
 
 $last = 0;
 $timestamp = 0;
@@ -71,8 +100,11 @@ for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
             $total += $ti[2] - $timestamp;
         $timestamp = $ti[3];
     }
-    else if($timestamp == 0)
-        @$timestamp = $ti[2];
+    else {
+        file_put_contents('php://stderr', "Warning: ignoring system call " . $st[1] . "\n");
+        if($timestamp == 0)
+            @$timestamp = $ti[2];
+    }
 
     if($mode == 'trace')
         echo $strace[$j];

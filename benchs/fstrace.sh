@@ -1,45 +1,6 @@
 #!/bin/bash
 
-gen_timedtrace() {
-    grep -B10000 "===" $1 | grep -v "===" > $1-strace
-    grep -A10000 "===" $1 | grep -v "===" > $1-timings
-
-    # for untar: prefix relative paths with /tmp/
-    sed --in-place -e 's/("\([^/]\)/("\/tmp\/\1/g' $1-strace
-
-    ./tools/timedstrace.php trace $1-strace $1-timings > $1-timedstrace
-
-    # make the strace a little more friendly for strace2cpp
-    sed --in-place -e 's/\/\* \([[:digit:]]*\) entries \*\//\1/' $1-timedstrace
-    sed --in-place -e 's/\/\* d_reclen == 0, problem here \*\///' $1-timedstrace
-
-    awk '{ print $1, $2, $4 - $3 }' $1-timings > $1-timings-human
-}
-
-extract_result() {
-    awk -v name=$2 'BEGIN {
-        start = 0
-    }
-
-    END {
-        printf("[%s] Total: %d\n", name, end - start)
-    }
-
-    /Copied/ {
-        printf("[%s] Memcpy: %d\n", name, $5)
-    }
-
-    /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*66/ {
-        if(start == 0) {
-            start = $3
-        }
-    }
-
-    /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*/ {
-        end = $3
-    }
-    ' $1
-}
+source tools/fstrace-helper.sh
 
 wait_time() {
     echo -n "[$2] Wait: "
@@ -57,8 +18,8 @@ run_bench() {
 
     cd -
 
-    gen_timedtrace $1/lx-fstrace-$2-13cycles.txt
-    gen_timedtrace $1/lx-fstrace-$2-30cycles.txt
+    gen_timedtrace $1/lx-fstrace-$2-13cycles.txt $LX_ARCH
+    gen_timedtrace $1/lx-fstrace-$2-30cycles.txt $LX_ARCH
 
     cd m3/XTSC
     export M3_TARGET=t3 M3_BUILD=bench M3_FS=bench.img

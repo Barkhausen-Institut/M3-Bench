@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
+export GEM5_DIR=/home/hrniels/imdata/gem5-current
 
 if [ $# -ne 3 ]; then
     echo "Usage: $0 <name> <benchs> <plots>" 1>&2
