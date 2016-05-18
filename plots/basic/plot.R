@@ -44,7 +44,7 @@ legend("topleft", c("Cache-misses", "Remaining"), cex=1, fill=rev(gray.colors(2)
 par(mar=c(3,2,3,2))
 
 barx <- barplot(as.matrix(thtimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,170), names.arg=c(paste(osname,"run",sep="."),"Lx.clone","Lx.fork"),
+    space=c(0, 0), ylim=c(0,100), names.arg=c(paste(osname,"run",sep="."),"Lx.clone","Lx.fork"),
     cex.names=namescale)
 
 error.bar(barx, colSums(thtimes), as.integer(thstddevs))
@@ -54,7 +54,7 @@ box(col = 'black')
 par(mar=c(3,2,3,1))
 
 barx <- barplot(as.matrix(extimes), col=gray.colors(2), axes = FALSE,
-    space=c(0, 0), ylim=c(0,600), names.arg=c(paste(osname,"exec",sep="."),"Lx.f+e","Lx.vf+e"),
+    space=c(0, 0), ylim=c(0,300), names.arg=c(paste(osname,"exec",sep="."),"Lx.f+e","Lx.vf+e"),
     cex.names=namescale)
 
 error.bar(barx, colSums(extimes), as.integer(exstddevs))

@@ -50,7 +50,7 @@ box(col = 'black')
 par(mar=c(8,4.5,2,2))
 
 barx <- barplot(as.matrix(rdtimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1, 0.1), axes=T, ylab="",
+    ylim=c(0,6), space=c(0.3, 0.1, 0.1), axes=T, ylab="",
     cex.names=namescale, las=3, mgp=c(5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="Read")
 title(ylab = "Time (M cycles)", mgp=c(3, 1, 0))
@@ -61,7 +61,7 @@ box(col = 'black')
 par(mar=c(8,0,2,2))
 
 barx <- barplot(as.matrix(wrtimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,6), space=c(0.3, 0.1, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="Write")
 error.bar(barx, colSums(wrtimes), as.double(wrstddev))
@@ -72,7 +72,7 @@ legend("topright", c("Xfers", "Other"), cex=namescale, fill=rev(gray.colors(2)))
 par(mar=c(8,0,2,2))
 
 barx <- barplot(as.matrix(pitimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,6), space=c(0.3, 0.1, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="Pipe")
 error.bar(barx, colSums(pitimes), as.double(pistddev))

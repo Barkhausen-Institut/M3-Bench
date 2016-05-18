@@ -8,6 +8,20 @@ if [ $# -ne 3 ]; then
     exit 1
 fi
 
+if [ "$M3_TARGET" = "" ]; then
+    echo "Please define M3_TARGET first." 1>&2
+    exit 1
+fi
+
+case $M3_TARGET in
+    t3)
+        export M3_LOG=run/xtsc.log
+        ;;
+    gem5)
+        export M3_LOG=run/gem5.log
+        ;;
+esac
+
 name=$1
 benchs=$2
 plots=$3

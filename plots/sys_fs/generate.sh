@@ -1,5 +1,9 @@
 #!/bin/bash
 
+get_m3_xfertime() {
+    grep 'TIME: aaaa' $1 | awk '{ sum += $4 } END { print sum }'
+}
+
 osname="M3"
 if [ "$BLIND" != "" ]; then
     suffix="-blind"
@@ -32,20 +36,20 @@ echo "`./tools/m3-stddev.awk < $1/m3-syscall.txt | tr -d '[[:space:]]'`" \
     "`lx_stddev $1/lx-30cycles.txt IDX_SYSCALL`" \
     "`lx_stddev $1/lx-13cycles.txt IDX_SYSCALL`" > $scstddev
 
-# fs
-m3trans=$((2048 * 1024 / 8))
-
+m3trans=`get_m3_xfertime $1/m3-fsread.txt`
 m3read=`grep 0001 $1/m3-fsread.txt | ./tools/m3-avg.awk`
 echo $((m3read - $m3trans)) `lx_rem_time $1/lx IDX_READ IDX_READ_MEMCPY` >> $read_avgs
 echo $m3trans `lx_copy_time $1/lx IDX_READ_MEMCPY` >> $read_avgs
 
+m3trans=`get_m3_xfertime $1/m3-fswrite.txt`
 m3write=`grep 0001 $1/m3-fswrite.txt | ./tools/m3-avg.awk`
 echo $((m3write - $m3trans)) `lx_rem_time $1/lx IDX_WRITE IDX_WRITE_MEMCPY` >> $write_avgs
 echo $m3trans `lx_copy_time $1/lx IDX_WRITE_MEMCPY` >> $write_avgs
 
-m3pipe=`grep 0000 $1/m3-pipe.txt | ./tools/m3-avg.awk`
-echo $((m3pipe - $m3trans * 2)) `lx_rem_time $1/lx IDX_PIPE IDX_PIPE_MEMCPY` >> $pipe_avgs
-echo $(($m3trans * 2)) `lx_copy_time $1/lx IDX_PIPE_MEMCPY` >> $pipe_avgs
+m3trans=`get_m3_xfertime $1/m3-pipe-indirect.txt`
+m3pipe=`grep 0000 $1/m3-pipe-indirect.txt | ./tools/m3-avg.awk`
+echo $((m3pipe - $m3trans)) `lx_rem_time $1/lx IDX_PIPE IDX_PIPE_MEMCPY` >> $pipe_avgs
+echo $(($m3trans)) `lx_copy_time $1/lx IDX_PIPE_MEMCPY` >> $pipe_avgs
 
 echo 0 \
     "`lx_stddev $1/lx-30cycles.txt IDX_READ`" \
