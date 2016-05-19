@@ -4,55 +4,68 @@ source tools/fstrace-helper.sh
 
 wait_time() {
     echo -n "[$2] Wait: "
-    ./tools/timedstrace.php waittime $1-strace $1-timings
+    ./tools/timedstrace.php $LX_ARCH waittime $1-strace $1-timings
 }
 
 run_bench() {
     cd xtensa-linux
 
-    ./b mkbr
-    ./b fsbench > $1/lx-fstrace-$2-13cycles.txt
-    # better regenerate the filesystem image, in case it is broken
-    ./b mkbr
-    LX_THCMP=1 ./b fsbench > $1/lx-fstrace-$2-30cycles.txt
+    if [ "$LX_ARCH" = "xtensa" ]; then
+        ./b mkbr
+        ./b mkdisk
+        ./b fsbench > $1/lx-fstrace-$2-xtensa-13cycles.txt
+        # better regenerate the filesystem image, in case it is broken
+        ./b mkbr
+        LX_THCMP=1 ./b fsbench > $1/lx-fstrace-$2-30cycles.txt
+    else
+        GEM5_CP=1 ./b fsbench > $1/lx-fstrace-$2-30cycles.txt
+    fi
 
     cd -
 
-    gen_timedtrace $1/lx-fstrace-$2-13cycles.txt $LX_ARCH
+    if [ "$LX_ARCH" = "xtensa" ]; then
+        gen_timedtrace $1/lx-fstrace-$2-13cycles.txt $LX_ARCH
+    fi
     gen_timedtrace $1/lx-fstrace-$2-30cycles.txt $LX_ARCH
 
-    cd m3/XTSC
-    export M3_TARGET=t3 M3_BUILD=bench M3_FS=bench.img
+    cd m3
+    export M3_BUILD=bench M3_FS=bench.img
 
     ./b
 
-    ./build/t3-sim-bench/apps/fstrace/strace2cpp/strace2cpp \
-        < $1/lx-fstrace-$2-30cycles.txt-timedstrace > $1/lx-fstrace-$2-30cycles.txt-opcodes.c
-    cp $1/lx-fstrace-$2-30cycles.txt-opcodes.c apps/fstrace/m3fs/trace.c
+    ./build/$M3_TARGET-$M3_BUILD/src/apps/fstrace/strace2cpp/strace2cpp \
+        < $1/lx-fstrace-$2-30cycles.txt-timedstrace \
+        > $1/lx-fstrace-$2-30cycles.txt-opcodes.c
+    cp $1/lx-fstrace-$2-30cycles.txt-opcodes.c src/apps/fstrace/m3fs/trace.c
 
     ./b run boot/fstrace.cfg
-    ./tools/bench.sh xtsc.log > $1/m3-fstrace.$2-txt
+    ./src/tools/bench.sh $M3_LOG > $1/m3-fstrace.$2-txt
 
-    extract_result $1/lx-fstrace-$2-13cycles.txt-timings $2 > $1/lx-fstrace-$2-result-13cycles.txt
+    if [ "$LX_ARCH" = "xtensa" ]; then
+        extract_result $1/lx-fstrace-$2-13cycles.txt-timings $2 > $1/lx-fstrace-$2-result-13cycles.txt
+        awk -v name=$2 '/Copied/ { printf("[%s] Memcpy: %d\n", name, $5) }' \
+            $1/lx-fstrace-$2-13cycles.txt >> $1/lx-fstrace-$2-result-13cycles.txt
+    fi
     extract_result $1/lx-fstrace-$2-30cycles.txt-timings $2 > $1/lx-fstrace-$2-result-30cycles.txt
+        awk -v name=$2 '/Copied/ { printf("[%s] Memcpy: %d\n", name, $5) }' \
+            $1/lx-fstrace-$2-30cycles.txt >> $1/lx-fstrace-$2-result-30cycles.txt
 
     cd -
 
-    wait_time $1/lx-fstrace-$2-13cycles.txt $2 >> $1/lx-fstrace-$2-result-13cycles.txt
+    if [ "$LX_ARCH" = "xtensa" ]; then
+        wait_time $1/lx-fstrace-$2-13cycles.txt $2 >> $1/lx-fstrace-$2-result-13cycles.txt
+    fi
     wait_time $1/lx-fstrace-$2-30cycles.txt $2 >> $1/lx-fstrace-$2-result-30cycles.txt
+
+    if [ "$LX_ARCH" != "xtensa" ]; then
+        cp $1/lx-fstrace-$2-result-30cycles.txt $1/lx-fstrace-$2-result-13cycles.txt
+    fi
 }
 
-cd xtensa-linux
+FSBENCH_CMD="find /finddata/dir-320 -name test" run_bench $1 find
 
-./b mklx
-./b mkapps
+FSBENCH_CMD="tar -cf /tmp/test.tar /tardata/tar-3968" run_bench $1 tar
 
-cd -
-
-FSBENCH_CMD="find /default -name test" run_bench $1 find
-
-FSBENCH_CMD="tar -cf /tmp/test.tar /tardata" run_bench $1 tar
-
-FSBENCH_CMD="tar -xf /test.tar -C /tmp" run_bench $1 untar
+FSBENCH_CMD="tar -xf /untardata/tar-3968.tar -C /tmp" run_bench $1 untar
 
 FSBENCH_CMD="/bench/sqlite /tmp/test.db" run_bench $1 sqlite

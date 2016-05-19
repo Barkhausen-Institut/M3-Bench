@@ -2,7 +2,7 @@
 
 gen_timedtrace() {
     grep -B10000 "===" $1 | grep -v "===" > $1-strace
-    grep -A10000 "===" $1 | grep -v "===" | grep -v '^Copied' > $1-timings
+    grep -A10000 "===" $1 | grep -v "===" | grep -v '^\(random: |Copied|Switched to\)' > $1-timings
 
     # for untar: prefix relative paths with /tmp/
     sed --in-place -e 's/("\([^/]\)/("\/tmp\/\1/g' $1-strace
@@ -26,18 +26,15 @@ extract_result() {
         printf("[%s] Total: %d\n", name, end - start)
     }
 
-    /Copied/ {
-        printf("[%s] Memcpy: %d\n", name, $5)
-    }
-
-    /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*66/ {
+    # TODO change that to 66 for xtensa
+    /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*16/ {
         if(start == 0) {
-            start = $3
+            start = $4
         }
     }
 
     /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*/ {
-        end = $3
+        end = $4
     }
     ' $1
 }

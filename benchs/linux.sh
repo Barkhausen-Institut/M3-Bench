@@ -1,10 +1,5 @@
 #!/bin/sh
 
-if [ "$LX_ARCH" = "" ]; then
-    echo "Please set LX_ARCH first!" 1>&2
-    exit
-fi
-
 cd xtensa-linux
 
 if [ "$LX_ARCH" = "xtensa" ]; then
@@ -14,5 +9,7 @@ if [ "$LX_ARCH" = "xtensa" ]; then
     ./b bench > $1/lx-13cycles.txt
     LX_THCMP=1 ./b bench > $1/lx-30cycles.txt
 else
-    GEM5_CP=1 ./b benchgem5 > $1/lx-$LX_ARCH.txt
+    GEM5_CP=1 ./b bench > $1/lx-30cycles.txt
+    # pretend we have two different times, as on xtensa, to keep the current infrastructure
+    cp $1/lx-30cycles.txt $1/lx-13cycles.txt
 fi

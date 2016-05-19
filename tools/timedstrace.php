@@ -49,7 +49,7 @@ foreach($allnames as $k => $v)
     $allnumbers[$k] = array_flip($v);
 
 if($argc != 5)
-    exit("Usage: {$argv[0]} (xtensa|x86) (trace|waittime) <strace> <timings>\n");
+    exit("Usage: {$argv[0]} (xtensa|x86_64) (trace|waittime) <strace> <timings>\n");
 
 $arch = $argv[1];
 $mode = $argv[2];

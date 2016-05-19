@@ -39,8 +39,8 @@ $indices['IDX_FFT'] =                 $i++;
 $indices['IDX_FFT_MEMCPY'] =          $i++;
 
 # for the fstrace files
-$indices['IDX_FSTRACE_MEMCPY']        = 0;
-$indices['IDX_FSTRACE_TOTAL']         = 1;
+$indices['IDX_FSTRACE_TOTAL']         = 0;
+$indices['IDX_FSTRACE_MEMCPY']        = 1;
 $indices['IDX_FSTRACE_WAIT']          = 2;
 
 $lines = file($argv[1]);
