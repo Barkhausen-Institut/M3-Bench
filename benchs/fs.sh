@@ -1,10 +1,10 @@
 #!/bin/sh
 
-rdcfg=`readlink -f benchs/filereader.cfg`
-wrcfg=`readlink -f benchs/filewriter.cfg`
-cpcfg=`readlink -f benchs/filecopy.cfg`
-pipedir=`readlink -f benchs/pipe-direct.cfg`
-pipeindir=`readlink -f benchs/pipe-indirect.cfg`
+rdcfg=`readlink -f input/filereader.cfg`
+wrcfg=`readlink -f input/filewriter.cfg`
+cpcfg=`readlink -f input/filecopy.cfg`
+pipedir=`readlink -f input/pipe-direct.cfg`
+pipeindir=`readlink -f input/pipe-indirect.cfg`
 
 cd m3
 export M3_BUILD=bench M3_FS=bench.img

@@ -27,7 +27,7 @@ EOF
 run_bench() {
     t3par=`readlink -f tools/t3-parallel.sh`
 
-    cp benchs/trace-$2.c m3/XTSC/apps/fstrace/m3fs/trace.c
+    cp input/trace-$2.c m3/XTSC/apps/fstrace/m3fs/trace.c
 
     cd m3/XTSC
     export M3_TARGET=t3 M3_MACHINE=sim M3_BUILD=bench M3_FS=bench.img M3_FSBLKS=$((32 * 1024))

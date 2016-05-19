@@ -1,7 +1,7 @@
 #!/bin/sh
 
-rdcfg=`readlink -f benchs/filereader.cfg`
-wrcfg=`readlink -f benchs/filewriter.cfg`
+rdcfg=`readlink -f input/filereader.cfg`
+wrcfg=`readlink -f input/filewriter.cfg`
 
 cd m3
 export M3_BUILD=bench M3_FS=bench.img
