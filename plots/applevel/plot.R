@@ -20,42 +20,42 @@ layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
 par(mar=c(7.5,5,4,2))
 
 barplot(as.matrix(rdtimes), beside=F,
-    ylim=c(0,8), space=c(0.3, 0.1, 0.1), ylab="",
+    ylim=c(0,8), space=c(0.3, 0.1), ylab="",
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c(osname,"Lx","Lx-$"), sub="cat+tr")
+    names.arg=c(osname,"Lx"), sub="cat+tr")
 title(ylab = "Time (M cycles)", mgp=c(3, 1, 0))
 box(col = 'black')
 
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(wrtimes), beside=F,
-    ylim=c(0,8), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,8), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c(osname,"Lx","Lx-$"), sub="tar")
+    names.arg=c(osname,"Lx"), sub="tar")
 box(col = 'black')
 
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(cptimes), beside=F,
-    ylim=c(0,8), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,8), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c(osname,"Lx","Lx-$"), sub="untar")
+    names.arg=c(osname,"Lx"), sub="untar")
 box(col = 'black')
 
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(pitimes), beside=F,
-    ylim=c(0,8), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,8), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c(osname,"Lx","Lx-$"), sub="find")
+    names.arg=c(osname,"Lx"), sub="find")
 box(col = 'black')
 
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(sqtimes), beside=F,
-    ylim=c(0,8), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,8), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c(osname,"Lx","Lx-$"), sub="sqlite")
+    names.arg=c(osname,"Lx"), sub="sqlite")
 box(col = 'black')
 
 # legend

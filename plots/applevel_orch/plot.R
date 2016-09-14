@@ -19,7 +19,7 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 par(mar=c(7.5,5,4,2))
 
 barplot(as.matrix(wrtimes), beside=F,
-    ylim=c(0,6), space=c(0.3, 0.1, 0.1), ylab="",
+    ylim=c(0,7), space=c(0.3, 0.1, 0.1), ylab="",
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="tar")
 title(ylab = "Time (Million cycles)", mgp=c(3, 1, 0))
@@ -28,7 +28,7 @@ box(col = 'black')
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(cptimes), beside=F,
-    ylim=c(0,6), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,7), space=c(0.3, 0.1, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="untar")
 box(col = 'black')
@@ -36,7 +36,7 @@ box(col = 'black')
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(pitimes), beside=F,
-    ylim=c(0,6), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,7), space=c(0.3, 0.1, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="find")
 box(col = 'black')
@@ -44,7 +44,7 @@ box(col = 'black')
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(sqtimes), beside=F,
-    ylim=c(0,6), space=c(0.3, 0.1, 0.1), axes=F,
+    ylim=c(0,7), space=c(0.3, 0.1, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c(osname,"Lx","Lx-$"), sub="sqlite")
 box(col = 'black')
