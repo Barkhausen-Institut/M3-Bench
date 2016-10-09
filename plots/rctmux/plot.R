@@ -45,7 +45,7 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 par(mar=c(7.5,5,4,2))
 
 barx <- barplot(as.matrix(tartimes), beside=F,
-    ylim=c(0,15), space=c(0.3, 0.1), ylab="",
+    ylim=c(0,9), space=c(0.3, 0.1), ylab="",
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("Alone","Shared"), sub="tar")
 title(ylab = "Time (M cycles)", mgp=c(3, 1, 0))
@@ -55,7 +55,7 @@ error.bar(barx, colSums(tartimes), as.double(tarsd))
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(untartimes), beside=F,
-    ylim=c(0,15), space=c(0.3, 0.1), axes=F,
+    ylim=c(0,9), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("Alone","Shared"), sub="untar")
 box(col = 'black')
@@ -64,7 +64,7 @@ error.bar(barx, colSums(untartimes), as.double(untarsd))
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(findtimes), beside=F,
-    ylim=c(0,15), space=c(0.3, 0.1), axes=F,
+    ylim=c(0,9), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("Alone","Shared"), sub="find")
 box(col = 'black')
@@ -73,7 +73,7 @@ error.bar(barx, colSums(findtimes), as.double(findsd))
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(sqlitetimes), beside=F,
-    ylim=c(0,15), space=c(0.3, 0.1), axes=F,
+    ylim=c(0,9), space=c(0.3, 0.1), axes=F,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("Alone","Shared"), sub="sqlite")
 box(col = 'black')
