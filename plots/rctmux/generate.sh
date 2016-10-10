@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 get_m3_ctxtime() {
     grep 'TIME: cccc' $1 | awk '{ sum += $4 } END { print sum }'
@@ -13,13 +13,13 @@ get_m3_appsd() {
     grep 'TIME: 1234' $1 | ./tools/m3-stddev.awk
 }
 
+get_ratio() {
+    echo $((($1 * 1.0) / $2))
+}
+
 gen_data() {
-    alone=$1/m3-rctmux-$2-alone.txt
-    shared=$1/m3-rctmux-$2-shared.txt
-    echo "Alone Shared AloneSD SharedSD"
-    # echo `get_m3_ctxtime $alone` `get_m3_ctxtime $shared`
-    # echo `get_m3_xfertime $alone` `get_m3_xfertime $shared`
-    echo `get_m3_appavg $alone` `get_m3_appavg $shared` `get_m3_appsd $alone` `get_m3_appsd $shared`
+    echo "ratio stddev"
+    echo $(get_ratio $(get_m3_appavg $1/m3-rctmux-$2-alone.txt) $(get_m3_appavg $1/m3-rctmux-$2-shared.txt)) 0
 }
 
 gen_data $1 "tar"    > $1/m3-rctmux-tar-times.dat

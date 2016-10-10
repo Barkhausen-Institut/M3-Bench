@@ -14,77 +14,70 @@ error.bar <- function(mp, means, stddevs) {
 }
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 2
-namescale <- 1.8
+scaling <- 1.8
+namescale <- 1.4
 
-tar         <- as.data.table(read.table(as.character(args[2]), header=TRUE, sep=" ") / 1000000)
-untar       <- as.data.table(read.table(as.character(args[3]), header=TRUE, sep=" ") / 1000000)
-find        <- as.data.table(read.table(as.character(args[4]), header=TRUE, sep=" ") / 1000000)
-sqlite      <- as.data.table(read.table(as.character(args[5]), header=TRUE, sep=" ") / 1000000)
+tar         <- as.data.table(read.table(as.character(args[2]), header=TRUE, sep=" "))
+untar       <- as.data.table(read.table(as.character(args[3]), header=TRUE, sep=" "))
+find        <- as.data.table(read.table(as.character(args[4]), header=TRUE, sep=" "))
+sqlite      <- as.data.table(read.table(as.character(args[5]), header=TRUE, sep=" "))
 
 tarsd       <- copy(tar)
-tarsd       <- tarsd[ ,`:=`("Alone" = NULL, "Shared" = NULL)]
+tarsd       <- tarsd[ ,`:=`("ratio" = NULL)]
 untarsd     <- copy(untar)
-untarsd     <- untarsd[ ,`:=`("Alone" = NULL, "Shared" = NULL)]
+untarsd     <- untarsd[ ,`:=`("ratio" = NULL)]
 findsd      <- copy(find)
-findsd      <- findsd[ ,`:=`("Alone" = NULL, "Shared" = NULL)]
+findsd      <- findsd[ ,`:=`("ratio" = NULL)]
 sqlitesd    <- copy(sqlite)
-sqlitesd    <- sqlitesd[ ,`:=`("Alone" = NULL, "Shared" = NULL)]
+sqlitesd    <- sqlitesd[ ,`:=`("ratio" = NULL)]
 
-tartimes    <- tar[ ,`:=`("AloneSD" = NULL, "SharedSD" = NULL)]
-untartimes  <- untar[ ,`:=`("AloneSD" = NULL, "SharedSD" = NULL)]
-findtimes   <- find[ ,`:=`("AloneSD" = NULL, "SharedSD" = NULL)]
-sqlitetimes <- sqlite[ ,`:=`("AloneSD" = NULL, "SharedSD" = NULL)]
+tartimes    <- tar[ ,`:=`("stddev" = NULL)]
+untartimes  <- untar[ ,`:=`("stddev" = NULL)]
+findtimes   <- find[ ,`:=`("stddev" = NULL)]
+sqlitetimes <- sqlite[ ,`:=`("stddev" = NULL)]
 
-pdf(as.character(args[1]), width=7, height=4)
+pdf(as.character(args[1]), width=4, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
-    widths=c(1.55,1,1,1), heights=c(1,1))
+    widths=c(1.8,1,1,1), heights=c(1,1))
 
 par(mar=c(7.5,5,4,2))
 
-barx <- barplot(as.matrix(tartimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1), ylab="",
-    cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c("Alone","Shared"), sub="tar")
-title(ylab = "Time (M cycles)", mgp=c(3, 1, 0))
+barx <- barplot(as.matrix(tartimes), beside=T,
+    ylim=c(0,1.1), ylab="", space=0.1,
+    cex.names=namescale, names.arg="",
+    sub="tar")
+title(ylab = "Time (relative to baseline)", mgp=c(3, 1, 0))
 box(col = 'black')
 error.bar(barx, colSums(tartimes), as.double(tarsd))
 
 par(mar=c(7.5,0,4,2))
 
-barplot(as.matrix(untartimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1), axes=F,
-    cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c("Alone","Shared"), sub="untar")
+barplot(as.matrix(untartimes), beside=T,
+    ylim=c(0,1.1), axes=F, space=0.1,
+    cex.names=namescale, names.arg="",
+    sub="untar")
 box(col = 'black')
 error.bar(barx, colSums(untartimes), as.double(untarsd))
 
 par(mar=c(7.5,0,4,2))
 
-barplot(as.matrix(findtimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1), axes=F,
-    cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c("Alone","Shared"), sub="find")
+barplot(as.matrix(findtimes), beside=T,
+    ylim=c(0,1.1), axes=F, space=0.1,
+    cex.names=namescale, names.arg="",
+    sub="find")
 box(col = 'black')
 error.bar(barx, colSums(findtimes), as.double(findsd))
 
 par(mar=c(7.5,0,4,2))
 
-barplot(as.matrix(sqlitetimes), beside=F,
-    ylim=c(0,9), space=c(0.3, 0.1), axes=F,
-    cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c("Alone","Shared"), sub="sqlite")
+barplot(as.matrix(sqlitetimes), beside=T,
+    ylim=c(0,1.1), axes=F, space=0.1,
+    cex.names=namescale, names.arg="",
+    sub="sqlite")
 box(col = 'black')
 error.bar(barx, colSums(sqlitetimes), as.double(sqlitesd))
-
-# legend
-par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
-
-plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("App", "Xfers", "OS"), xpd=TRUE, horiz=TRUE, bty="n",
-    inset=c(0,0), cex=namescale, fill=rev(gray.colors(3)))
 
 dev.off()
 embed_fonts(as.character(args[1]))
