@@ -10,14 +10,14 @@ times <- as.data.table(read.table(as.character(args[2]), header=TRUE, sep=" ")) 
 plottimes <- copy(times)
 plottimes[ ,`:=`("Name" = NULL)]
 
-pdf(as.character(args[1]), width=7, height=4)
+pdf(as.character(args[1]), width=7, height=3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
-par(mar=c(3,5,3.5,2))
-barplot(as.matrix(plottimes), beside=F,
-    ylim=c(0,7.5), space=c(0.3, 0.1), ylab="",
-    cex.names=namescale, names.arg=c("Direct","Indirect"))
-title(ylab = "Time (K cycles)", mgp=c(3, 1, 0))
+par(mar=c(5,3,3.5,2))
+barplot(as.matrix(plottimes), beside=F, horiz=TRUE,
+    xlim=c(0,7.5), space=c(0.3, 0.1), ylab="",
+    cex.names=namescale, names.arg=c("Indirect","Direct"))
+title(xlab = "Time (K cycles)", mgp=c(3, 1, 0), cex=namescale)
 box(col = 'black')
 
 # legend
