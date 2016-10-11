@@ -13,24 +13,24 @@ run_pipe() {
     /bin/echo -e "\e[1mRunning $2-alone...\e[0m"
     M3_CORES=7 M3_RCTMUX_ARGS="0 $3" ./b run $cfg
     ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-alone.txt
-    cp $M3_LOG $1/m3-rctmux-$2-alone.log
+    mv $M3_LOG $1/m3-rctmux-$2-alone.log
 
     /bin/echo -e "\e[1mRunning $2-shared...\e[0m"
     M3_CORES=6 M3_RCTMUX_ARGS="1 $3" ./b run $cfg
     ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-shared.txt
-    cp $M3_LOG $1/m3-rctmux-$2-shared.log
+    mv $M3_LOG $1/m3-rctmux-$2-shared.log
 }
 
 run_pipe_m3fs() {
     /bin/echo -e "\e[1mRunning $2-m3fs-alone...\e[0m"
     M3_CORES=8 M3_RCTMUX_ARGS="2 $3" ./b run $cfg
     ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-m3fs-alone.txt
-    cp $M3_LOG $1/m3-rctmux-$2-m3fs-alone.log
+    mv $M3_LOG $1/m3-rctmux-$2-m3fs-alone.log
 
     /bin/echo -e "\e[1mRunning $2-m3fs-shared...\e[0m"
     M3_CORES=7 M3_RCTMUX_ARGS="3 $3" ./b run $cfg
     ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-m3fs-shared.txt
-    cp $M3_LOG $1/m3-rctmux-$2-m3fs-shared.log
+    mv $M3_LOG $1/m3-rctmux-$2-m3fs-shared.log
 }
 
 run_pipe $1 rand-wc-64k      "2 /bin/rand $((64*1024)) /bin/wc"
