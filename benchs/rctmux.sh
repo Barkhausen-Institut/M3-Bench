@@ -32,4 +32,8 @@ run_fstrace_shared $1 untar
 run_fstrace_alone $1 find
 run_fstrace_shared $1 find
 run_fstrace_alone $1 sqlite
+
+# for some weird reason, we need to use more tracing here to make it work. I have no clue what gem5
+# is doing here, because the trace flags should actually not have any influence on timings etc.
+export M3_GEM5_DBG=Dtu,DtuRegRead,DtuRegWrite,DtuCmd,DtuConnector
 run_fstrace_shared $1 sqlite
