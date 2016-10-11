@@ -45,7 +45,7 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 par(mar=c(7.5,5,4,2))
 
 barx <- barplot(as.matrix(tartimes), beside=T,
-    ylim=c(0,1.1), ylab="", space=0.1,
+    ylim=c(0,1), ylab="", space=0.1,
     cex.names=namescale, names.arg="",
     sub="tar")
 title(ylab = "Time (relative to baseline)", mgp=c(3, 1, 0))
@@ -55,7 +55,7 @@ error.bar(barx, colSums(tartimes), as.double(tarsd))
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(untartimes), beside=T,
-    ylim=c(0,1.1), axes=F, space=0.1,
+    ylim=c(0,1), axes=F, space=0.1,
     cex.names=namescale, names.arg="",
     sub="untar")
 box(col = 'black')
@@ -64,7 +64,7 @@ error.bar(barx, colSums(untartimes), as.double(untarsd))
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(findtimes), beside=T,
-    ylim=c(0,1.1), axes=F, space=0.1,
+    ylim=c(0,1), axes=F, space=0.1,
     cex.names=namescale, names.arg="",
     sub="find")
 box(col = 'black')
@@ -73,7 +73,7 @@ error.bar(barx, colSums(findtimes), as.double(findsd))
 par(mar=c(7.5,0,4,2))
 
 barplot(as.matrix(sqlitetimes), beside=T,
-    ylim=c(0,1.1), axes=F, space=0.1,
+    ylim=c(0,1), axes=F, space=0.1,
     cex.names=namescale, names.arg="",
     sub="sqlite")
 box(col = 'black')
