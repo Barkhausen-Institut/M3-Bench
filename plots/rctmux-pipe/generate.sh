@@ -1,10 +1,10 @@
 #!/bin/bash
 
 get_m3_appavg() {
-    grep 'TIME: 1234' $1 | ./tools/m3-avg.awk
+    grep 'TIME: 1234' $1 | tail -n 3 | ./tools/m3-avg.awk
 }
 get_m3_appsd() {
-    grep 'TIME: 1234' $1 | ./tools/m3-stddev.awk
+    grep 'TIME: 1234' $1 | tail -n 3 | ./tools/m3-stddev.awk
 }
 get_name() {
     echo $1 | sed -e 's/m3fs-\(.*\)/\1-m3fs/'
