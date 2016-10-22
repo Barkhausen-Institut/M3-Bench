@@ -24,8 +24,8 @@ box(col = 'black')
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("Cli>", "Fail", "Wake", "CtxSw", "Fwd", "Serv", "<Cli"),
-    xpd=TRUE, horiz=TRUE, bty="n", inset=c(0,0), cex=namescale, fill=gray.colors(7))
+legend("top", c("Cli>", "Wake", "CtxSw", "Fwd", "Serv", "<Cli"),
+    xpd=TRUE, horiz=TRUE, bty="n", inset=c(0,0), cex=namescale, fill=gray.colors(6))
 
 dev.off()
 embed_fonts(as.character(args[1]))

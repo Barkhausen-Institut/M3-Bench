@@ -4,7 +4,7 @@ extract_times() {
     awk '
     BEGIN {
         times["Cli>"] = 0
-        times["Fail"] = 0
+        # times["Fail"] = 0
         times["Wake"] = 0
         times["CtxSw"] = 0
         times["Fwd"] = 0
@@ -31,7 +31,7 @@ extract_times() {
     /pe03.*sd -> 0/ {
         if (p) {
             match($0, /^([[:digit:]]+):/, res)
-            times["Fail"] += res[1] - start
+            # times["Fail"] += res[1] - start
             start = res[1]
             indirect = 1
             wakeup = 1
@@ -94,7 +94,7 @@ extract_times() {
     }
 
     END {
-        skeys = "Cli>_Fail_Wake_CtxSw_Fwd_Call_<Cli"
+        skeys = "Cli>_Wake_CtxSw_Fwd_Call_<Cli"
         split(skeys, keys, "_")
         for(k in keys) {
             printf "%s %d\n", keys[k], times[keys[k]] / count
