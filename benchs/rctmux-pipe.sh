@@ -6,7 +6,7 @@ cd m3
 export M3_BUILD=bench M3_FS=bench.img
 
 export M3_GEM5_CFG=config/caches.py
-export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
+export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuSysCalls,DtuCmd,DtuConnector
 # export M3_GEM5_CPU=timing
 
 run_pipe() {
