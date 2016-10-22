@@ -62,7 +62,11 @@ run_bench() {
     fi
 }
 
-FSBENCH_CMD="find /finddata/dir-320 -name test" run_bench $1 find
+FSBENCH_CMD="find /finddata/dir -name test" run_bench $1 find-multi
+
+FSBENCH_CMD="find /finddata/dir-160 -name test" run_bench $1 find
+
+FSBENCH_CMD="find /finddata/dir-320-multi -name test" run_bench $1 find
 
 FSBENCH_CMD="tar -cf /tmp/test.tar /tardata/tar-3968" run_bench $1 tar
 
