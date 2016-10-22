@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 get_m3_ctxtime() {
     grep 'TIME: cccc' $1 | awk '{ sum += $4 } END { print sum }'
@@ -18,7 +18,11 @@ get_name() {
 }
 
 get_ratio() {
-    echo $((($1 * 1.0) / $2))
+    if [ "$2" = "" ]; then
+        echo 0
+    else
+        echo "scale=8; ($1 * 1.0) / $2" | bc
+    fi
 }
 
 gen_data() {
