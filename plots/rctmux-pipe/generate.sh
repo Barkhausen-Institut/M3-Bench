@@ -1,22 +1,14 @@
 #!/bin/bash
 
-get_m3_ctxtime() {
-    grep 'TIME: cccc' $1 | awk '{ sum += $4 } END { print sum }'
-}
-get_m3_xfertime() {
-    grep 'TIME: aaaa' $1 | awk '{ sum += $4 } END { print sum }'
-}
 get_m3_appavg() {
     grep 'TIME: 1234' $1 | ./tools/m3-avg.awk
 }
 get_m3_appsd() {
     grep 'TIME: 1234' $1 | ./tools/m3-stddev.awk
 }
-
 get_name() {
     echo $1 | sed -e 's/m3fs-\(.*\)/\1-m3fs/'
 }
-
 get_ratio() {
     if [ "$2" = "" ]; then
         echo 0
