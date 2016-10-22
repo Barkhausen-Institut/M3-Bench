@@ -2,21 +2,21 @@ library(extrafont)
 library(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.3
-namescale <- 1
+scaling <- 1.6
+namescale <- 1.5
 
 times <- as.data.table(read.table(as.character(args[2]), header=TRUE, sep=" ")) / 1000000
 
 plottimes <- copy(times)
 plottimes[ ,`:=`("Name" = NULL)]
 
-pdf(as.character(args[1]), width=7, height=3)
+pdf(as.character(args[1]), width=8, height=2.7)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
-par(mar=c(5,3,3.5,2))
+par(mar=c(4.5,2.5,3,1.1))
 barplot(as.matrix(plottimes), beside=F, horiz=TRUE,
     xlim=c(0,7.5), space=c(0.3, 0.1), ylab="",
-    cex.names=namescale, names.arg=c("Indirect","Direct"))
+    cex.names=namescale, names.arg=c("Ind","Dir"))
 title(xlab = "Time (K cycles)", mgp=c(3, 1, 0), cex=namescale)
 box(col = 'black')
 
