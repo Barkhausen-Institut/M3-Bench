@@ -3,6 +3,8 @@
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
 export GEM5_DIR=/home/hrniels/imdata/gem5-current
 
+M3_GEM5_OUT=${M3_GEM5_OUT:-run}
+
 if [ $# -ne 3 ]; then
     echo "Usage: $0 <name> <benchs> <plots>" 1>&2
     exit 1
@@ -19,7 +21,7 @@ case $M3_TARGET in
         export LX_ARCH=xtensa LX_PLATFORM=xtensa
         ;;
     gem5)
-        export M3_LOG=run/gem5.log
+        export M3_LOG=$M3_GEM5_OUT/gem5.log
         export LX_ARCH=x86_64 LX_PLATFORM=gem5
         ;;
 esac
