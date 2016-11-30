@@ -9,28 +9,28 @@ export M3_GEM5_CFG=config/caches.py
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuSysCalls,DtuCmd,DtuConnector
 # export M3_GEM5_CPU=timing
 
-run_pipe() {
-    /bin/echo -e "\e[1mRunning $2-alone...\e[0m"
-    M3_CORES=7 M3_RCTMUX_ARGS="0 $3" ./b run $cfg
-    ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-alone.txt
-    mv $M3_LOG $1/m3-rctmux-$2-alone.log
+run() {
+    /bin/echo -e "\e[1mRunning $2-$3...\e[0m"
 
-    /bin/echo -e "\e[1mRunning $2-shared...\e[0m"
-    M3_CORES=6 M3_RCTMUX_ARGS="1 $3" ./b run $cfg
-    ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-shared.txt
-    mv $M3_LOG $1/m3-rctmux-$2-shared.log
+    ./b run $cfg
+
+    if [ $? -eq 0 ]; then
+        /bin/echo -e "\e[1;32mSUCCESS\e[0m"
+        ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-$3.txt
+        mv $M3_LOG $1/m3-rctmux-$2-$3.log
+    else
+        /bin/echo -e "\e[1;31mFAILED\e[0m"
+    fi
+}
+
+run_pipe() {
+    M3_CORES=7 M3_RCTMUX_ARGS="0 $3" run $1 $2 alone
+    M3_CORES=6 M3_RCTMUX_ARGS="1 $3" run $1 $2 shared
 }
 
 run_pipe_m3fs() {
-    /bin/echo -e "\e[1mRunning $2-m3fs-alone...\e[0m"
-    M3_CORES=8 M3_RCTMUX_ARGS="2 $3" ./b run $cfg
-    ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-m3fs-alone.txt
-    mv $M3_LOG $1/m3-rctmux-$2-m3fs-alone.log
-
-    /bin/echo -e "\e[1mRunning $2-m3fs-shared...\e[0m"
-    M3_CORES=7 M3_RCTMUX_ARGS="3 $3" ./b run $cfg
-    ./src/tools/bench.sh $M3_LOG > $1/m3-rctmux-$2-m3fs-shared.txt
-    mv $M3_LOG $1/m3-rctmux-$2-m3fs-shared.log
+    M3_CORES=8 M3_RCTMUX_ARGS="2 $3" run $1 $2 m3fs-alone
+    M3_CORES=7 M3_RCTMUX_ARGS="3 $3" run $1 $2 m3fs-shared
 }
 
 run_pipe $1 rand-wc-64k      "2 /bin/rand $((64*1024)) /bin/wc"
