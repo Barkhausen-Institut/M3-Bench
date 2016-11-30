@@ -5,8 +5,8 @@ export GEM5_DIR=/home/hrniels/imdata/gem5-current
 
 M3_GEM5_OUT=${M3_GEM5_OUT:-run}
 
-if [ $# -ne 3 ]; then
-    echo "Usage: $0 <name> <benchs> <plots>" 1>&2
+if [ $# -ne 4 ]; then
+    echo "Usage: $0 <name> <benchs> <plots> <jobs>" 1>&2
     exit 1
 fi
 
@@ -35,7 +35,7 @@ res=$(readlink -f results/$name)
 mkdir -p $res
 
 for b in $benchs; do
-    ./benchs/$b.sh $res
+    ./benchs/$b.sh $res $4
 done
 
 for p in $plots; do
