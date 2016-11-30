@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-source tools/jobs.sh
+. tools/jobs.sh
 
 cfg=`readlink -f input/rctmux-pipe.cfg`
 
@@ -12,16 +12,16 @@ export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuSysCalls,DtuCmd,DtuConnector
 # export M3_GEM5_CPU=timing
 
 run() {
-    /bin/echo -e "\e[1mRunning $2-$3...\e[0m"
+    /bin/echo -e "\e[1mStarting $2-$3\e[0m"
 
     ./b run $cfg -n 1>$1/m3-rctmux-$2-$3-output.txt 2>&1
 
     if [ $? -eq 0 ]; then
-        /bin/echo -e "\e[1;32mSUCCESS\e[0m"
+        /bin/echo -e "\e[1mFinished $2-$3:\e[0m \e[1;32mSUCCESS\e[0m"
         ./src/tools/bench.sh $M3_GEM5_OUT/gem5.log > $1/m3-rctmux-$2-$3.txt
         mv $M3_GEM5_OUT/gem5.log $1/m3-rctmux-$2-$3.log
     else
-        /bin/echo -e "\e[1;31mFAILED\e[0m"
+        /bin/echo -e "\e[1mFinished $2-$3:\e[0m \e[1;31mFAILED\e[0m"
     fi
 }
 
