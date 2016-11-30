@@ -1,10 +1,10 @@
 #!/bin/bash
 
 get_m3_appavg() {
-    grep 'TIME: 1234' $1 | tail -n 7 | ./tools/m3-avg.awk
+    grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-avg.awk
 }
 get_m3_appsd() {
-    grep 'TIME: 1234' $1 | tail -n 7 | ./tools/m3-stddev.awk
+    grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-stddev.awk
 }
 get_ratio() {
     echo "scale=8; ($1 * 1.0) / $2" | bc
