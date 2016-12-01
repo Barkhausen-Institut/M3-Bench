@@ -67,11 +67,9 @@ gen_pipe_time() {
     done
 }
 
-gen_data $1 "rand-wc"       > $1/m3-rctmux-rand-wc-times.dat
-gen_data $1 "rand-sink"     > $1/m3-rctmux-rand-sink-times.dat
-gen_data $1 "cat-wc"        > $1/m3-rctmux-cat-wc-times.dat
-gen_data $1 "cat-sink"      > $1/m3-rctmux-cat-sink-times.dat
-gen_data $1 "cat-wc-m3fs"   > $1/m3-rctmux-cat-wc-m3fs-times.dat
+for a in rand-wc rand-sink cat-wc cat-sink cat-wc-m3fs; do
+    gen_data $1 $a > $1/m3-rctmux-$a-times.dat
+done
 
 echo "name runtime percent" > $1/m3-rctmux-pipe-alone-pipeserv.dat
 echo "name stddev runtime percent" > $1/m3-rctmux-pipe-alone-sd.dat
