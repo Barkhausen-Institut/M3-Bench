@@ -55,13 +55,13 @@ jobs_init $2
 
 for type in alone shared; do
     for size in 64 128 256 512 1024; do
-        jobs_submit run_pipe $1 rand-wc-${size}k        "2 /bin/rand $(($size * 1024)) /bin/wc" $type
-        jobs_submit run_pipe $1 cat-wc-${size}k         "2 /bin/cat /data/${size}k.txt /bin/wc" $type
-        jobs_submit run_pipe $1 rand-sink-${size}k      "2 /bin/rand $(($size * 1024)) /bin/sink" $type
-        jobs_submit run_pipe $1 cat-sink-${size}k       "2 /bin/cat /data/${size}k.txt /bin/sink" $type
+        jobs_submit run_pipe $1 rand-wc-${size}k        "2 1 /bin/rand $(($size * 1024)) /bin/wc" $type
+        jobs_submit run_pipe $1 cat-wc-${size}k         "2 1 /bin/cat /data/${size}k.txt /bin/wc" $type
+        jobs_submit run_pipe $1 rand-sink-${size}k      "2 1 /bin/rand $(($size * 1024)) /bin/sink" $type
+        jobs_submit run_pipe $1 cat-sink-${size}k       "2 1 /bin/cat /data/${size}k.txt /bin/sink" $type
 
         f="/foo/data/$(($size / 4))k.txt"
-        jobs_submit run_pipe_m3fs $1 cat-wc-${size}k    "5 /bin/cat $f $f $f $f /bin/wc" $type
+        jobs_submit run_pipe_m3fs $1 cat-wc-${size}k    "5 1 /bin/cat $f $f $f $f /bin/wc" $type
     done
 done
 
