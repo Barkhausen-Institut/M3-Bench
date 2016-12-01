@@ -1,7 +1,11 @@
 #!/bin/bash
 
 get_m3_appavg() {
-    grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-avg.awk
+    if [ "`grep 'TIME: 1234' $1 | tail -n +2`" != "" ]; then
+        grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-avg.awk
+    else
+        echo 1
+    fi
 }
 get_m3_appsd() {
     grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-stddev.awk
