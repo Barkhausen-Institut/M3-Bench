@@ -56,6 +56,13 @@ gen_data() {
         echo $(get_ratio $(get_m3_appavg $1/m3-rctmux-$(get_name $2-$s)-alone.txt) $(get_m3_appavg $1/m3-rctmux-$(get_name $2-$s)-shared.txt)) 0
     done
 }
+gen_abs_data() {
+    echo "time"
+    for s in 64k 128k 256k 512k 1024k; do
+        echo $(get_m3_appavg $1/m3-rctmux-$(get_name $2-$s)-alone.txt)
+        echo $(get_m3_appavg $1/m3-rctmux-$(get_name $2-$s)-shared.txt)
+    done
+}
 gen_sd() {
     for s in 64k 128k 256k 512k 1024k; do
         ti=$(get_m3_appavg $1/m3-rctmux-$(get_name $3-$s)-$2.txt)
@@ -73,6 +80,7 @@ gen_pipe_time() {
 
 for a in rand-wc rand-sink cat-wc cat-sink cat-wc-m3fs; do
     gen_data $1 $a > $1/m3-rctmux-$a-times.dat
+    gen_abs_data $1 $a > $1/m3-rctmux-$a-abstimes.dat
 done
 
 echo "name runtime percent" > $1/m3-rctmux-pipe-alone-pipeserv.dat
@@ -84,9 +92,16 @@ for a in rand-wc rand-sink cat-wc cat-sink cat-wc-m3fs; do
     # gen_pipe_time $1 $a >> $1/m3-rctmux-pipe-alone-pipeserv.dat
 done
 
-Rscript plots/rctmux-pipe/plot.R $1/m3-rctmux-pipe.pdf \
+Rscript plots/rctmux-pipe/plot-ratio.R $1/m3-rctmux-pipe-ratio.pdf \
     $1/m3-rctmux-rand-wc-times.dat \
     $1/m3-rctmux-rand-sink-times.dat \
     $1/m3-rctmux-cat-wc-times.dat \
     $1/m3-rctmux-cat-sink-times.dat \
     $1/m3-rctmux-cat-wc-m3fs-times.dat
+
+Rscript plots/rctmux-pipe/plot-abs.R $1/m3-rctmux-pipe-abs.pdf \
+    $1/m3-rctmux-rand-wc-abstimes.dat \
+    $1/m3-rctmux-rand-sink-abstimes.dat \
+    $1/m3-rctmux-cat-wc-abstimes.dat \
+    $1/m3-rctmux-cat-sink-abstimes.dat \
+    $1/m3-rctmux-cat-wc-m3fs-abstimes.dat
