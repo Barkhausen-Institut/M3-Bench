@@ -30,23 +30,23 @@ run_bench() {
 }
 
 for count in 40 80 160 320 640; do
-    FSBENCH_CMD="find /finddata/dir-$count -name test" run_bench $1 find-$count
+    BENCH_CMD="find /finddata/dir-$count -name test" run_bench $1 find-$count
 done
 
 for size in 384 896 3968 8064; do
-    FSBENCH_CMD="tar -cf /tmp/test.tar /tardata/tar-$size" run_bench $1 tar-$size
+    BENCH_CMD="tar -cf /tmp/test.tar /tardata/tar-$size" run_bench $1 tar-$size
 done
 
 for count in 40 80 160; do
-    FSBENCH_CMD="tar -cf /tmp/test.tar /finddata/dir-$count" run_bench $1 tar-many-$count
+    BENCH_CMD="tar -cf /tmp/test.tar /finddata/dir-$count" run_bench $1 tar-many-$count
 done
 
 for size in 384 896 3968 8064; do
-    FSBENCH_CMD="tar -xf /untardata/tar-$size.tar -C /tmp" run_bench $1 untar-$size
+    BENCH_CMD="tar -xf /untardata/tar-$size.tar -C /tmp" run_bench $1 untar-$size
 done
 
 for count in 40 80 160; do
-    FSBENCH_CMD="tar -xf /untardata/tar-$count.tar -C /tmp" run_bench $1 untar-many-$count
+    BENCH_CMD="tar -xf /untardata/tar-$count.tar -C /tmp" run_bench $1 untar-many-$count
 done
 
-FSBENCH_CMD="/bench/sqlite /tmp/test.db" run_bench $1 sqlite
+BENCH_CMD="/bench/sqlite /tmp/test.db" run_bench $1 sqlite

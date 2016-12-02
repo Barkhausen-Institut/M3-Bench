@@ -62,24 +62,24 @@ run_bench() {
     fi
 }
 
-FSBENCH_CMD="find /finddata/dir -name test" run_bench $1 find-multi
+BENCH_CMD="find /finddata/dir -name test" run_bench $1 find-multi
 
-FSBENCH_CMD="find /finddata/dir-160 -name test" run_bench $1 find
+BENCH_CMD="find /finddata/dir-160 -name test" run_bench $1 find
 
-FSBENCH_CMD="find /finddata/dir-320-multi -name test" run_bench $1 find
+BENCH_CMD="find /finddata/dir-320-multi -name test" run_bench $1 find
 
-FSBENCH_CMD="tar -cf /tmp/test.tar /tardata/tar-3968" run_bench $1 tar
+BENCH_CMD="tar -cf /tmp/test.tar /tardata/tar-3968" run_bench $1 tar
 
-FSBENCH_CMD="tar -xf /untardata/tar-3968.tar -C /tmp" run_bench $1 untar
+BENCH_CMD="tar -xf /untardata/tar-3968.tar -C /tmp" run_bench $1 untar
 
-FSBENCH_CMD="/bench/sqlite /tmp/test.db" run_bench $1 sqlite
+BENCH_CMD="/bench/sqlite /tmp/test.db" run_bench $1 sqlite
 
-# FSBENCH_CMD="wc /large.txt" run_bench $1 wc
+# BENCH_CMD="wc /large.txt" run_bench $1 wc
 
-# FSBENCH_CMD="grep -rn test /finddata/dir-40 /largetext.txt" run_bench $1 grep
+# BENCH_CMD="grep -rn test /finddata/dir-40 /largetext.txt" run_bench $1 grep
 
-# FSBENCH_CMD="sha256sum /largetext.txt" run_bench $1 sha256sum
+# BENCH_CMD="sha256sum /largetext.txt" run_bench $1 sha256sum
 
-# FSBENCH_CMD="sort -o /tmp/sorted.txt /largetext.txt" run_bench $1 sort
+# BENCH_CMD="sort -o /tmp/sorted.txt /largetext.txt" run_bench $1 sort
 
-# FSBENCH_CMD="tail /largetext.txt" run_bench $1 tail
+# BENCH_CMD="tail /largetext.txt" run_bench $1 tail
