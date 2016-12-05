@@ -41,16 +41,20 @@ jobs_init $2
 
 ./b
 
+ds=$((512 * 1024))
+wr=/bin/rctmux-util-pipewr
+rd=/bin/rctmux-util-piperd
+
 for type in alone shared; do
     for comp in 32 64 128 256 512; do
         for per in 100 500 750 1000; do
-            jobs_submit run_pipe $1 write$per-$comp "3 2 /bin/rctmux-util-pipewr $((512 * 1024)) $(($comp * $per)) /bin/rctmux-util-piperd $(($comp * 1000))" $type
-            jobs_submit run_pipe $1 read$per-$comp "3 2 /bin/rctmux-util-pipewr $((512 * 1024)) $(($comp * 1000)) /bin/rctmux-util-piperd $(($comp * $per))" $type
+            jobs_submit run_pipe $1 write-$per-$comp "3 2 $wr $ds $(($comp * $per)) $rd $(($comp * 1000))" $type
+            jobs_submit run_pipe $1 read-$per-$comp  "3 2 $wr $ds $(($comp * 1000)) $rd $(($comp * $per))" $type
         done
     done
 
-    jobs_submit run_pipe $1 rand-wc  "2 1 /bin/rand $((512 * 1024)) /bin/wc" $type
-    jobs_submit run_pipe $1 cat-wc   "2 1 /bin/cat /data/512k.txt /bin/wc" $type
+    jobs_submit run_pipe $1 rand-wc "2 1 /bin/rand $ds /bin/wc" $type
+    jobs_submit run_pipe $1 cat-wc  "2 1 /bin/cat /data/512k.txt /bin/wc" $type
 done
 
 jobs_wait
