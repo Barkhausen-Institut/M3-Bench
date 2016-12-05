@@ -1,18 +1,6 @@
 library(extrafont)
 library(data.table)
 
-error.bar <- function(mp, means, stddevs) {
-    stDevs <- matrix(stddevs, length(stddevs))
-    # Plot the vertical lines of the error bars
-    # The vertical bars are plotted at the midpoints
-    segments(mp, means - stDevs, mp, means + stDevs, lwd=1)
-    # Now plot the horizontal bounds for the error bars
-    # 1. The lower bar
-    segments(mp - 0.1, means - stDevs, mp + 0.1, means - stDevs, lwd=1)
-    # 2. The upper bar
-    segments(mp - 0.1, means + stDevs, mp + 0.1, means + stDevs, lwd=1)
-}
-
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 2.4
 namescale <- 2
@@ -23,28 +11,6 @@ catwc           <- as.data.table(read.table(as.character(args[4]), header=TRUE, 
 catsink         <- as.data.table(read.table(as.character(args[5]), header=TRUE, sep=" "))
 catwcfs         <- as.data.table(read.table(as.character(args[6]), header=TRUE, sep=" "))
 
-randwcsd        <- copy(randwc)
-randwcsd        <- randwcsd[ ,`:=`("ratio" = NULL)]
-randwcsd        <- randwcsd[1]
-randsinksd      <- copy(randsink)
-randsinksd      <- randsinksd[ ,`:=`("ratio" = NULL)]
-randsinksd      <- randsinksd[1]
-catwcsd         <- copy(catwc)
-catwcsd         <- catwcsd[ ,`:=`("ratio" = NULL)]
-catwcsd         <- catwcsd[1]
-catsinksd       <- copy(catsink)
-catsinksd       <- catsinksd[ ,`:=`("ratio" = NULL)]
-catsinksd       <- catsinksd[1]
-catwcfssd       <- copy(catwcfs)
-catwcfssd       <- catwcfssd[ ,`:=`("ratio" = NULL)]
-catwcfssd       <- catwcfssd[1]
-
-randwctimes     <- randwc[ ,`:=`("stddev" = NULL)]
-randsinktimes   <- randsink[ ,`:=`("stddev" = NULL)]
-catwctimes      <- catwc[ ,`:=`("stddev" = NULL)]
-catsinktimes    <- catsink[ ,`:=`("stddev" = NULL)]
-catwcfstimes    <- catwcfs[ ,`:=`("stddev" = NULL)]
-
 pdf(as.character(args[1]), width=7.5, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
@@ -53,44 +19,39 @@ layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
 
 par(mar=c(2.8,5.5,4.8,0.8))
 
-barx <- barplot(as.matrix(randwctimes), beside=T,
+barx <- barplot(as.matrix(randwc), beside=T,
     ylim=c(0,1), ylab="", space=0.1,
     cex.names=scaling, names.arg="rand|wc")
 title(ylab = "Time (relative to baseline)", mgp=c(3, 1, 0))
 box(col = 'black')
-error.bar(barx, colSums(randwctimes), as.double(randwcsd))
 
 par(mar=c(2.8,0.5,4.8,0.8))
 
-barplot(as.matrix(randsinktimes), beside=T,
+barplot(as.matrix(randsink), beside=T,
     ylim=c(0,1), axes=F, space=0.1,
     cex.names=scaling, names.arg="rand|sink")
 box(col = 'black')
-error.bar(barx, colSums(randsinktimes), as.double(randsinksd))
 
 par(mar=c(2.8,0.5,4.8,0.8))
 
-barplot(as.matrix(catwctimes), beside=T,
+barplot(as.matrix(catwc), beside=T,
     ylim=c(0,1), axes=F, space=0.1,
     cex.names=scaling, names.arg="cat|wc")
 box(col = 'black')
-error.bar(barx, colSums(catwctimes), as.double(catwcsd))
 
 par(mar=c(2.8,0.5,4.8,0.8))
 
-barplot(as.matrix(catsinktimes), beside=T,
+barplot(as.matrix(catsink), beside=T,
     ylim=c(0,1), axes=F, space=0.1,
     cex.names=scaling, names.arg="cat|sink")
 box(col = 'black')
-error.bar(barx, colSums(catsinktimes), as.double(catsinksd))
 
 par(mar=c(2.8,0.5,4.8,0.8))
 
-barplot(as.matrix(catwcfstimes), beside=T,
+barplot(as.matrix(catwcfs), beside=T,
     ylim=c(0,1), axes=F, space=0.1,
     cex.names=scaling, names.arg="fs:cat|wc")
 box(col = 'black')
-error.bar(barx, colSums(catwcfstimes), as.double(catwcfssd))
 
 # legend
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
