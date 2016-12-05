@@ -40,13 +40,15 @@ run() {
 jobs_init $2
 
 datasize=$((512 * 1024))
+wr=/bench/bin/pipewr
+rd=/bench/bin/piperd
 
 for comp in 32 64 128 256 512; do
     for per in 100 500 750 1000; do
         slow=$(($comp * 1000))
-	fast=$(($comp * $per))
-        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 /bench/bin/pipewr $datasize $slow /bench/bin/piperd $fast" "read$per-$comp"
-        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 /bench/bin/pipewr $datasize $fast /bench/bin/piperd $slow" "write$per-$comp"
+        fast=$(($comp * $per))
+        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 $wr $datasize $slow $rd $fast" "read-$per-$comp"
+        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 $wr $datasize $fast $rd $slow" "write-$per-$comp"
     done
 done
 

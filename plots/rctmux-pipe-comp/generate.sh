@@ -8,7 +8,11 @@ get_m3_appavg() {
     fi
 }
 get_lx_appavg() {
-    grep "Total time" $1 | awk '{ print $4 }'
+    if [ "`grep "Total time" $1`" != "" ]; then
+        grep "Total time" $1 | awk '{ print $4 }'
+    else
+        echo 1
+    fi
 }
 get_ratio() {
     if [ "$2" = "" ]; then
@@ -36,7 +40,7 @@ gen_abs_data() {
 sizes="32 64 128 256 512"
 
 for a in read write; do
-    for comp in 100 500 750 1000
+    for comp in 100 500 750 1000; do
         gen_data $1 $a-$comp > $1/m3-rctmux-$a-$comp-times.dat
         gen_abs_data $1 $a-$comp > $1/m3-rctmux-$a-$comp-abstimes.dat
     done
