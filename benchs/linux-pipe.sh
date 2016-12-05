@@ -41,10 +41,13 @@ jobs_init $2
 
 datasize=$((512 * 1024))
 
-for comp in 32000 64000 128000 256000 512000; do
-    jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 0 /bench/bin/pipewr $datasize $comp /bench/bin/piperd $comp" "equal-${comp}"
-    jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 0 /bench/bin/pipewr $datasize $comp /bench/bin/piperd 1000" "fastread-${comp}"
-    jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 0 /bench/bin/pipewr $datasize 1000 /bench/bin/piperd $comp" "fastwrite-${comp}"
+for comp in 32 64 128 256 512; do
+    for per in 100 500 750 1000; do
+        slow=$(($comp * 1000))
+	fast=$(($comp * $per))
+        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 /bench/bin/pipewr $datasize $slow /bench/bin/piperd $fast" "read$per-$comp"
+        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 /bench/bin/pipewr $datasize $fast /bench/bin/piperd $slow" "write$per-$comp"
+    done
 done
 
 jobs_wait
