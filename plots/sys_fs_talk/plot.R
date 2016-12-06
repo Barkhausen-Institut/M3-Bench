@@ -1,16 +1,5 @@
 library(extrafont)
-
-error.bar <- function(mp, means, stddevs) {
-    stDevs <- matrix(stddevs, length(stddevs))
-    # Plot the vertical lines of the error bars
-    # The vertical bars are plotted at the midpoints
-    segments(mp, means - stDevs, mp, means + stDevs, lwd=1)
-    # Now plot the horizontal bounds for the error bars
-    # 1. The lower bar
-    segments(mp - 0.1, means - stDevs, mp + 0.1, means - stDevs, lwd=1)
-    # 2. The upper bar
-    segments(mp - 0.1, means + stDevs, mp + 0.1, means + stDevs, lwd=1)
-}
+source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 2.2
