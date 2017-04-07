@@ -4,3 +4,6 @@
 [submodule "xtensa-linux"]
 	path = xtensa-linux
 	url = nils@os:xtensa-linux
+[submodule "NRE"]
+	path = NRE
+	url = git@github.com:TUD-OS/NRE.git
