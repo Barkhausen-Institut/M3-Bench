@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
-export GEM5_DIR=/home/hrniels/imdata/gem5-current
+export GEM5_DIR=/home/hrniels/m3bench/m3/hw/gem5
 
 M3_GEM5_OUT=${M3_GEM5_OUT:-run}
 
