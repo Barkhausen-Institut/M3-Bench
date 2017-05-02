@@ -1,0 +1,31 @@
+EXTRACT POWER MEASUREMENT FROM FILES IN FOLDER: ../../../../../Synthesis/pm_pe_core_2014_21_irq/power_analysis/results/
+---------------------------
+pt_report_power_pm_top_fib_iterative_recv_500_.log: pm_top: 1.29e-02
+pt_report_power_pm_top_fib_iterative_recv_500_.log: imem_i0: 5.59e-03
+pt_report_power_pm_top_fib_iterative_recv_500_.log: xttop_i0: 4.73e-03
+pt_report_power_pm_top_fib_iterative_recv_500_.log: idma_i0: 2.22e-03
+pt_report_power_pm_top_fib_iterative_recv_500_.log: dmem_i0: 2.31e-04
+---------------------------
+pt_report_power_pm_top_fib_iterative_recv_1000_.log: pm_top: 1.37e-02
+pt_report_power_pm_top_fib_iterative_recv_1000_.log: imem_i0: 6.20e-03
+pt_report_power_pm_top_fib_iterative_recv_1000_.log: xttop_i0: 5.01e-03
+pt_report_power_pm_top_fib_iterative_recv_1000_.log: idma_i0: 2.20e-03
+pt_report_power_pm_top_fib_iterative_recv_1000_.log: dmem_i0: 1.57e-04
+---------------------------
+pt_report_power_pm_top_fib_iterative_recv_2000_.log: pm_top: 1.43e-02
+pt_report_power_pm_top_fib_iterative_recv_2000_.log: imem_i0: 6.66e-03
+pt_report_power_pm_top_fib_iterative_recv_2000_.log: xttop_i0: 5.23e-03
+pt_report_power_pm_top_fib_iterative_recv_2000_.log: idma_i0: 2.19e-03
+pt_report_power_pm_top_fib_iterative_recv_2000_.log: dmem_i0: 9.96e-05
+---------------------------
+pt_report_power_pm_top_fib_iterative_recv_4000_.log: pm_top: 1.47e-02
+pt_report_power_pm_top_fib_iterative_recv_4000_.log: imem_i0: 6.95e-03
+pt_report_power_pm_top_fib_iterative_recv_4000_.log: xttop_i0: 5.38e-03
+pt_report_power_pm_top_fib_iterative_recv_4000_.log: idma_i0: 2.19e-03
+pt_report_power_pm_top_fib_iterative_recv_4000_.log: dmem_i0: 6.20e-05
+---------------------------
+pt_report_power_pm_top_fib_iterative_recv_10000_.log: pm_top: 1.48e-02
+pt_report_power_pm_top_fib_iterative_recv_10000_.log: imem_i0: 7.03e-03
+pt_report_power_pm_top_fib_iterative_recv_10000_.log: xttop_i0: 5.47e-03
+pt_report_power_pm_top_fib_iterative_recv_10000_.log: idma_i0: 2.18e-03
+pt_report_power_pm_top_fib_iterative_recv_10000_.log: dmem_i0: 3.53e-05
