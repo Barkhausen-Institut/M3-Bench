@@ -16,7 +16,7 @@ barplot(
     transpose(as.matrix(vals)),
     ylim=c(0,15),
     xlab="Compute time (K cycles)",
-    ylab="Power (mW)",
+    ylab="Avg Power (mW)",
     col=gray.colors(3),
     # numbers from imdata zwischenbericht M2
     names=c("0.5","1","2","4","10"),

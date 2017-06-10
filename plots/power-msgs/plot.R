@@ -15,7 +15,7 @@ barplot(
     as.matrix(vals),
     ylim=c(0,3.5),
     xlab="Message size (Bytes)",
-    ylab="Power (mW)",
+    ylab="Avg Power (mW)",
     col=gray.colors(2),
     names=c("8","64","128","256","512"),
     beside=TRUE
