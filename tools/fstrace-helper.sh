@@ -4,6 +4,8 @@ gen_timedtrace() {
     grep -B10000 "===" $1 | grep -v "===" > $1-strace
     grep -A10000 "===" $1 | grep -v "===" | grep -v '^\(random: |Copied|Switched to\)' > $1-timings
 
+    # remove "/bench" from absolute paths
+    sed --in-place -e 's#"/bench/#"/#g' $1-strace
     # for untar: prefix relative paths with /tmp/
     sed --in-place -e 's/("\([^/]\)/("\/tmp\/\1/g' $1-strace
 
