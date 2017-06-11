@@ -5,80 +5,27 @@ export M3_BUILD=bench
 
 export M3_GEM5_CFG=config/caches.py
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
+export M3_CORES=3
 # export M3_GEM5_CPU=timing
 
-export M3_GEM5_OUT=$1/m3-syscall
-mkdir -p $M3_GEM5_OUT
+run_bench() {
+    export M3_GEM5_OUT=$1/m3-syscall-$2-$3 M3_GEM5_MMU=$2 M3_GEM5_DTUPOS=$3
+    mkdir -p $M3_GEM5_OUT
 
-echo > $1/m3-syscall-output.txt
+    /bin/echo -e "\e[1mStarted m3-syscall-$2-$3\e[0m"
 
-./b run boot/bench-syscall.cfg 1>$1/m3-syscall-output.txt 2>&1
+    ./b run boot/bench-syscall.cfg -n > $M3_GEM5_OUT/output.txt 2>&1
+    [ $? -eq 0 ] || exit 1
 
-if [ $? -eq 0 ]; then
-    ./src/tools/bench.sh $M3_GEM5_OUT/gem5.log 2 > $1/m3-syscall.txt
+    /bin/echo -e "\e[1mFinished m3-syscall-$2-$3\e[0m"
+}
 
-    awk '
-    BEGIN {
-        times[0] = 0
-        times[1] = 0
-        times[2] = 0
-        count = 0
-    }
+./b
 
-    /DEBUG.*1ff10000/ {
-        p = 1
-        match($0, /^([[:digit:]]*):/, res)
-        start = res[1]
-    }
-
-    /Starting command SEND/ {
-        if (p) {
-            match($0, /^([[:digit:]]+):/, res)
-            if (count >= 2)
-                times[0] += res[1] - start
-            start = res[1]
-        }
-    }
-
-    /Finished command SEND/ {
-        if (p) {
-            match($0, /^([[:digit:]]+):/, res)
-            if (count >= 2)
-                times[1] += res[1] - start
-            start = res[1]
-        }
-    }
-
-    /Starting command REPLY/ {
-        if (p) {
-            match($0, /^([[:digit:]]+):/, res)
-            if (count >= 2)
-                times[2] += res[1] - start
-            start = res[1]
-        }
-    }
-
-    /Finished command REPLY/ {
-        if (p) {
-            match($0, /^([[:digit:]]+):/, res)
-            if (count >= 2)
-                times[1] += res[1] - start
-            start = res[1]
-        }
-    }
-
-    /DEBUG.*1ff20000/ {
-        match($0, /^([[:digit:]]+):/, res)
-        if (count >= 2)
-            times[0] += res[1] - start
-        count += 1
-        p = 0
-    }
-
-    END {
-        count -= 2
-        for(i in times) {
-            printf "%d\n", times[i] / count
-        }
-    }' $1/m3-syscall/gem5.log > $1/m3-syscall-detail.txt
-fi
+for mmu in 0 1; do
+    for dtupos in 0 1 2; do
+        if [ $mmu -eq 1 ] || [ $dtupos == 0 ]; then
+            run_bench $1 $mmu $dtupos
+        fi
+    done
+done
