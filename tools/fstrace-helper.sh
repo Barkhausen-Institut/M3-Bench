@@ -9,7 +9,7 @@ gen_timedtrace() {
     # for untar: prefix relative paths with /tmp/
     sed --in-place -e 's/("\([^/]\)/("\/tmp\/\1/g' $1-strace
 
-    ./tools/timedstrace.php $2 trace $1-strace $1-timings > $1-timedstrace
+    ./tools/timedstrace.php trace $1-strace $1-timings > $1-timedstrace
 
     # make the strace a little more friendly for strace2cpp
     sed --in-place -e 's/\/\* \([[:digit:]]*\) entries \*\//\1/' $1-timedstrace
@@ -19,24 +19,21 @@ gen_timedtrace() {
         awk '{ printf "[%3d] %3d %d\n", $1, $2, $4 - $3 }' > $1-timings-human
 }
 
-extract_result() {
-    awk -v name=$2 'BEGIN {
-        start = 0
-    }
+gen_results() {
+    lxlog=$1/lx-fstrace-$2/res.txt
 
-    END {
-        printf("[%s] Total: %d\n", name, end - start)
-    }
+    lxtota=`./tools/timedstrace.php total $lxlog-strace $lxlog-timings`
+    lxxfer=`awk '/Copied/ { print $5 }' $lxlog`
+    lxwait=`./tools/timedstrace.php waittime $lxlog-strace $lxlog-timings`
 
-    # TODO change that to 66 for xtensa
-    /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*16/ {
-        if(start == 0) {
-            start = $4
-        }
-    }
+    log=$1/m3-fstrace-$2/gem5.log
 
-    /^[[:space:]]*\[[[:space:]]*[[:digit:]]+\][[:space:]]*/ {
-        end = $4
-    }
-    ' $1
+    m3tota=`./m3/src/tools/bench.sh $log | grep 'TIME: 0000' | ./tools/m3-avg.awk`
+    m3xfer=`./m3/src/tools/bench.sh $log | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
+    m3wait=`./m3/src/tools/bench.sh $log | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
+
+    echo "M3 Lx"
+    echo $(($m3tota - $m3xfer - $m3wait)) $(($lxtota - $lxxfer - $lxwait))
+    echo $m3xfer $lxxfer
+    echo $m3wait $lxwait
 }
