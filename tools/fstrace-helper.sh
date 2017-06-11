@@ -27,7 +27,7 @@ gen_results() {
     lxxfer=`awk '/Copied/ { print $5 }' $lxlog`
     lxwait=`./tools/timedstrace.php waittime $lxlog-strace $lxlog-timings`
 
-    log=$1/m3-fstrace-$2/gem5.log
+    log=$1/m3-fstrace-$3/gem5.log
 
     m3tota=`./m3/src/tools/bench.sh $log | grep 'TIME: 0000' | ./tools/m3-avg.awk`
     m3xfer=`./m3/src/tools/bench.sh $log | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`

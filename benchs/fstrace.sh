@@ -35,7 +35,7 @@ run_lx_bench() {
 }
 
 run_m3_bench() {
-    /bin/echo -e "\e[1mStarting m3-$2\e[0m"
+    /bin/echo -e "\e[1mStarting m3-$2-$3-$4\e[0m"
 
     cd m3
 
@@ -49,26 +49,27 @@ run_m3_bench() {
     [ $? -eq 0 ] || ( jobs_started && exit 1 )
 
     # run M3 benchmark
-    mkdir -p $1/m3-fstrace-$2
-    M3_GEM5_OUT=$1/m3-fstrace-$2 ./b run boot/fstrace.cfg -n 1>$1/m3-fstrace-$2-output.txt 2>&1 &
+    export M3_GEM5_OUT=$1/m3-fstrace-$2-$3-$4 M3_GEM5_MMU=$3 M3_GEM5_DTUPOS=$4
+    mkdir -p $M3_GEM5_OUT
+    ./b run boot/fstrace.cfg -n 1>$1/m3-fstrace-$2-$3-$4-output.txt 2>&1 &
 
     # wait until gem5 has started the simulation
-    while [ "`grep 'info: Entering event queue' $1/m3-fstrace-$2-output.txt`" = "" ]; do
+    while [ "`grep 'info: Entering event queue' $1/m3-fstrace-$2-$3-$4-output.txt`" = "" ]; do
         sleep 1
     done
 
     jobs_started
 
-    /bin/echo -e "\e[1mStarted m3-$2\e[0m"
+    /bin/echo -e "\e[1mStarted m3-$2-$3-$4\e[0m"
 
     wait
 
     cd - >/dev/null
 
     if [ $? -eq 0 ]; then
-        /bin/echo -e "\e[1mFinished m3-$2:\e[0m \e[1;32mSUCCESS\e[0m"
+        /bin/echo -e "\e[1mFinished m3-$2-$3-$4:\e[0m \e[1;32mSUCCESS\e[0m"
     else
-        /bin/echo -e "\e[1mFinished m3-$2:\e[0m \e[1;31mFAILED\e[0m"
+        /bin/echo -e "\e[1mFinished m3-$2-$3-$4:\e[0m \e[1;31mFAILED\e[0m"
     fi
 }
 
@@ -81,10 +82,21 @@ jobs_submit run_lx_bench $1 sqlite  "/bench/bin/sqlite /tmp/test.db"
 
 jobs_wait
 
-jobs_submit run_m3_bench $1 find
-jobs_submit run_m3_bench $1 tar
-jobs_submit run_m3_bench $1 untar
-jobs_submit run_m3_bench $1 sqlite
+jobs_submit run_m3_bench $1 find 1 0
+jobs_submit run_m3_bench $1 tar 1 0
+jobs_submit run_m3_bench $1 untar 1 0
+jobs_submit run_m3_bench $1 sqlite 1 0
+
+for mmu in 0 1; do
+    for dtupos in 1 2; do
+        if [ $mmu -eq 1 ] || [ $dtupos == 0 ]; then
+            jobs_submit run_m3_bench $1 find $mmu $dtupos
+            jobs_submit run_m3_bench $1 tar $mmu $dtupos
+            jobs_submit run_m3_bench $1 untar $mmu $dtupos
+            jobs_submit run_m3_bench $1 sqlite $mmu $dtupos
+        fi
+    done
+done
 
 jobs_wait
 
