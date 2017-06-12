@@ -102,10 +102,10 @@ jobs_submit run_m3_bench $1 untar-5 0 0
 jobs_submit run_m3_bench $1 sqlite-5 0 0
 
 for dtupos in 0 1 2; do
-    jobs_submit run_m3_bench $1 find $mmu $dtupos
-    jobs_submit run_m3_bench $1 tar $mmu $dtupos
-    jobs_submit run_m3_bench $1 untar $mmu $dtupos
-    jobs_submit run_m3_bench $1 sqlite $mmu $dtupos
+    jobs_submit run_m3_bench $1 find 1 $dtupos
+    jobs_submit run_m3_bench $1 tar 1 $dtupos
+    jobs_submit run_m3_bench $1 untar 1 $dtupos
+    jobs_submit run_m3_bench $1 sqlite 1 $dtupos
 done
 
 jobs_wait

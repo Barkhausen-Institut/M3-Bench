@@ -2,7 +2,7 @@
 
 . tools/helper.sh
 
-mhz=`get_mhz $1/m3-fstrace-tar-0-0/output.txt`
+mhz=`get_mhz $1/m3-fstrace-tar-5-0-0/output.txt`
 
 sum_time() {
     awk '{ sum += $4 } END { printf("%u\n", sum) }'
