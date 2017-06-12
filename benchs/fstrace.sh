@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cfg=`readlink -f input/fstrace.cfg`
+
 . tools/helper.sh
 . tools/jobs.sh
 
@@ -22,6 +24,9 @@ run_lx_bench() {
     mkdir -p $1/lx-fstrace-$2
 
     export BENCH_CMD=$3 GEM5_OUT=$1/lx-fstrace-$2 GEM5_CP=1
+    if [[ $2 == *-5 ]]; then
+        export GEM5_L1LAT=5
+    fi
 
     # run linux benchmark
     ( cd xtensa-linux && ./b fsbench ) > $GEM5_OUT/output.txt 2>&1
@@ -53,7 +58,7 @@ run_m3_bench() {
     # run M3 benchmark
     export M3_GEM5_OUT=$1/m3-fstrace-$2-$3-$4 M3_GEM5_MMU=$3 M3_GEM5_DTUPOS=$4
     mkdir -p $M3_GEM5_OUT
-    ./b run boot/fstrace.cfg -n 1>$M3_GEM5_OUT/output.txt 2>&1 &
+    ./b run $cfg -n 1>$M3_GEM5_OUT/output.txt 2>&1 &
 
     # wait until gem5 has started the simulation
     while [ "`grep 'info: Entering event queue' $M3_GEM5_OUT/output.txt`" = "" ]; do
@@ -82,17 +87,25 @@ jobs_submit run_lx_bench $1 tar     "tar -cf /tmp/test.tar /bench/tardata/tar-39
 jobs_submit run_lx_bench $1 untar   "tar -xf /bench/untardata/tar-3968.tar -C /tmp"
 jobs_submit run_lx_bench $1 sqlite  "/bench/bin/sqlite /tmp/test.db"
 
+# 1 cycle more latency for address translation in the DTU
+jobs_submit run_lx_bench $1 find-5    "find /bench/finddata/dir -name test"
+jobs_submit run_lx_bench $1 tar-5     "tar -cf /tmp/test.tar /bench/tardata/tar-3968"
+jobs_submit run_lx_bench $1 untar-5   "tar -xf /bench/untardata/tar-3968.tar -C /tmp"
+jobs_submit run_lx_bench $1 sqlite-5  "/bench/bin/sqlite /tmp/test.db"
+
 jobs_wait
 
-for mmu in 0 1; do
-    for dtupos in 0 1 2; do
-        if [ $mmu -eq 1 ] || [ $dtupos == 0 ]; then
-            jobs_submit run_m3_bench $1 find $mmu $dtupos
-            jobs_submit run_m3_bench $1 tar $mmu $dtupos
-            jobs_submit run_m3_bench $1 untar $mmu $dtupos
-            jobs_submit run_m3_bench $1 sqlite $mmu $dtupos
-        fi
-    done
+# use the 5 cycles waittimes, but compare later on it with the 4 cycles run of Linux
+jobs_submit run_m3_bench $1 find-5 0 0
+jobs_submit run_m3_bench $1 tar-5 0 0
+jobs_submit run_m3_bench $1 untar-5 0 0
+jobs_submit run_m3_bench $1 sqlite-5 0 0
+
+for dtupos in 0 1 2; do
+    jobs_submit run_m3_bench $1 find $mmu $dtupos
+    jobs_submit run_m3_bench $1 tar $mmu $dtupos
+    jobs_submit run_m3_bench $1 untar $mmu $dtupos
+    jobs_submit run_m3_bench $1 sqlite $mmu $dtupos
 done
 
 jobs_wait

@@ -15,7 +15,7 @@ gen_results() {
     lxxfer=`awk '/Copied/ { print $5 }' $lxlog`
     lxwait=`./tools/timedstrace.php waittime $lxlog-strace $lxlog-timings`
 
-    log00=$1/m3-fstrace-$2-0-0/gem5.log
+    log00=$1/m3-fstrace-$2-5-0-0/gem5.log
     log10=$1/m3-fstrace-$2-1-0/gem5.log
     log11=$1/m3-fstrace-$2-1-1/gem5.log
     log12=$1/m3-fstrace-$2-1-2/gem5.log
