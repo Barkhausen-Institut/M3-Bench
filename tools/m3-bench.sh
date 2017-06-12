@@ -1,19 +1,20 @@
 #!/bin/sh
 
-if [ $# -ne 3 ]; then
-    echo "Usage: $0 (stddev|time) <id> <warmup>" >&2
+if [ $# -ne 4 ]; then
+    echo "Usage: $0 (stddev|time) <id> <mhz> <warmup>" >&2
     exit 1
 fi
 
 type=$1
 id=$2
-warmup=$3
+mhz=$3
+warmup=$4
 
 starttsc="1ff1$id"
 stoptsc="1ff2$id"
 
 extract() {
-    awk -v warmup=$warmup '
+    awk -v warmup=$warmup -v mhz=$mhz '
     function stddev(vals, avg) {
         sum = 0
         for(v in vals) {
@@ -36,9 +37,13 @@ extract() {
         }
     }
 
+    function ticksToCycles(ticks) {
+        return ticks * (mhz / 1000000)
+    }
+
     /DEBUG [[:xdigit:]]+/ {
         match($1, /^([[:digit:]]+):/, m)
-        handle($4, m[1] / 1000)
+        handle($4, ticksToCycles(m[1]))
     }
 
     END {

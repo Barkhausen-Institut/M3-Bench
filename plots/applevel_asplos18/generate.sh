@@ -1,5 +1,13 @@
 #!/bin/bash
 
+. tools/helper.sh
+
+mhz=`get_mhz $1/m3-fstrace-tar-0-0/output.txt`
+
+sum_time() {
+    awk '{ sum += $4 } END { printf("%u\n", sum) }'
+}
+
 gen_results() {
     lxlog=$1/lx-fstrace-$2/res.txt
 
@@ -12,21 +20,21 @@ gen_results() {
     log11=$1/m3-fstrace-$2-1-1/gem5.log
     log12=$1/m3-fstrace-$2-1-2/gem5.log
 
-    m3tota00=`./m3/src/tools/bench.sh $log00 | grep 'TIME: 0000' | ./tools/m3-avg.awk`
-    m3xfer00=`./m3/src/tools/bench.sh $log00 | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
-    m3wait00=`./m3/src/tools/bench.sh $log00 | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
+    m3tota00=`./m3/src/tools/bench.sh $log00 $mhz | grep 'TIME: 0000' | ./tools/m3-avg.awk`
+    m3xfer00=`./m3/src/tools/bench.sh $log00 $mhz | grep 'TIME: aaaa' | sum_time`
+    m3wait00=`./m3/src/tools/bench.sh $log00 $mhz | grep 'TIME: bbbb' | sum_time`
 
-    m3tota10=`./m3/src/tools/bench.sh $log10 | grep 'TIME: 0000' | ./tools/m3-avg.awk`
-    m3xfer10=`./m3/src/tools/bench.sh $log10 | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
-    m3wait10=`./m3/src/tools/bench.sh $log10 | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
+    m3tota10=`./m3/src/tools/bench.sh $log10 $mhz | grep 'TIME: 0000' | ./tools/m3-avg.awk`
+    m3xfer10=`./m3/src/tools/bench.sh $log10 $mhz | grep 'TIME: aaaa' | sum_time`
+    m3wait10=`./m3/src/tools/bench.sh $log10 $mhz | grep 'TIME: bbbb' | sum_time`
 
-    m3tota11=`./m3/src/tools/bench.sh $log11 | grep 'TIME: 0000' | ./tools/m3-avg.awk`
-    m3xfer11=`./m3/src/tools/bench.sh $log11 | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
-    m3wait11=`./m3/src/tools/bench.sh $log11 | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
+    m3tota11=`./m3/src/tools/bench.sh $log11 $mhz | grep 'TIME: 0000' | ./tools/m3-avg.awk`
+    m3xfer11=`./m3/src/tools/bench.sh $log11 $mhz | grep 'TIME: aaaa' | sum_time`
+    m3wait11=`./m3/src/tools/bench.sh $log11 $mhz | grep 'TIME: bbbb' | sum_time`
 
-    m3tota12=`./m3/src/tools/bench.sh $log12 | grep 'TIME: 0000' | ./tools/m3-avg.awk`
-    m3xfer12=`./m3/src/tools/bench.sh $log12 | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
-    m3wait12=`./m3/src/tools/bench.sh $log12 | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
+    m3tota12=`./m3/src/tools/bench.sh $log12 $mhz | grep 'TIME: 0000' | ./tools/m3-avg.awk`
+    m3xfer12=`./m3/src/tools/bench.sh $log12 $mhz | grep 'TIME: aaaa' | sum_time`
+    m3wait12=`./m3/src/tools/bench.sh $log12 $mhz | grep 'TIME: bbbb' | sum_time`
 
     echo "M300 M310 M311 M312 Lx"
     echo $(($m3tota00 - $m3xfer00 - $m3wait00)) \

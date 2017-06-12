@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./m3/src/tools/bench.sh $1/m3-syscall/gem5.log 2 > $1/m3-syscall.txt
+./m3/src/tools/bench.sh $1/m3-syscall/gem5.log 1000 2 > $1/m3-syscall.txt
 
 awk '
 BEGIN {

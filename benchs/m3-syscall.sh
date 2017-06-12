@@ -5,6 +5,7 @@ export M3_BUILD=bench
 
 export M3_GEM5_CFG=config/caches.py
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
+export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=3
 # export M3_GEM5_CPU=timing
 

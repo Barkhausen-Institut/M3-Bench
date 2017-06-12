@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source tools/fstrace-helper.sh
+source tools/helper.sh
 
 run_bench() {
     cd xtensa-linux

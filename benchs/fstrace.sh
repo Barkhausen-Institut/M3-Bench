@@ -1,14 +1,16 @@
 #!/bin/bash
 
-. tools/fstrace-helper.sh
+. tools/helper.sh
 . tools/jobs.sh
 
 # build M3
 export M3_BUILD=bench M3_FS=bench.img M3_CORES=5 M3_GEM5_CFG=config/caches.py
+export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 ( cd m3 && ./b )
 [ $? -eq 0 ] || exit 1
 
 # build Linux
+export GEM5_CPUFREQ=3GHz GEM5_MEMFREQ=1GHz
 ( cd xtensa-linux && ./b mklx && ./b mkapps && ./b mkbr )
 [ $? -eq 0 ] || exit 1
 
@@ -22,7 +24,7 @@ run_lx_bench() {
     export BENCH_CMD=$3 GEM5_OUT=$1/lx-fstrace-$2 GEM5_CP=1
 
     # run linux benchmark
-    ( cd xtensa-linux && ./b fsbench ) > $1/lx-fstrace-$2-output.txt 2>&1
+    ( cd xtensa-linux && ./b fsbench ) > $GEM5_OUT/output.txt 2>&1
 
     if [ $? -eq 0 ]; then
         /bin/echo -e "\e[1mFinished lx-$2:\e[0m \e[1;32mSUCCESS\e[0m"
@@ -31,7 +33,7 @@ run_lx_bench() {
     fi
 
     # split result into strace and timings
-    gen_timedtrace $1/lx-fstrace-$2/res.txt >> $1/lx-fstrace-$2-output.txt 2>&1
+    gen_timedtrace $1/lx-fstrace-$2/res.txt >> $GEM5_OUT/output.txt 2>&1
 }
 
 run_m3_bench() {
@@ -51,10 +53,10 @@ run_m3_bench() {
     # run M3 benchmark
     export M3_GEM5_OUT=$1/m3-fstrace-$2-$3-$4 M3_GEM5_MMU=$3 M3_GEM5_DTUPOS=$4
     mkdir -p $M3_GEM5_OUT
-    ./b run boot/fstrace.cfg -n 1>$1/m3-fstrace-$2-$3-$4-output.txt 2>&1 &
+    ./b run boot/fstrace.cfg -n 1>$M3_GEM5_OUT/output.txt 2>&1 &
 
     # wait until gem5 has started the simulation
-    while [ "`grep 'info: Entering event queue' $1/m3-fstrace-$2-$3-$4-output.txt`" = "" ]; do
+    while [ "`grep 'info: Entering event queue' $M3_GEM5_OUT/output.txt`" = "" ]; do
         sleep 1
     done
 
@@ -82,13 +84,8 @@ jobs_submit run_lx_bench $1 sqlite  "/bench/bin/sqlite /tmp/test.db"
 
 jobs_wait
 
-jobs_submit run_m3_bench $1 find 1 0
-jobs_submit run_m3_bench $1 tar 1 0
-jobs_submit run_m3_bench $1 untar 1 0
-jobs_submit run_m3_bench $1 sqlite 1 0
-
 for mmu in 0 1; do
-    for dtupos in 1 2; do
+    for dtupos in 0 1 2; do
         if [ $mmu -eq 1 ] || [ $dtupos == 0 ]; then
             jobs_submit run_m3_bench $1 find $mmu $dtupos
             jobs_submit run_m3_bench $1 tar $mmu $dtupos

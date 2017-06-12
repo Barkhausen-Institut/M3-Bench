@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. tools/fstrace-helper.sh
+. tools/helper.sh
 
 gen_results $1 "tar"    tar-0-0    > $1/applevel-tar-times.dat
 gen_results $1 "untar"  untar-0-0  > $1/applevel-untar-times.dat

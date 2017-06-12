@@ -1,5 +1,14 @@
 #!/bin/bash
 
+get_mhz() {
+    ghz=`grep 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)GHz.*/\1/g'`
+    if [ "$ghz" != "" ]; then
+        echo $(($ghz * 1000))
+    else
+        grep 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)MHz.*/\1/g'
+    fi
+}
+
 gen_timedtrace() {
     grep -vE '^(Copied|Switched to)' $1 > $1-clean
     grep -B10000 "===" $1-clean | grep -v "===" > $1-strace
@@ -28,10 +37,11 @@ gen_results() {
     lxwait=`./tools/timedstrace.php waittime $lxlog-strace $lxlog-timings`
 
     log=$1/m3-fstrace-$3/gem5.log
+    mhz=`get_mhz $1/m3-fstrace-$3/output.txt`
 
-    m3tota=`./m3/src/tools/bench.sh $log | grep 'TIME: 0000' | ./tools/m3-avg.awk`
-    m3xfer=`./m3/src/tools/bench.sh $log | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
-    m3wait=`./m3/src/tools/bench.sh $log | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
+    m3tota=`./m3/src/tools/bench.sh $log $mhz | grep 'TIME: 0000' | ./tools/m3-avg.awk`
+    m3xfer=`./m3/src/tools/bench.sh $log $mhz | grep 'TIME: aaaa' | awk '{ sum += $4 } END { print sum }'`
+    m3wait=`./m3/src/tools/bench.sh $log $mhz | grep 'TIME: bbbb' | awk '{ sum += $4 } END { print sum }'`
 
     echo "M3 Lx"
     echo $(($m3tota - $m3xfer - $m3wait)) $(($lxtota - $lxxfer - $lxwait))

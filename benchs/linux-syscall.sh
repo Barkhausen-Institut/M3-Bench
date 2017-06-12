@@ -6,6 +6,7 @@ cd xtensa-linux
 ./b mklx
 ./b mkbr
 
+export GEM5_CPUFREQ=3GHz GEM5_MEMFREQ=1GHz
 export GEM5_OUT=$1/lx-syscall
 mkdir -p $GEM5_OUT
 
