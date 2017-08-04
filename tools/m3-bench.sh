@@ -28,7 +28,7 @@ extract() {
             start = time
         }
         else if(substr(msg,3,8) == "'$stoptsc'") {
-            if(counter > warmup) {
+            if(counter >= warmup) {
                 times[num] = strtonum(time) - strtonum(start)
                 total += times[num]
                 num += 1

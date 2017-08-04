@@ -19,12 +19,13 @@ $names = array(
     6 => "lstat",
     5 => "fstat",
     217 => "getdents64",
+    262 => "newfstatat",
     40 => "sendfile",
 );
 $numbers = array_flip($names);
 
 if($argc != 4)
-    exit("Usage: {$argv[0]} (trace|waittime|total) <strace> <timings>\n");
+    exit("Usage: {$argv[0]} (trace|waittime|total|human) <strace> <timings>\n");
 
 $mode = $argv[1];
 $strace = file($argv[2]);
@@ -74,9 +75,12 @@ for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
         else if($mode == 'waittime' && $timestamp > 0)
             $waittime += $ti[2] - $timestamp;
         $timestamp = $ti[3];
+
+        if($mode == 'human')
+            printf("%12s : %u\n", $names[$ti[1]], $ti[3] - $ti[2]);
     }
     else {
-        file_put_contents('php://stderr', "Warning: ignoring system call " . $st[1] . "\n");
+        file_put_contents('php://stderr', "Warning in line $i: ignoring system call " . $st[1] . "\n");
         if($timestamp == 0)
             @$timestamp = $ti[2];
     }
@@ -94,6 +98,6 @@ else if($mode == 'waittime') {
         $waittime += $last - $timestamp;
     echo $waittime . "\n";
 }
-else
+else if($mode == 'total')
     echo ($last - $start) . "\n";
 ?>
