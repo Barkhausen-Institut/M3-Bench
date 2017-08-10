@@ -9,17 +9,15 @@ export M3_BUILD=bench M3_FS=bench.img
 
 export M3_GEM5_CFG=config/caches.py
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
-# export M3_GEM5_CPU=timing
+# export M3_GEM5_CPU=TimingSimpleCPU
 
 run() {
     /bin/echo -e "\e[1mStarting $2-$3\e[0m"
 
-    echo > $1/m3-rctmux-$2-$3-output.txt
-
-    ./b run $cfg -n 1>$1/m3-rctmux-$2-$3-output.txt 2>&1 &
+    ./b run $cfg -n 1>>$M3_GEM5_OUT/output.txt 2>&1 &
 
     # wait until gem5 has started the simulation
-    while [ "`grep 'info: Entering event queue' $1/m3-rctmux-$2-$3-output.txt`" = "" ]; do
+    while [ "`grep 'info: Entering event queue' $M3_GEM5_OUT/output.txt`" = "" ]; do
         sleep 1
     done
 
@@ -30,24 +28,26 @@ run() {
 
     wait
 
-    if [ $? -eq 0 ]; then
+    if [ $? -eq 0 ] && [ "`grep 'benchmark terminated' $M3_GEM5_OUT/output.txt`" != "" ]; then
         /bin/echo -e "\e[1mFinished $2-$3:\e[0m \e[1;32mSUCCESS\e[0m"
-        ./src/tools/bench.sh $M3_GEM5_OUT/gem5.log > $1/m3-rctmux-$2-$3.txt
     else
         /bin/echo -e "\e[1mFinished $2-$3:\e[0m \e[1;31mFAILED\e[0m"
     fi
 }
 
 run_fstrace() {
+    out=$1/m3-rctmux-$2-$3
+    mkdir -p $out
+
+    /bin/echo -e "\e[1mBuilding $2-$3\e[0m"
+
     # rebuild it first
-    cp $1/lx-fstrace-$2-30cycles.txt-opcodes.c src/apps/fstrace/m3fs/trace.c
-    ./b 1>/dev/null 2>/dev/null
+    cp ../input/trace-$2.c src/apps/fstrace/m3fs/trace.c
+    ./b 1>$out/output.txt 2>&1
     if [ $? -ne 0 ]; then
         /bin/echo -e "\e[1;31mBuild failed\e[0m"
         exit
     fi
-
-    out=$1/m3-rctmux-$2-$3
 
     if [ "$3" = "alone" ]; then
         M3_GEM5_OUT=$out M3_CORES=6 M3_RCTMUX_ARGS="0 2 /bin/fstrace-m3fs /tmp/1/ /bin/fstrace-m3fs /tmp/2/" run $1 $2 $3
