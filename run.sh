@@ -18,11 +18,11 @@ fi
 case $M3_TARGET in
     t3)
         export M3_LOG=run/xtsc.log
-        export LX_ARCH=xtensa LX_PLATFORM=xtensa
+        export LX_ARCH=xtensa LX_PLATFORM=xtensa LX_BUILD=release
         ;;
     gem5)
         export M3_LOG=$M3_GEM5_OUT/gem5.log
-        export LX_ARCH=x86_64 LX_PLATFORM=gem5
+        export LX_ARCH=x86_64 LX_PLATFORM=gem5 LX_BUILD=release
         ;;
 esac
 
