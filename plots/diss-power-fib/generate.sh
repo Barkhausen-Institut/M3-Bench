@@ -25,4 +25,4 @@ awk '
     }
     ' < $here/pe_rcv_fib.txt > $1/power-fib.dat
 
-Rscript plots/power-fib/plot.R $1/eval-power-fib.pdf $1/power-fib.dat
+Rscript plots/diss-power-fib/plot.R $1/eval-power-fib.pdf $1/power-fib.dat
