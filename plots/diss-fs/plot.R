@@ -16,7 +16,7 @@ pdf(as.character(args[1]), width=5, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
-    widths=c(1.1,1.3,1), heights=c(1,1))
+    widths=c(1.08,1,1), heights=c(1,1))
 
 par(mar=c(9.5,5,4,1))
 
@@ -30,10 +30,10 @@ title(ylab = "Time (ms)", mgp=c(3, 1, 0))
 par(mar=c(9.5,0,4,1))
 
 barplot(as.matrix(wrtimes), beside=F,
-    ylim=c(0,2), space=c(0.3, 0.2, 0.2, 0.2), axes=F,
+    ylim=c(0,2), space=c(0.3, 0.2, 0.2), axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("Linux","M3", "Lx-ovwr","M3-clr"), sub="Write")
+    names.arg=c("Linux","M3", "M3-zero"), sub="Write")
 
 par(mar=c(9.5,0,4,1))
 

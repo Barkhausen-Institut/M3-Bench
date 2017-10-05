@@ -15,7 +15,7 @@ dev = scan(args[3])
 plot = barplot(
     vals,
     names=c("Linux", "NOVA", "M3"),
-    ylab = "Time (Cycles)",
+    ylab = "Duration (Cycles)",
     ylim = c(0, 450),
     col=gray.colors(3)
 )

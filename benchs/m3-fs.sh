@@ -13,34 +13,54 @@ export M3_FS=bench.img
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=3
+export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 
 run_bench() {
-    jobs_started
-
     export M3_FS_CLEAR=$3
-    export M3_GEM5_OUT=$1/m3-fs-$2-$5
+    export M3_FSBPE=$6
+    export M3_GEM5_OUT=$1/m3-fs-$2-$5-$6
     export M3_GEM5_CFG=config/$5.py
     mkdir -p $M3_GEM5_OUT
 
-    /bin/echo -e "\e[1mStarted m3-fs-$2-$5\e[0m"
+    /bin/echo -e "\e[1mStarting m3-fs-$2-$5-$6\e[0m"
 
-    ./b run $4 -n > $M3_GEM5_OUT/output.txt 2>&1
-    [ $? -eq 0 ] || exit 1
+    # rebuilding the image is enough
+    scons build/$M3_TARGET-$LX_ARCH-$M3_BUILD/bench.img > $M3_GEM5_OUT/output.txt 2>&1
+    [ $? -eq 0 ] || ( jobs_started && exit 1 )
 
-    /bin/echo -e "\e[1mFinished m3-fs-$2-$5\e[0m"
+    ./b run $4 -n >> $M3_GEM5_OUT/output.txt 2>&1 &
+
+    # wait until gem5 has started the simulation
+    while [ "`grep 'info: Entering event queue' $M3_GEM5_OUT/output.txt`" = "" ]; do
+        sleep 1
+    done
+
+    jobs_started
+
+    /bin/echo -e "\e[1mStarted m3-fs-$2-$5-$6\e[0m"
+
+    wait
+
+    if [ $? -eq 0 ] && [ "`grep '\(Read\|Write\|Copy\) time:' $M3_GEM5_OUT/output.txt`" != "" ]; then
+        /bin/echo -e "\e[1mFinished m3-fs-$2-$5-$6:\e[0m \e[1;32mSUCCESS\e[0m"
+    else
+        /bin/echo -e "\e[1mFinished m3-fs-$2-$5-$6:\e[0m \e[1;31mFAILED\e[0m"
+    fi
 }
 
-./b
+./b || exit 1
 
 jobs_init $2
 
-for c in spm caches; do
-    jobs_submit run_bench $1 read 0 $rdcfg $c
-    jobs_submit run_bench $1 write 0 $wrcfg $c
-    jobs_submit run_bench $1 write-clear 1 $wrcfg $c
-    jobs_submit run_bench $1 copy 0 $cpcfg $c
+for bpe in 4 8 16 32 64 128 256; do
+    for c in spm caches; do
+        jobs_submit run_bench $1 read "" $rdcfg $c $bpe
+        jobs_submit run_bench $1 write "" $wrcfg $c $bpe
+        jobs_submit run_bench $1 write-clear "-c" $wrcfg $c $bpe
+        jobs_submit run_bench $1 copy "" $cpcfg $c $bpe
+    done
 done
 
 jobs_wait
