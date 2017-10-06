@@ -16,7 +16,7 @@ plot = barplot(
     vals,
     names=c("NOVA (loc)", "NOVA (rem)", "M3 (rem)"),
     ylab = "Duration (K Cycles)",
-    ylim = c(0, 7),
+    ylim = c(0, 10),
     col=gray.colors(3)
 )
 error.bar(plot, vals, dev)
