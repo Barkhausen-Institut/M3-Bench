@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ $# -ne 4 ]; then
-    echo "Usage: $0 (stddev|time) <id> <mhz> <warmup>" >&2
+if [ $# -lt 4 ]; then
+    echo "Usage: $0 (stddev|time) <id> <mhz> <warmup> [<pe>]" >&2
     exit 1
 fi
 
@@ -9,12 +9,13 @@ type=$1
 id=$2
 mhz=$3
 warmup=$4
+pe=${5:-1000000}
 
 starttsc="1ff1$id"
 stoptsc="1ff2$id"
 
 extract() {
-    awk -v warmup=$warmup -v mhz=$mhz '
+    awk -v warmup=$warmup -v mhz=$mhz -v pe=$pe '
     function stddev(vals, avg) {
         sum = 0
         for(v in vals) {
@@ -23,17 +24,17 @@ extract() {
         return sqrt(sum / length(vals))
     }
 
-    function handle(msg, time) {
+    function handle(msg, idx, time) {
         if(substr(msg,3,8) == "'$starttsc'") {
-            start = time
+            start[idx] = time
         }
         else if(substr(msg,3,8) == "'$stoptsc'") {
-            if(counter >= warmup) {
-                times[num] = strtonum(time) - strtonum(start)
-                total += times[num]
-                num += 1
+            if(counter[idx] >= warmup) {
+                times[idx][num[idx]] = strtonum(time) - strtonum(start[idx])
+                total[idx] += times[idx][num[idx]]
+                num[idx] += 1
             }
-            counter += 1
+            counter[idx] += 1
         }
     }
 
@@ -43,21 +44,29 @@ extract() {
 
     /DEBUG [[:xdigit:]]+/ {
         match($1, /^([[:digit:]]+):/, m)
-        handle($4, ticksToCycles(m[1]))
+        if(type == "times" || pe != 1000000) {
+            match($2, /(cpu|pe)([[:digit:]]+)/, mpe)
+            handle($4, mpe[2], ticksToCycles(m[1]))
+        }
+        else
+            handle($4, pe, ticksToCycles(m[1]))
     }
 
     END {
-        if (num > 0)
-            printf "%d %d\n", total / num, stddev(times, total / num)
-        else
-            print 0, 0
+        for(i in num) {
+            if (num[i] > 0)
+                printf "PE%d: %d %d\n", i, total[i] / num[i], stddev(times[i], total[i] / num[i])
+            else
+                print 0, 0
+        }
     }
     '
 }
 
-res=`extract`
-if [ "$type" = "stddev" ]; then
-    echo $res | cut -d ' ' -f 2
-else
-    echo $res | cut -d ' ' -f 1
-fi
+extract | grep "PE$pe" | while read line; do
+    if [ "$type" = "stddev" ]; then
+        echo $line | cut -d ' ' -f 3
+    else
+        echo $line | cut -d ' ' -f 2
+    fi
+done

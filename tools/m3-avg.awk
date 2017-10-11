@@ -6,8 +6,11 @@
 }
 
 END {
+    for(len in total);
     for(i in total) {
-        printf "%d ", total[i] / count[i]
+        printf "%d", total[i] / count[i]
+        if(i + 1 < len)
+            printf(" ")
     }
     printf "\n"
 }
