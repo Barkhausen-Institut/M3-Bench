@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# use this gem5 version, because the atomic rwm operations do not work on the new version
+export GEM5_DIR=`readlink -f gem5`
+
 . tools/jobs.sh
 
 cd xtensa-linux
@@ -26,8 +29,8 @@ run_bench() {
 jobs_init $2
 
 jobs_submit run_bench $1 read "/bench/bin/read /bench/large.bin"
-jobs_submit run_bench $1 write "/bench/bin/write /tmp/res.bin $((2 * 1024 * 1024))"
-jobs_submit run_bench $1 write-notrunc "/bench/bin/write /tmp/res.bin $((2 * 1024 * 1024)) notrunc"
+jobs_submit run_bench $1 write "/bench/bin/write /tmp/res.bin $((32 * 1024 * 1024))"
+jobs_submit run_bench $1 write-notrunc "/bench/bin/write /tmp/res.bin $((32 * 1024 * 1024)) notrunc"
 jobs_submit run_bench $1 copy "/bench/bin/cp /bench/large.bin /tmp/res.bin"
 jobs_submit run_bench $1 sendfile "/bench/bin/sendfile /bench/large.bin /tmp/res.bin"
 
