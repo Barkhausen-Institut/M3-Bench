@@ -28,7 +28,7 @@ run() {
 
     ./b run $cfg -n 1>$M3_GEM5_OUT/output.txt 2>&1
 
-    if [ $? -eq 0 ]; then
+    if [ "`grep "Time: " $M3_GEM5_OUT/output.txt | wc -l`" = "8" ]; then
         /bin/echo -e "\e[1mFinished m3-pipe-$3:\e[0m \e[1;32mSUCCESS\e[0m"
     else
         /bin/echo -e "\e[1mFinished m3-pipe-$3:\e[0m \e[1;31mFAILED\e[0m"

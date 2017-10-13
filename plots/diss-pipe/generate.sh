@@ -145,13 +145,13 @@ gen_var_cmp() {
 echo "Splitting Linux results..."
 csplit -s --prefix="$1/lx-pipe/stats-" $1/lx-pipe/stats.txt "/End Simulation Statistics/+1" "{*}"
 csplit -s --prefix="$1/lx-pipe/gem5-" $1/lx-pipe/gem5.log "/DEBUG 0x1ff21234/+1" "{*}"
-rm $1/lx-pipe/stats-{04,05} $1/lx-pipe/gem5-04
+rm $1/lx-pipe/stats-{08,09} $1/lx-pipe/gem5-08
 
 for c in spm caches near-spm; do
     echo "Splitting M3-$c results..."
     grep "\(Suspending\|Waking\|DEBUG 0x\)" $1/m3-pipe-$c/gem5.log > $1/m3-pipe-$c/times.log
     csplit -s --prefix="$1/m3-pipe-$c/gem5-" $1/m3-pipe-$c/times.log "/DEBUG 0x1ff21234/+1" "{*}"
-    rm $1/m3-pipe-$c/gem5-04
+    rm $1/m3-pipe-$c/gem5-08
 
     echo "Generating $1/pipe-$c.dat..."
     if [ "$c" = "near-spm" ]; then

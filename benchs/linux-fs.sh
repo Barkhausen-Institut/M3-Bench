@@ -7,11 +7,12 @@ export GEM5_DIR=`readlink -f gem5`
 
 cd xtensa-linux
 
-./b mkapps
-./b mklx
-./b mkbr
+# ./b mkapps
+# ./b mklx
+# ./b mkbr
 
 export GEM5_CPUFREQ=3GHz GEM5_MEMFREQ=1GHz
+export GEM5_FLAGS=Dtu
 
 run_bench() {
     jobs_started
