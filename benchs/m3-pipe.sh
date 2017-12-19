@@ -7,11 +7,10 @@ cfg=`readlink -f input/rctmux-pipe.cfg`
 cd m3
 export M3_BUILD=bench M3_FS=bench.img
 
-# export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuSysCalls,DtuCmd,DtuConnector
+# export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_DBG=Dtu,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
-export M3_CORES=8
-export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
+export M3_CORES=7
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 
@@ -23,8 +22,17 @@ run() {
     export M3_GEM5_OUT=$1/m3-pipe-$3
     mkdir -p $M3_GEM5_OUT
 
-    export M3_GEM5_CFG=config/$2.py
     export M3_RCTMUX_ARGS="$4"
+
+    if [ "$2" = "a" ]; then
+        export M3_GEM5_CFG=config/spm.py
+    elif [ "$2" = "b" ]; then
+        export M3_GEM5_CFG=config/caches.py
+        export M3_GEM5_MMU=0 M3_GEM5_DTUPOS=0
+    else
+        export M3_GEM5_CFG=config/caches.py
+        export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
+    fi
 
     ./b run $cfg -n 1>$M3_GEM5_OUT/output.txt 2>&1
 
@@ -44,8 +52,9 @@ comp=2
 wr=/bin/rctmux-util-pipewr
 rd=/bin/rctmux-util-piperd
 
-jobs_submit run $1 spm spm          "0 0 3 2 $wr $ds $comp $rd $comp"
-jobs_submit run $1 caches caches    "0 0 3 2 $wr $ds $comp $rd $comp"
-jobs_submit run $1 spm near-spm     "0 1 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 a a-dram         "0 0 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 b b-dram         "0 0 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 c c-dram         "0 0 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 a a-near-spm     "0 1 3 2 $wr $ds $comp $rd $comp"
 
 jobs_wait

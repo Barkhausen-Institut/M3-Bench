@@ -3,7 +3,7 @@
 . tools/helper.sh
 
 m3bpe=64
-mhz=`get_mhz $1/m3-fs-read-spm-$m3bpe/output.txt`
+mhz=`get_mhz $1/m3-fs-read-a-$m3bpe/output.txt`
 
 sum() {
     ./m3/src/tools/bench.sh $1 $mhz | grep "PE$3-TIME: $2" | awk '
@@ -107,7 +107,7 @@ gen_copy_var() {
     echo "$lxcp $m3to $lxsf"
 }
 
-for c in spm caches; do
+for pe in a b c; do
     for b in read write write-notrunc copy sendfile; do
         echo "Splitting Linux-$b results..."
         csplit -s --prefix="$1/lx-fs-$b/gem5-" $1/lx-fs-$b/gem5.log "/DEBUG 0x1ff21234/+1" "{*}"
@@ -115,26 +115,26 @@ for c in spm caches; do
     done
 
     for b in read write write-clear copy; do
-        echo "Splitting M3-$b-$c results..."
-        grep "DEBUG 0x" $1/m3-fs-$b-$c-$m3bpe/gem5.log > $1/m3-fs-$b-$c-$m3bpe/times.log
-        csplit -s --prefix="$1/m3-fs-$b-$c-$m3bpe/gem5-" $1/m3-fs-$b-$c-$m3bpe/times.log "/DEBUG 0x1ff20001/+1" "{*}"
-        rm $1/m3-fs-$b-$c-$m3bpe/gem5-{00,05}
+        echo "Splitting M3-$b-$pe results..."
+        grep "DEBUG 0x" $1/m3-fs-$b-$pe-$m3bpe/gem5.log > $1/m3-fs-$b-$pe-$m3bpe/times.log
+        csplit -s --prefix="$1/m3-fs-$b-$pe-$m3bpe/gem5-" $1/m3-fs-$b-$pe-$m3bpe/times.log "/DEBUG 0x1ff20001/+1" "{*}"
+        rm $1/m3-fs-$b-$pe-$m3bpe/gem5-{00,05}
     done
 
-    echo "Generating data files for $c..."
-    gen_read $1 $c > $1/fs-$c-read.dat
-    gen_write $1 $c > $1/fs-$c-write.dat
-    gen_copy $1 $c > $1/fs-$c-copy.dat
+    echo "Generating data files for $pe..."
+    gen_read $1 $pe > $1/fs-$pe-read.dat
+    gen_write $1 $pe > $1/fs-$pe-write.dat
+    gen_copy $1 $pe > $1/fs-$pe-copy.dat
 
-    echo "Generating stddev files for $c..."
-    gen_read_var $1 $c > $1/fs-$c-read-stddev.dat
-    gen_write_var $1 $c > $1/fs-$c-write-stddev.dat
-    gen_copy_var $1 $c > $1/fs-$c-copy-stddev.dat
+    echo "Generating stddev files for $pe..."
+    gen_read_var $1 $pe > $1/fs-$pe-read-stddev.dat
+    gen_write_var $1 $pe > $1/fs-$pe-write-stddev.dat
+    gen_copy_var $1 $pe > $1/fs-$pe-copy-stddev.dat
 
-    Rscript plots/diss-fs/plot.R $1/eval-fs-$c.pdf \
-        $1/fs-$c-read.dat $1/fs-$c-read-stddev.dat \
-        $1/fs-$c-write.dat $1/fs-$c-write-stddev.dat \
-        $1/fs-$c-copy.dat $1/fs-$c-copy-stddev.dat
+    Rscript plots/diss-fs/plot.R $1/eval-fs-$pe.pdf \
+        $1/fs-$pe-read.dat $1/fs-$pe-read-stddev.dat \
+        $1/fs-$pe-write.dat $1/fs-$pe-write-stddev.dat \
+        $1/fs-$pe-copy.dat $1/fs-$pe-copy-stddev.dat
 done
 
 rel_diff() {
@@ -142,6 +142,6 @@ rel_diff() {
     echo "scale=4;$diff / $1" | bc
 }
 
-echo "read : $(rel_diff $(m3_total $1/m3-fs-read-spm-$m3bpe) $(m3_total $1/m3-fs-read-caches-$m3bpe))" > $1/fs-diff.txt
-echo "write: $(rel_diff $(m3_total $1/m3-fs-write-spm-$m3bpe) $(m3_total $1/m3-fs-write-caches-$m3bpe))" >> $1/fs-diff.txt
-echo "copy : $(rel_diff $(m3_total $1/m3-fs-copy-spm-$m3bpe) $(m3_total $1/m3-fs-copy-caches-$m3bpe))" >> $1/fs-diff.txt
+echo "read : $(rel_diff $(m3_total $1/m3-fs-read-a-$m3bpe) $(m3_total $1/m3-fs-read-c-$m3bpe))" > $1/fs-diff.txt
+echo "write: $(rel_diff $(m3_total $1/m3-fs-write-a-$m3bpe) $(m3_total $1/m3-fs-write-c-$m3bpe))" >> $1/fs-diff.txt
+echo "copy : $(rel_diff $(m3_total $1/m3-fs-copy-a-$m3bpe) $(m3_total $1/m3-fs-copy-c-$m3bpe))" >> $1/fs-diff.txt

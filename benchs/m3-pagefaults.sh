@@ -34,6 +34,7 @@ run_bench() {
 jobs_init $2
 
 for pages in 1 4; do
+    jobs_submit run_bench $1 0 0 $pages
     jobs_submit run_bench $1 1 0 $pages
     jobs_submit run_bench $1 1 2 $pages
 done

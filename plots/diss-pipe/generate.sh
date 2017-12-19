@@ -2,7 +2,7 @@
 
 . tools/helper.sh
 
-mhz=`get_mhz $1/m3-pipe-spm/output.txt`
+mhz=`get_mhz $1/m3-pipe-a-dram/output.txt`
 
 m3_idle() {
     for f in $1/gem5-*; do
@@ -147,14 +147,16 @@ csplit -s --prefix="$1/lx-pipe/stats-" $1/lx-pipe/stats.txt "/End Simulation Sta
 csplit -s --prefix="$1/lx-pipe/gem5-" $1/lx-pipe/gem5.log "/DEBUG 0x1ff21234/+1" "{*}"
 rm $1/lx-pipe/stats-{08,09} $1/lx-pipe/gem5-08
 
-for c in spm caches near-spm; do
+rm $1/m3-pipe-*/gem5-*
+
+for c in a-dram b-dram c-dram a-near-spm; do
     echo "Splitting M3-$c results..."
     grep "\(Suspending\|Waking\|DEBUG 0x\)" $1/m3-pipe-$c/gem5.log > $1/m3-pipe-$c/times.log
     csplit -s --prefix="$1/m3-pipe-$c/gem5-" $1/m3-pipe-$c/times.log "/DEBUG 0x1ff21234/+1" "{*}"
     rm $1/m3-pipe-$c/gem5-08
 
     echo "Generating $1/pipe-$c.dat..."
-    if [ "$c" = "near-spm" ]; then
+    if [ "$c" = "a-near-spm" ]; then
         gen $1 $c > $1/pipe-$c.dat
         gen_var $1 $c > $1/pipe-$c-stddev.dat
     else
@@ -163,17 +165,18 @@ for c in spm caches near-spm; do
     fi
 done
 
-Rscript plots/diss-pipe/plot-cmp.R $1/eval-pipe-caches.pdf $1/pipe-caches.dat $1/pipe-caches-stddev.dat
-Rscript plots/diss-pipe/plot-cmp.R $1/eval-pipe-cmp.pdf $1/pipe-spm.dat $1/pipe-spm-stddev.dat
-Rscript plots/diss-pipe/plot-spm.R $1/eval-pipe-spm.pdf $1/pipe-near-spm.dat $1/pipe-near-spm-stddev.dat
+for c in a-dram b-dram c-dram; do
+    Rscript plots/diss-pipe/plot-cmp.R $1/eval-pipe-$c.pdf $1/pipe-$c.dat $1/pipe-$c-stddev.dat
+done
+Rscript plots/diss-pipe/plot-spm.R $1/eval-pipe-a-near-spm.pdf $1/pipe-a-near-spm.dat $1/pipe-a-near-spm-stddev.dat
 
 rel_diff() {
     diff=$(($1 < $2 ? $2 - $1 : $1 - $2))
     echo "scale=4;$diff / $1" | bc
 }
 
-spmlog=$1/m3-pipe-spm/times.log
-cachelog=$1/m3-pipe-caches/times.log
+spmlog=$1/m3-pipe-a-dram/times.log
+cachelog=$1/m3-pipe-c-dram/times.log
 echo "total : $(rel_diff $(total $spmlog 1234) $(total $cachelog 1234))" > $1/pipe-diff.txt
 echo "reader: $(rel_diff $(total $spmlog 1235 6) $(total $cachelog 1235 6))" >> $1/pipe-diff.txt
 echo "writer: $(rel_diff $(total $spmlog 1235 5) $(total $cachelog 1235 5))" >> $1/pipe-diff.txt

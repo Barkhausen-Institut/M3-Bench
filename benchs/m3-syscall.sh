@@ -28,6 +28,7 @@ run_bench() {
 
 ./b
 
+run_bench $1 0 0
 run_bench $1 1 0
 run_bench $1 1 2
 run_bench $1 2 0

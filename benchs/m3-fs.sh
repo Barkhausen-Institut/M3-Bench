@@ -13,7 +13,6 @@ export M3_FS=bench.img
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=3
-export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 
@@ -21,8 +20,17 @@ run_bench() {
     export M3_FS_CLEAR=$3
     export M3_FSBPE=$6
     export M3_GEM5_OUT=$1/m3-fs-$2-$5-$6
-    export M3_GEM5_CFG=config/$5.py
     mkdir -p $M3_GEM5_OUT
+
+    if [ "$5" = "a" ]; then
+        export M3_GEM5_CFG=config/spm.py
+    elif [ "$5" = "b" ]; then
+        export M3_GEM5_CFG=config/caches.py
+        export M3_GEM5_MMU=0 M3_GEM5_DTUPOS=0
+    else
+        export M3_GEM5_CFG=config/caches.py
+        export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
+    fi
 
     /bin/echo -e "\e[1mStarting m3-fs-$2-$5-$6\e[0m"
 
@@ -55,11 +63,11 @@ run_bench() {
 jobs_init $2
 
 for bpe in 4 8 16 32 64 128 256; do
-    for c in spm caches; do
-        jobs_submit run_bench $1 read "" $rdcfg $c $bpe
-        jobs_submit run_bench $1 write "" $wrcfg $c $bpe
-        jobs_submit run_bench $1 write-clear "-c" $wrcfg $c $bpe
-        jobs_submit run_bench $1 copy "" $cpcfg $c $bpe
+    for pe in a b c; do
+        jobs_submit run_bench $1 read "" $rdcfg $pe $bpe
+        jobs_submit run_bench $1 write "" $wrcfg $pe $bpe
+        jobs_submit run_bench $1 write-clear "-c" $wrcfg $pe $bpe
+        jobs_submit run_bench $1 copy "" $cpcfg $pe $bpe
     done
 done
 
