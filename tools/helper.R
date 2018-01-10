@@ -19,6 +19,13 @@ error.bar <- function(mp, means, stddevs, horizontal=F) {
         segments(mp - 0.1, means + stDevs, mp + 0.1, means + stDevs, lwd=1)
 }
 
+bar.break <- function(mp, idx, ypos, height, skew) {
+    xvals <- c(mp[idx] - 0.5, mp[idx] + 0.5)
+    lines(xvals, c(ypos - height - skew, ypos - height + skew), lwd=1, col='black')
+    lines(xvals, c(ypos - skew, ypos + skew), lwd=5, col='white')
+    lines(xvals, c(ypos + height - skew, ypos + height + skew), lwd=1, col='black')
+}
+
 add_legend <- function(...) {
     opar <- par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=T)
     on.exit(par(opar))
