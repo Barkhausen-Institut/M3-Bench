@@ -28,7 +28,7 @@ plot <- barplot(as.matrix(tottimes), beside=F,
     ylim=c(0,12), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
     col=rev(colors),
     cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("M3-a","M3-b","M3-c"), sub="Total")
+    names.arg=c("M3-A","M3-B","M3-C"), sub="Total")
 axis(2, at = seq(0, 12, 3), las = 2)
 title(ylab = "Time (ms)", mgp=c(4, 1, 0))
 error.bar(plot, colSums(tottimes), totstddev)
@@ -39,7 +39,7 @@ plot <- barplot(as.matrix(rdtimes), beside=F,
     ylim=c(0,12), space=c(0.3, 0.2, 0.2), axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("M3-a","M3-b","M3-c"), sub="Reader")
+    names.arg=c("M3-A","M3-B","M3-C"), sub="Reader")
 error.bar(plot, colSums(rdtimes), rdstddev)
 
 par(mar=c(9.5,0,4,1))
@@ -48,7 +48,7 @@ plot <- barplot(as.matrix(wrtimes), beside=F,
     ylim=c(0,12), space=c(0.3, 0.2, 0.2), axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("M3-a","M3-b","M3-c"), sub="Writer")
+    names.arg=c("M3-A","M3-B","M3-C"), sub="Writer")
 error.bar(plot, colSums(wrtimes), wrstddev)
 
 # legend

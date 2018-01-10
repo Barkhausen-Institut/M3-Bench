@@ -16,6 +16,8 @@ m312=`./tools/m3-bench.sh stddev 0000 $mhz 5 < $1/m3-syscall-1-2/gem5.log`
 m320=`./tools/m3-bench.sh stddev 0000 $mhz 5 < $1/m3-syscall-2-0/gem5.log`
 echo "$m320 $m300 $m312 $m310" > $1/vm-sysc-stddev.dat
 
-Rscript plots/diss-vm-sysc/plot.R $1/eval-vm-sysc.pdf \
+Rscript plots/diss-vm-sysc/plot.R $1/eval-vm-sysc.tmp.pdf \
     $1/vm-sysc-times.dat \
     $1/vm-sysc-stddev.dat
+pdfcrop $1/eval-vm-sysc.tmp.pdf $1/eval-vm-sysc.pdf
+rm $1/eval-vm-sysc.tmp.pdf
