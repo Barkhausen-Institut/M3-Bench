@@ -61,8 +61,9 @@ gen_results() {
 
 gen_results $1
 
-Rscript plots/accelchain/plot.R $1/accelchain.pdf \
+Rscript plots/accelchain/plot.R $1/accelchain-tmp.pdf \
     $1/accelchain-1-times.dat \
     $1/accelchain-2-times.dat \
     $1/accelchain-3-times.dat \
     $1/accelchain-4-times.dat
+pdfcrop $1/accelchain-tmp.pdf $1/accelchain.pdf

@@ -1,8 +1,8 @@
 library(extrafont)
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 2
-namescale <- 2
+scaling <- 2.2
+namescale <- 2.2
 
 # colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
 colors <- gray.colors(3)
@@ -13,47 +13,48 @@ cptimes <- read.table(as.character(args[3]), header=TRUE, sep=" ") / (1000000 * 
 pitimes <- read.table(as.character(args[4]), header=TRUE, sep=" ") / (1000000 * 3)
 sqtimes <- read.table(as.character(args[5]), header=TRUE, sep=" ") / (1000000 * 3)
 
-pdf(as.character(args[1]), width=7, height=4)
+pdf(as.character(args[1]), width=7, height=2.3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(1.42,1,1,1), heights=c(1,1))
 
-par(mar=c(9.5,5,4,1))
+par(mar=c(8,5,3.6,1))
 
-barplot(as.matrix(wrtimes), beside=F,
+barplot(as.matrix(wrtimes), beside=F, axes=F,
     ylim=c(0,3.5), space=c(0.3, 0.2, 0.2, 0.2), ylab="",
     col=colors,
-    cex.names=namescale, las=3, mgp=c(6.5, 0.5, 0),
-    names.arg=c("Linux","M3c-A","M3c-C","M3c-C*"), sub="tar")
+    cex.names=namescale, las=3, mgp=c(5.8, 0.5, 0),
+    names.arg=c("Linux","M3-A","M3-C","M3-C*"), sub="tar")
+axis(2, at = seq(0, 3.5, 1), las = 2)
 title(ylab = "Time (ms)", mgp=c(3, 1, 0))
 # box(col = 'black')
 
-par(mar=c(9.5,0,4,1))
+par(mar=c(8,0,3.6,1))
 
 barplot(as.matrix(cptimes), beside=F,
     ylim=c(0,3.5), space=c(0.3, 0.2, 0.2, 0.2), axes=F,
     col=colors,
-    cex.names=namescale, las=3, mgp=c(6.5, 0.5, 0),
-    names.arg=c("Linux","M3c-A","M3c-C","M3c-C*"), sub="untar")
+    cex.names=namescale, las=3, mgp=c(5.8, 0.5, 0),
+    names.arg=c("Linux","M3-A","M3-C","M3-C*"), sub="untar")
 # box(col = 'black')
 
-par(mar=c(9.5,0,4,1))
+par(mar=c(8,0,3.6,1))
 
 barplot(as.matrix(pitimes), beside=F,
     ylim=c(0,3.5), space=c(0.3, 0.2, 0.2, 0.2), axes=F,
     col=colors,
-    cex.names=namescale, las=3, mgp=c(6.5, 0.5, 0),
-    names.arg=c("Linux","M3c-A","M3c-C","M3c-C*"), sub="find")
+    cex.names=namescale, las=3, mgp=c(5.8, 0.5, 0),
+    names.arg=c("Linux","M3-A","M3-C","M3-C*"), sub="find")
 # box(col = 'black')
 
-par(mar=c(9.5,0,4,1))
+par(mar=c(8,0,3.6,1))
 
 barplot(as.matrix(sqtimes), beside=F,
     ylim=c(0,3.5), space=c(0.3, 0.2, 0.2, 0.2), axes=F,
     col=colors,
-    cex.names=namescale, las=3, mgp=c(6.5, 0.5, 0),
-    names.arg=c("Linux","M3c-A","M3c-C","M3c-C*"), sub="sqlite")
+    cex.names=namescale, las=3, mgp=c(5.8, 0.5, 0),
+    names.arg=c("Linux","M3-A","M3-C","M3-C*"), sub="sqlite")
 # box(col = 'black')
 
 # legend

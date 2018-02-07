@@ -44,11 +44,12 @@ gen_results $1 file 0001 pagefaults -1
 gen_results $1 anon 0000 pagefaults -4
 gen_results $1 file 0001 pagefaults -4
 
-Rscript plots/pagefaults/sc-plot.R $1/syscalls.pdf \
+Rscript plots/pagefaults/sc-plot.R $1/syscalls-tmp.pdf \
     $1/syscall-sysc-times.dat \
     $1/syscall-sysc-stddev.dat
+pdfcrop $1/syscalls-tmp.pdf $1/syscalls.pdf
 
-Rscript plots/pagefaults/pf-plot.R $1/pagefaults.pdf \
+Rscript plots/pagefaults/pf-plot.R $1/pagefaults-tmp.pdf \
     $1/pagefaults-anon-1-times.dat \
     $1/pagefaults-anon-1-stddev.dat \
     $1/pagefaults-file-1-times.dat \
@@ -57,3 +58,4 @@ Rscript plots/pagefaults/pf-plot.R $1/pagefaults.pdf \
     $1/pagefaults-anon-4-stddev.dat \
     $1/pagefaults-file-4-times.dat \
     $1/pagefaults-file-4-stddev.dat
+pdfcrop $1/pagefaults-tmp.pdf $1/pagefaults.pdf

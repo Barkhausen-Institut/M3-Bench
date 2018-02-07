@@ -85,8 +85,9 @@ gen_results $1 "untar"  > $1/applevel_asplos18-untar-times.dat
 gen_results $1 "find"   > $1/applevel_asplos18-find-times.dat
 gen_results $1 "sqlite" > $1/applevel_asplos18-sqlite-times.dat
 
-Rscript plots/applevel_asplos18/plot.R $1/applevel_asplos18.pdf \
+Rscript plots/applevel_asplos18/plot.R $1/applevel_asplos18-tmp.pdf \
     $1/applevel_asplos18-tar-times.dat \
     $1/applevel_asplos18-untar-times.dat \
     $1/applevel_asplos18-find-times.dat \
     $1/applevel_asplos18-sqlite-times.dat
+pdfcrop $1/applevel_asplos18-tmp.pdf $1/applevel_asplos18.pdf
