@@ -32,18 +32,18 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 par(mar=c(7,6,4,0.5))
 
 plot <- barplot(as.matrix(anon1times), beside=F,
-    ylim=c(0,11), space=c(0.3, 0.2, 0.2, 0.2), ylab="", axes=F,
+    ylim=c(0,10), space=c(0.3, 0.2, 0.2, 0.2), ylab="", axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("Linux","M3-B","M3-C","M3-C*"), sub="Anon 1P")
-axis(2, at = seq(0, 11, 2), las = 2)
+axis(2, at = seq(0, 10, 2), las = 2)
 title(ylab = "Time (µs)", mgp=c(4, 1, 0))
 error.bar(plot, colSums(anon1times), anon1stddev)
 
 par(mar=c(7,0,4,0.5))
 
 plot <- barplot(as.matrix(file1times), beside=F,
-    ylim=c(0,11), space=c(0.3, 0.2, 0.2, 0.2), ylab="", axes=F,
+    ylim=c(0,10), space=c(0.3, 0.2, 0.2, 0.2), ylab="", axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("Linux","M3-B","M3-C","M3-C*"), sub="File 1P")
@@ -52,7 +52,7 @@ error.bar(plot, colSums(file1times), file1stddev)
 par(mar=c(7,0,4,0.5))
 
 plot <- barplot(as.matrix(anon4times), beside=F,
-    ylim=c(0,11), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
+    ylim=c(0,10), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("M3-B","M3-C","M3-C*"), sub="Anon 4P")
@@ -61,7 +61,7 @@ error.bar(plot, colSums(anon4times), anon4stddev)
 par(mar=c(7,0,4,0.5))
 
 plot <- barplot(as.matrix(file4times), beside=F,
-    ylim=c(0,11), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
+    ylim=c(0,10), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("M3-B","M3-C","M3-C*"), sub="File 4P")
