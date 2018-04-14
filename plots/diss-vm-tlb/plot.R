@@ -18,7 +18,7 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 par(mar=c(7,6,4,1))
 
 plot <- barplot(as.matrix(times), beside=F,
-    ylim=c(0,1), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
+    ylim=c(0,1.021), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
     names.arg=c("M3-B","M3-C","M3-C*"), sub="TLB miss")
