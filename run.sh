@@ -34,6 +34,9 @@ mkdir -p results
 res=$(readlink -f results/$name)
 mkdir -p $res
 
+# increase number of file descriptors
+ulimit -n 8192
+
 for b in $benchs; do
     ./benchs/$b.sh $res $4
 done
