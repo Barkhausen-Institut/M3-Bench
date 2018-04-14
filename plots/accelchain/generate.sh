@@ -30,7 +30,7 @@ get_app_idle() {
 }
 
 gen_results() {
-    for num in 1 2 3 4; do
+    for num in 1 2 3 4 5 6; do
         echo -n > $1/accelchain-$num-times.dat
         echo -n > $1/accelchain-$num-idle.dat
         echo -n > $1/accelchain-$num-wakes.dat
@@ -38,14 +38,24 @@ gen_results() {
 
         for time in 1024 2048 4096 8192 16384 32768; do
             echo "Generating times and stddev for comp=$time num=$num..."
-            m30t=`./tools/m3-bench.sh time 0000 $mhz 1 < $1/m3-accelchain-0-$time-$num/gem5.log`
-            m31t=`./tools/m3-bench.sh time 0000 $mhz 1 < $1/m3-accelchain-1-$time-$num/gem5.log`
+            m30t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-0-$time-$num/gem5.log`
+            m31t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-1-$time-$num/gem5.log`
+            m32t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-2-$time-$num/gem5.log`
+            if [ "$m30t" = "" ]; then m30t=1; fi
+            if [ "$m31t" = "" ]; then m31t=1; fi
+            if [ "$m32t" = "" ]; then m32t=1; fi
             echo $m30t >> $1/accelchain-$num-times.dat
             echo $m31t >> $1/accelchain-$num-times.dat
-            m30s=`./tools/m3-bench.sh stddev 0000 $mhz 1 < $1/m3-accelchain-0-$time-$num/gem5.log`
-            m31s=`./tools/m3-bench.sh stddev 0000 $mhz 1 < $1/m3-accelchain-1-$time-$num/gem5.log`
+            echo $m32t >> $1/accelchain-$num-times.dat
+            m30s=`./tools/m3-bench.sh stddev 0000 $mhz 0 < $1/m3-accelchain-0-$time-$num/gem5.log`
+            m31s=`./tools/m3-bench.sh stddev 0000 $mhz 0 < $1/m3-accelchain-1-$time-$num/gem5.log`
+            m32s=`./tools/m3-bench.sh stddev 0000 $mhz 0 < $1/m3-accelchain-2-$time-$num/gem5.log`
+            if [ "$m30s" = "" ]; then m30s=0; fi
+            if [ "$m31s" = "" ]; then m31s=0; fi
+            if [ "$m32s" = "" ]; then m32s=0; fi
             echo $m30s $(echo 'print $(( 100. * (1.*'$m30s' / '$m30t') ))' | zsh) >> $1/accelchain-$num-stddev.dat
             echo $m31s $(echo 'print $(( 100. * (1.*'$m31s' / '$m31t') ))' | zsh) >> $1/accelchain-$num-stddev.dat
+            echo $m32s $(echo 'print $(( 100. * (1.*'$m32s' / '$m32t') ))' | zsh) >> $1/accelchain-$num-stddev.dat
 
             # m30=`get_app_idle $1/m3-accelchain-0-$time-$num/gem5.log`
             # m31=`get_app_idle $1/m3-accelchain-1-$time-$num/gem5.log`
@@ -65,5 +75,7 @@ Rscript plots/accelchain/plot.R $1/accelchain-tmp.pdf \
     $1/accelchain-1-times.dat \
     $1/accelchain-2-times.dat \
     $1/accelchain-3-times.dat \
-    $1/accelchain-4-times.dat
+    $1/accelchain-4-times.dat \
+    $1/accelchain-5-times.dat \
+    $1/accelchain-6-times.dat
 pdfcrop $1/accelchain-tmp.pdf $1/accelchain.pdf

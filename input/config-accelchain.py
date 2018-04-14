@@ -12,8 +12,9 @@ cmd_list = options.cmd.split(",")
 num_mem = 1
 num_pes = int(os.environ.get('M3_GEM5_PES'))
 fsimg = os.environ.get('M3_GEM5_FS')
-num_fft = 8
-mem_pe = num_pes + num_fft
+num_fft = 6
+num_indir = 6
+mem_pe = num_pes + num_fft + num_indir
 
 pes = []
 
@@ -41,11 +42,21 @@ for i in range(0, num_fft):
                        #l1size='32kB')
     pes.append(pe)
 
+for i in range(0, num_indir):
+    pe = createAccelPE(noc=root.noc,
+                       options=options,
+                       no=num_pes + num_fft + i,
+                       accel='indir',
+                       memPE=mem_pe,
+                       spmsize='128kB')
+                       #l1size='32kB')
+    pes.append(pe)
+
 # create the memory PEs
 for i in range(0, num_mem):
     pe = createMemPE(noc=root.noc,
                      options=options,
-                     no=num_pes + num_fft + i,
+                     no=num_pes + num_fft + num_indir + i,
                      size='1024MB',
                      content=fsimg if i == 0 else None)
     pes.append(pe)
