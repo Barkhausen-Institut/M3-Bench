@@ -5,7 +5,7 @@
 cfg=`readlink -f input/rctmux-pipe.cfg`
 
 cd m3
-export M3_BUILD=bench M3_FS=bench.img
+export M3_BUILD=release M3_FS=bench.img
 
 # export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_DBG=Dtu,DtuConnector
