@@ -12,12 +12,13 @@ wrtimes <- read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000000 * 
 cptimes <- read.table(as.character(args[3]), header=TRUE, sep=" ") / (1000000 * 3)
 pitimes <- read.table(as.character(args[4]), header=TRUE, sep=" ") / (1000000 * 3)
 sqtimes <- read.table(as.character(args[5]), header=TRUE, sep=" ") / (1000000 * 3)
+lvtimes <- read.table(as.character(args[6]), header=TRUE, sep=" ") / (1000000 * 3)
 
 pdf(as.character(args[1]), width=7, height=2.3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
-layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
-    widths=c(1.42,1,1,1), heights=c(1,1))
+layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
+    widths=c(1.42,1,1,1,1), heights=c(1,1))
 
 par(mar=c(8,5,3.6,1))
 
@@ -55,6 +56,15 @@ barplot(as.matrix(sqtimes), beside=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(5.8, 0.5, 0),
     names.arg=c("Linux","M3-A","M3-C","M3-C*"), sub="sqlite")
+# box(col = 'black')
+
+par(mar=c(8,0,3.6,1))
+
+barplot(as.matrix(lvtimes), beside=F,
+    ylim=c(0,3.5), space=c(0.3, 0.2, 0.2, 0.2), axes=F,
+    col=colors,
+    cex.names=namescale, las=3, mgp=c(5.8, 0.5, 0),
+    names.arg=c("Linux","M3-A","M3-C","M3-C*"), sub="leveldb")
 # box(col = 'black')
 
 # legend

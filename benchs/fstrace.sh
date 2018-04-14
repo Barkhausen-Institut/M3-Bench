@@ -7,7 +7,7 @@ cfg=`readlink -f input/fstrace.cfg`
 
 # build M3
 export M3_FSBPE=128
-export M3_BUILD=bench M3_FS=bench.img M3_CORES=5 M3_GEM5_CFG=config/caches.py
+export M3_BUILD=release M3_FS=bench.img M3_CORES=5 M3_GEM5_CFG=config/caches.py
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 # export M3_GEM5_CPU=TimingSimpleCPU
 ( cd m3 && ./b )
@@ -90,6 +90,7 @@ jobs_submit run_lx_bench $1 find    "find /bench/finddata/dir -name test"
 jobs_submit run_lx_bench $1 tar     "tar -cf /tmp/test.tar /bench/tardata/tar-3968"
 jobs_submit run_lx_bench $1 untar   "tar -xf /bench/untardata/tar-3968.tar -C /tmp"
 jobs_submit run_lx_bench $1 sqlite  "/bench/bin/sqlite /tmp/test.db"
+jobs_submit run_lx_bench $1 leveldb  "/bench/bin/leveldb /tmp/test.db"
 
 jobs_wait
 
@@ -98,6 +99,7 @@ for dtupos in 2 3; do
     jobs_submit run_m3_bench $1 tar 1 $dtupos
     jobs_submit run_m3_bench $1 untar 1 $dtupos
     jobs_submit run_m3_bench $1 sqlite 1 $dtupos
+    jobs_submit run_m3_bench $1 leveldb 1 $dtupos
 done
 
 export M3_GEM5_CFG=config/spm.py
@@ -106,6 +108,7 @@ jobs_submit run_m3_bench $1 find 2 0
 jobs_submit run_m3_bench $1 tar 2 0
 jobs_submit run_m3_bench $1 untar 2 0
 jobs_submit run_m3_bench $1 sqlite 2 0
+jobs_submit run_m3_bench $1 leveldb 2 0
 
 jobs_wait
 
