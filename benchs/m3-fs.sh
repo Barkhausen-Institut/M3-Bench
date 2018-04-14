@@ -7,7 +7,7 @@ wrcfg=`readlink -f input/filewriter.cfg`
 cpcfg=`readlink -f input/filecopy.cfg`
 
 cd m3
-export M3_BUILD=bench
+export M3_BUILD=release
 
 export M3_FS=bench.img
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
@@ -17,7 +17,6 @@ export M3_CORES=3
 # export M3_GEM5_CPU=TimingSimpleCPU
 
 run_bench() {
-    export M3_FS_CLEAR=$3
     export M3_FSBPE=$6
     export M3_GEM5_OUT=$1/m3-fs-$2-$5-$6
     mkdir -p $M3_GEM5_OUT
@@ -32,6 +31,7 @@ run_bench() {
         export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
     fi
     export M3_REPEATS=$7
+    export M3FS_ARGS="-e $M3_FSBPE $3"
 
     /bin/echo -e "\e[1mStarting m3-fs-$2-$5-$6\e[0m"
 
@@ -63,7 +63,7 @@ run_bench() {
 
 jobs_init $2
 
-for bpe in 4 8 16 32 64 128 256; do
+for bpe in 2 4 8 16 32 64 128 256; do
     jobs_submit run_bench $1 read "" $rdcfg a $bpe 1
     jobs_submit run_bench $1 write "" $wrcfg a $bpe 1
     jobs_submit run_bench $1 write-clear "-c" $wrcfg a $bpe 1
@@ -72,10 +72,10 @@ done
 
 bpe=64
 for pe in a b c; do
-    jobs_submit run_bench $1 read "" $rdcfg $pe $bpe 5
-    jobs_submit run_bench $1 write "" $wrcfg $pe $bpe 5
-    jobs_submit run_bench $1 write-clear "-c" $wrcfg $pe $bpe 5
-    jobs_submit run_bench $1 copy "" $cpcfg $pe $bpe 5
+    jobs_submit run_bench $1 read "-r" $rdcfg $pe $bpe 5
+    jobs_submit run_bench $1 write "-r" $wrcfg $pe $bpe 5
+    jobs_submit run_bench $1 write-clear "-c -r" $wrcfg $pe $bpe 5
+    jobs_submit run_bench $1 copy "-r" $cpcfg $pe $bpe 5
 done
 
 jobs_wait

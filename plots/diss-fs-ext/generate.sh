@@ -9,7 +9,7 @@ m3_total() {
 }
 
 echo "Read Write Copy" > $1/fs-a-ext.dat
-for bpe in 4 8 16 32 64 128 256; do
+for bpe in 2 4 8 16 32 64 128 256; do
     rd=`m3_total $1 read a $bpe`
     wr=`m3_total $1 write a $bpe`
     cp=`m3_total $1 copy a $bpe`

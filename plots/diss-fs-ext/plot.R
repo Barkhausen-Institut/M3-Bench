@@ -1,8 +1,8 @@
 library(extrafont)
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.3
-namescale <- 1.3
+scaling <- 1.25
+namescale <- 1.25
 
 times = read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000000 * 3)
 
@@ -14,7 +14,7 @@ plot(times$Read, ylim=c(0,20), type="o", pch=0, axes=FALSE, ylab="Time (ms)", xl
 lines(times$Write, ylim=c(0,20), type="o", pch=1, lty="dashed")
 lines(times$Copy, ylim=c(0,20), type="o", pch=2, lty="dotted")
 
-axis(side = 1, at = 1:7, lab = c("4","8","16","32","64","128","256"))
+axis(side = 1, at = 1:8, lab = c("2","4","8","16","32","64","128","256"))
 axis(side = 2, at = seq(0, 20, by = 5), labels = TRUE)
 
 # legend
