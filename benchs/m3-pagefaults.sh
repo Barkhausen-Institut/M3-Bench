@@ -5,7 +5,7 @@
 cfg=`readlink -f input/bench-pagefaults.cfg`
 
 cd m3
-export M3_BUILD=bench
+export M3_BUILD=release
 
 export M3_GEM5_CFG=config/caches.py
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
