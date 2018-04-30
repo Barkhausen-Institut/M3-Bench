@@ -12,14 +12,13 @@ cmd_list = options.cmd.split(",")
 num_mem = 1
 num_pes = int(os.environ.get('M3_GEM5_PES'))
 fsimg = os.environ.get('M3_GEM5_FS')
-num_fft = 6
-num_indir = 6
+num_fft = int(os.environ.get('ACCEL_NUM'))
+num_indir = int(os.environ.get('ACCEL_NUM'))
 mem_pe = num_pes + num_fft + num_indir
 
 pes = []
 
 # create the core PEs
-options.cpu_clock = '3GHz'
 for i in range(0, num_pes):
     pe = createCorePE(noc=root.noc,
                       options=options,
@@ -31,6 +30,9 @@ for i in range(0, num_pes):
                       dtupos=1,
                       mmu=2)
     pes.append(pe)
+
+# create the accelerator PEs
+options.cpu_clock = '1GHz'
 
 for i in range(0, num_fft):
     pe = createAccelPE(noc=root.noc,

@@ -10,8 +10,9 @@ export M3_BUILD=release
 
 export M3_GEM5_CFG=$config
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector,DtuAccelStream,DtuAccelStreamState
+export M3_GEM5_CPUFREQ=3GHz
 export M3_GEM5_MEMFREQ=1GHz
-export M3_CORES=6
+export M3_CORES=8
 # export M3_GEM5_CPU=TimingSimpleCPU
 
 run_bench() {
@@ -38,11 +39,12 @@ run_bench() {
 
 jobs_init $2
 
-for num in 1 2 3 4 5 6; do
-    for time in 1024 2048 4096 8192 16384 32768; do
+for num in 1 2 4 8; do
+    for time in 256 512 1024 2048; do
         jobs_submit run_bench $1 0 $time $num
         jobs_submit run_bench $1 1 $time $num
         jobs_submit run_bench $1 2 $time $num
+        # jobs_submit run_bench $1 3 $time $num
     done
 done
 
