@@ -5,10 +5,10 @@
 cfg=`readlink -f input/rctmux.cfg`
 
 cd m3
-export M3_BUILD=bench M3_FS=bench.img
+export M3_BUILD=release M3_FS=bench.img
 
 export M3_GEM5_CFG=config/caches.py
-export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
+export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector,DtuMsgs
 # export M3_GEM5_CPU=TimingSimpleCPU
 
 run() {
@@ -43,7 +43,7 @@ run_fstrace() {
 
     # rebuild it first
     cp ../input/trace-$2.c src/apps/fstrace/m3fs/trace.c
-    ./b 1>$out/output.txt 2>&1
+    ./b 1>$out/output.txt
     if [ $? -ne 0 ]; then
         /bin/echo -e "\e[1;31mBuild failed\e[0m"
         exit

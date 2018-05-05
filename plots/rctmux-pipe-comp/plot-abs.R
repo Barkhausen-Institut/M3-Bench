@@ -30,7 +30,7 @@ barcols = c(cols[1], cols[1], cols[1],
             cols[5], cols[5], cols[5])
 
 barplot(as.matrix(read100),
-    ylim=c(0,21), ylab="", space=barspace, beside=T,
+    ylim=c(0,150), ylab="", space=barspace, beside=T,
     cex.names=scaling, names.arg="100/10", col=barcols)
 title(ylab = "Time (M cycles)", mgp=c(3, 1, 0))
 box(col = 'black')
@@ -38,42 +38,42 @@ box(col = 'black')
 par(mar=c(2.8,0.2,3,0.2))
 
 barplot(as.matrix(write100),
-    ylim=c(0,21), axes=F, space=barspace, beside=T,
+    ylim=c(0,150), axes=F, space=barspace, beside=T,
     cex.names=scaling, names.arg="10/100", col=barcols)
 box(col = 'black')
 
 par(mar=c(2.8,0.2,3,0.2))
 
 barplot(as.matrix(read500),
-    ylim=c(0,21), axes=F, space=barspace, beside=T,
+    ylim=c(0,150), axes=F, space=barspace, beside=T,
     cex.names=scaling, names.arg="100/50", col=barcols)
 box(col = 'black')
 
 par(mar=c(2.8,0.2,3,0.2))
 
 barplot(as.matrix(write500),
-    ylim=c(0,21), axes=F, space=barspace, beside=T,
+    ylim=c(0,150), axes=F, space=barspace, beside=T,
     cex.names=scaling, names.arg="50/100", col=barcols)
 box(col = 'black')
 
 par(mar=c(2.8,0.2,3,0.2))
 
 barplot(as.matrix(read750),
-    ylim=c(0,21), axes=F, space=barspace, beside=T,
+    ylim=c(0,150), axes=F, space=barspace, beside=T,
     cex.names=scaling, names.arg="100/75", col=barcols)
 box(col = 'black')
 
 par(mar=c(2.8,0.2,3,0.2))
 
 barplot(as.matrix(write750),
-    ylim=c(0,21), axes=F, space=barspace, beside=T,
+    ylim=c(0,150), axes=F, space=barspace, beside=T,
     cex.names=scaling, names.arg="75/100", col=barcols)
 box(col = 'black')
 
 par(mar=c(2.8,0.2,3,0.2))
 
 barplot(as.matrix(read1000),
-    ylim=c(0,21), axes=F, space=barspace, beside=T,
+    ylim=c(0,150), axes=F, space=barspace, beside=T,
     cex.names=scaling, names.arg="100/100", col=barcols)
 box(col = 'black')
 

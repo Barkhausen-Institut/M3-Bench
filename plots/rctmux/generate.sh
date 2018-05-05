@@ -1,21 +1,21 @@
 #!/bin/bash
 
 get_m3_appavg() {
-    grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-avg.awk
+    ./tools/m3-bench.sh time 1234 1000 2 < $1
 }
 get_m3_appsd() {
-    grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-stddev.awk
+    ./tools/m3-bench.sh stddev 1234 1000 2 < $1
 }
 get_ratio() {
     echo "scale=8; ($1 * 1.0) / $2" | bc
 }
 gen_data() {
     echo "ratio stddev"
-    echo $(get_ratio $(get_m3_appavg $1/m3-rctmux-$2-alone.txt) $(get_m3_appavg $1/m3-rctmux-$2-shared.txt)) 0
+    echo $(get_ratio $(get_m3_appavg $1/m3-rctmux-$2-alone/gem5.log) $(get_m3_appavg $1/m3-rctmux-$2-shared/gem5.log)) 0
 }
 gen_sd() {
-    ti=$(get_m3_appavg $1/m3-rctmux-$3-$2.txt)
-    sd=$(get_m3_appsd $1/m3-rctmux-$3-$2.txt)
+    ti=$(get_m3_appavg $1/m3-rctmux-$3-$2/gem5.log)
+    sd=$(get_m3_appsd $1/m3-rctmux-$3-$2/gem5.log)
     echo $sd $ti $(get_ratio $sd $ti)
 }
 
@@ -27,7 +27,9 @@ gen_data $1 "sqlite" > $1/m3-rctmux-sqlite-times.dat
 echo "stddev runtime percent" > $1/m3-rctmux-alone-sd.dat
 echo "stddev runtime percent" > $1/m3-rctmux-shared-sd.dat
 for a in tar untar find sqlite; do
+    echo "Generating times for $a-alone..."
     gen_sd $1 alone $a >> $1/m3-rctmux-alone-sd.dat
+    echo "Generating times for $a-shared..."
     gen_sd $1 shared $a >> $1/m3-rctmux-shared-sd.dat
 done
 

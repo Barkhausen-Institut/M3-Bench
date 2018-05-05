@@ -1,11 +1,7 @@
 #!/bin/bash
 
 get_m3_appavg() {
-    if [ "`grep 'TIME: 1234' $1 | tail -n +2`" != "" ]; then
-        grep 'TIME: 1234' $1 | tail -n +2 | ./tools/m3-avg.awk
-    else
-        echo 1
-    fi
+    ./m3/src/tools/bench.sh $1 3000 | grep "TIME: 1234" | sed -e 's/PE3-//g' | ./tools/m3-avg.awk
 }
 get_lx_appavg() {
     if [ "`grep "Total time" $1`" != "" ]; then
@@ -25,15 +21,15 @@ get_ratio() {
 gen_data() {
     echo "ratio"
     for s in $sizes; do
-        echo $(get_ratio $(get_m3_appavg $1/m3-rctmux-$2-$s-alone.txt) $(get_m3_appavg $1/m3-rctmux-$2-$s-shared.txt))
+        echo $(get_ratio $(get_m3_appavg $1/m3-rctmux-$2-$s-alone/gem5.log) $(get_m3_appavg $1/m3-rctmux-$2-$s-shared/gem5.log))
     done
 }
 gen_abs_data() {
     echo "time"
     for s in $sizes; do
-        echo $(get_m3_appavg $1/m3-rctmux-$2-$s-alone.txt)
-        echo $(get_m3_appavg $1/m3-rctmux-$2-$s-shared.txt)
-        echo $(get_lx_appavg $1/lx-$2-$s-output.txt)
+        echo $(get_m3_appavg $1/m3-rctmux-$2-$s-alone/gem5.log)
+        echo $(get_m3_appavg $1/m3-rctmux-$2-$s-shared/gem5.log)
+        echo $(get_lx_appavg $1/lx-$(echo $2 | sed -e 's/-//')-$s/res.txt)
     done
 }
 
@@ -41,6 +37,7 @@ sizes="32 64 128 256 512"
 
 for a in read write; do
     for comp in 100 500 750 1000; do
+        echo "Generating $1/m3-rctmux-$a-$comp-{abstimes,times}.dat..."
         gen_data $1 $a-$comp > $1/m3-rctmux-$a-$comp-times.dat
         gen_abs_data $1 $a-$comp > $1/m3-rctmux-$a-$comp-abstimes.dat
     done
