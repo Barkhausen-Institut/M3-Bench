@@ -32,9 +32,9 @@ run_pipe() {
     mkdir -p $out
 
     if [ "$4" = "alone" ]; then
-        M3_GEM5_OUT=$out M3_CORES=7 M3_RCTMUX_ARGS="0 DRAM $3" run $1 $2 alone
+        M3_GEM5_OUT=$out M3_CORES=7 M3_RCTMUX_ARGS="0 0 4 $3" run $1 $2 alone
     else
-        M3_GEM5_OUT=$out M3_CORES=6 M3_RCTMUX_ARGS="1 DRAM $3" run $1 $2 shared
+        M3_GEM5_OUT=$out M3_CORES=6 M3_RCTMUX_ARGS="1 0 4 $3" run $1 $2 shared
     fi
 }
 

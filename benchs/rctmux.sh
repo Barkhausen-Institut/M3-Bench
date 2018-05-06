@@ -50,9 +50,9 @@ run_fstrace() {
     fi
 
     if [ "$3" = "alone" ]; then
-        M3_GEM5_OUT=$out M3_CORES=6 M3_RCTMUX_ARGS="0 2 /bin/fstrace-m3fs /tmp/1/ /bin/fstrace-m3fs /tmp/2/" run $1 $2 $3
+        M3_GEM5_OUT=$out M3_CORES=6 M3_RCTMUX_ARGS="0 4 2 /bin/fstrace-m3fs /tmp/1/ /bin/fstrace-m3fs /tmp/2/" run $1 $2 $3
     else
-        M3_GEM5_OUT=$out M3_CORES=5 M3_RCTMUX_ARGS="1 2 /bin/fstrace-m3fs /tmp/1/ /bin/fstrace-m3fs /tmp/2/" run $1 $2 $3
+        M3_GEM5_OUT=$out M3_CORES=5 M3_RCTMUX_ARGS="1 4 2 /bin/fstrace-m3fs /tmp/1/ /bin/fstrace-m3fs /tmp/2/" run $1 $2 $3
     fi
 }
 

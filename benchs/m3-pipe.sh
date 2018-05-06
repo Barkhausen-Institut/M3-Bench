@@ -52,9 +52,9 @@ comp=2
 wr=/bin/rctmux-util-pipewr
 rd=/bin/rctmux-util-piperd
 
-jobs_submit run $1 a a-dram         "0 0 3 2 $wr $ds $comp $rd $comp"
-jobs_submit run $1 b b-dram         "0 0 3 2 $wr $ds $comp $rd $comp"
-jobs_submit run $1 c c-dram         "0 0 3 2 $wr $ds $comp $rd $comp"
-jobs_submit run $1 a a-near-spm     "0 1 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 a a-dram         "0 0 4 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 b b-dram         "0 0 4 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 c c-dram         "0 0 4 3 2 $wr $ds $comp $rd $comp"
+jobs_submit run $1 a a-near-spm     "0 1 4 3 2 $wr $ds $comp $rd $comp"
 
 jobs_wait

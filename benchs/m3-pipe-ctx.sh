@@ -40,42 +40,42 @@ jobs_init $2
 
 export M3_CORES=6
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "1 0 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared rand wc $sz
-    jobs_submit run $1 "1 0 2 1 /bin/cat /data/${sz}k.txt /bin/wc" shared cat wc $sz
-    jobs_submit run $1 "1 0 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared rand sink $sz
-    jobs_submit run $1 "1 0 2 1 /bin/cat /data/${sz}k.txt /bin/sink" shared cat sink $sz
+    jobs_submit run $1 "1 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared rand wc $sz
+    jobs_submit run $1 "1 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/wc" shared cat wc $sz
+    jobs_submit run $1 "1 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared rand sink $sz
+    jobs_submit run $1 "1 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/sink" shared cat sink $sz
 done
 
 export M3_CORES=7
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "0 0 2 1 /bin/rand $(($sz * 1024)) /bin/wc" alone rand wc $sz
-    jobs_submit run $1 "0 0 2 1 /bin/cat /data/${sz}k.txt /bin/wc" alone cat wc $sz
-    jobs_submit run $1 "0 0 2 1 /bin/rand $(($sz * 1024)) /bin/sink" alone rand sink $sz
-    jobs_submit run $1 "0 0 2 1 /bin/cat /data/${sz}k.txt /bin/sink" alone cat sink $sz
+    jobs_submit run $1 "0 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" alone rand wc $sz
+    jobs_submit run $1 "0 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/wc" alone cat wc $sz
+    jobs_submit run $1 "0 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/sink" alone rand sink $sz
+    jobs_submit run $1 "0 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/sink" alone cat sink $sz
 done
 
 export M3_CORES=7
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "3 0 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared-m3fs rand wc $sz
-    jobs_submit run $1 "3 0 2 1 /bin/cat /foo/data/${sz}k.txt /bin/wc" shared-m3fs cat wc $sz
-    jobs_submit run $1 "3 0 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared-m3fs rand sink $sz
-    jobs_submit run $1 "3 0 2 1 /bin/cat /foo/data/${sz}k.txt /bin/sink" shared-m3fs cat sink $sz
+    jobs_submit run $1 "3 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared-m3fs rand wc $sz
+    jobs_submit run $1 "3 0 4 2 1 /bin/cat /foo/data/${sz}k.txt /bin/wc" shared-m3fs cat wc $sz
+    jobs_submit run $1 "3 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared-m3fs rand sink $sz
+    jobs_submit run $1 "3 0 4 2 1 /bin/cat /foo/data/${sz}k.txt /bin/sink" shared-m3fs cat sink $sz
 done
 
 export M3_CORES=6
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "4 0 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared-all rand wc $sz
-    jobs_submit run $1 "4 0 2 1 /bin/cat /foo/data/${sz}k.txt /bin/wc" shared-all cat wc $sz
-    jobs_submit run $1 "4 0 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared-all rand sink $sz
-    jobs_submit run $1 "4 0 2 1 /bin/cat /foo/data/${sz}k.txt /bin/sink" shared-all cat sink $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared-all rand wc $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/cat /foo/data/${sz}k.txt /bin/wc" shared-all cat wc $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared-all rand sink $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/cat /foo/data/${sz}k.txt /bin/sink" shared-all cat sink $sz
 done
 
 export M3_CORES=5
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "4 0 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared-1pe rand wc $sz
-    jobs_submit run $1 "4 0 2 1 /bin/cat /data/${sz}k.txt /bin/wc" shared-1pe cat wc $sz
-    jobs_submit run $1 "4 0 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared-1pe rand sink $sz
-    jobs_submit run $1 "4 0 2 1 /bin/cat /data/${sz}k.txt /bin/sink" shared-1pe cat sink $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared-1pe rand wc $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/wc" shared-1pe cat wc $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/sink" shared-1pe rand sink $sz
+    jobs_submit run $1 "4 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/sink" shared-1pe cat sink $sz
 done
 
 jobs_wait
