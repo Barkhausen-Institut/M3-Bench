@@ -8,13 +8,13 @@ namescale <- 2
 # colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
 colors <- gray.colors(2)
 
-# convert back to time (cycles / 3)
-rdtimes  <- read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000000 * 3)
-rdstddev <- scan(args[3]) / (1000000 * 3)
-wrtimes  <- read.table(as.character(args[4]), header=TRUE, sep=" ") / (1000000 * 3)
-wrstddev <- scan(args[5]) / (1000000 * 3)
-cptimes  <- read.table(as.character(args[6]), header=TRUE, sep=" ") / (1000000 * 3)
-cpstddev <- scan(args[7]) / (1000000 * 3)
+times   <- list()
+stddevs <- list()
+for(i in 1:3) {
+    # convert back to time (cycles / 3)
+    times[[i]]   <- read.table(as.character(args[i * 2]), header=TRUE, sep=" ") / (1000000 * 3)
+    stddevs[[i]] <- scan(args[i * 2 + 1]) / (1000000 * 3)
+}
 
 pdf(as.character(args[1]), width=5, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
@@ -22,34 +22,36 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
     widths=c(1.5,1,1), heights=c(1,1))
 
-par(mar=c(9.5,6,4,1))
+par(mar=c(8.5,5.5,4,0))
 
-plot <- barplot(as.matrix(rdtimes), beside=F,
-    ylim=c(0,10), space=c(0.3, 0.2, 0.2), ylab="", axes=F,
+barplot(as.matrix(times[[1]]), beside=F, ylim=c(0,10), axes=F,
+    space=rep(0.2, 3), names.arg=rep("", 3))
+abline(h=c(seq(0,9,3)), col="gray80")
+
+plot <- barplot(as.matrix(times[[1]]), beside=F, add=T,
+    ylim=c(0,10), space=rep(0.2, 3), ylab="", axes=F,
     col=colors,
-    cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
+    cex.names=namescale, las=3, mgp=c(6, 0.5, 0),
     names.arg=c("M3-A","M3-B","M3-C"), sub="Read")
 axis(2, at = seq(0, 10, 3), las = 2)
-title(ylab = "Time (ms)", mgp=c(4, 1, 0))
-error.bar(plot, colSums(rdtimes), rdstddev)
+title(ylab = "Time (ms)", mgp=c(3, 1, 0))
+error.bar(plot, colSums(times[[1]]), stddevs[[1]])
 
-par(mar=c(9.5,0,4,1))
+subs <- c("Write", "Copy")
+for(i in 2:length(times)) {
+    par(mar=c(8.5,0,4,0))
 
-plot <- barplot(as.matrix(wrtimes), beside=F,
-    ylim=c(0,10), space=c(0.3, 0.2, 0.2), axes=F,
-    col=colors,
-    cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("M3-A","M3-B","M3-C"), sub="Write")
-error.bar(plot, colSums(wrtimes), wrstddev)
+    barplot(as.matrix(times[[i]]), beside=F, ylim=c(0,10), axes=F,
+        space=rep(0.2, 3), names.arg=rep("", 3))
+    abline(h=c(seq(0,9,3)), col="gray80")
 
-par(mar=c(9.5,0,4,1))
-
-plot <- barplot(as.matrix(cptimes), beside=F,
-    ylim=c(0,10), space=c(0.3, 0.2, 0.2), axes=F,
-    col=colors,
-    cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("M3-A","M3-B","M3-C"), sub="Copy")
-error.bar(plot, colSums(cptimes), cpstddev)
+    plot <- barplot(as.matrix(times[[i]]), beside=F, add=T,
+        ylim=c(0,10), space=rep(0.2, 3), axes=F,
+        col=colors,
+        cex.names=namescale, las=3, mgp=c(6, 0.5, 0),
+        names.arg=c("M3-A","M3-B","M3-C"), sub=subs[[i - 1]])
+    error.bar(plot, colSums(times[[i]]), stddevs[[i]])
+}
 
 # legend
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
