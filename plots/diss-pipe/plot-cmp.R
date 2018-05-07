@@ -17,8 +17,12 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 par(mar=c(5,5.5,2,1))
 
-plot <- barplot(as.matrix(cmptimes), beside=F,
-    ylim=c(0,20), space=c(0.3, 0.2, 0.2, 0.4, 0.2, 0.2), ylab="", axes=F,
+barplot(as.matrix(cmptimes), beside=F, ylim=c(0,20), axes=F,
+    space=c(0.2, 0.2, 0.2, 0.4, 0.2, 0.2), names.arg=rep("", 6))
+abline(h=c(seq(0,20,5)), col="gray80")
+
+plot <- barplot(as.matrix(cmptimes), beside=F, add=T,
+    ylim=c(0,20), space=c(0.2, 0.2, 0.2, 0.4, 0.2, 0.2), ylab="", axes=F,
     col=colors, cex.names=namescale, las=2, mgp=c(5, 0.8, 3),
     names.arg=c("Linux", "Lx-rd", "Lx-wr", "M3", "M3-rd", "M3-wr"))
 axis(2, at = seq(0, 20, 5), las = 2)
