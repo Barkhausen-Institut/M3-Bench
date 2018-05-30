@@ -7,9 +7,9 @@ sigusr1() {
 }
 
 sigint() {
-    echo "Terminating running jobs (`jobs -p | wc -l`)..."
+    echo "Terminating running jobs (`jobs -p -r | wc -l`)..."
     # kill the whole process group to kill also the childs in an easy and reliable way.
-    for pid in `jobs -p`; do
+    for pid in `jobs -p -r`; do
         kill -INT -$pid
     done
     exit 1
@@ -28,7 +28,7 @@ jobs_init() {
 
 jobs_submit() {
     # wait until there are free slots
-    while [ `jobs -p | wc -l` -ge $parallel ]; do
+    while [ `jobs -p -r | wc -l` -ge $parallel ]; do
         sleep 1 || kill -INT $$
     done
 
