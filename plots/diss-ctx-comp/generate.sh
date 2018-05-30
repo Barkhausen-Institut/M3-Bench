@@ -7,12 +7,18 @@ mhz=`get_mhz $1/m3-comp-ctx-alone-b-1/output.txt`
 m3_avg() {
     ./tools/m3-bench.sh time 1234 $mhz 1 < $1/m3-comp-ctx-$2-$3-$4/gem5.log
 }
+m3_stddev() {
+    ./tools/m3-bench.sh stddev 1234 $mhz 1 < $1/m3-comp-ctx-$2-$3-$4/gem5.log
+}
 
-for t in b c; do
+for t in c; do
     echo -n > $1/comp-ctx-$t.dat
+    echo -n > $1/comp-ctx-$t-stddev.dat
 
     base=`m3_avg $1 alone $t 1`
-    for ts in 1 2 4 8 16; do
+    basestddev=`m3_stddev $1 alone $t 1`
+    echo $((100.0 * ($basestddev * 1. / $base))) >> $1/comp-ctx-$t-stddev.dat
+    for ts in 1 2 4 8; do
         time=`m3_avg $1 shared $t $ts`
         if [ "$time" = "" ]; then
             ratio=0.95
@@ -20,7 +26,12 @@ for t in b c; do
             ratio=$((($base * 1.0) / $time))
         fi
         echo $ratio >> $1/comp-ctx-$t.dat
+
+        stddev=`m3_stddev $1 shared $t $ts`
+        echo $((100.0 * ($stddev * 1. / $time))) >> $1/comp-ctx-$t-stddev.dat
     done
 
-    Rscript plots/diss-ctx-comp/plot.R $1/eval-ctx-comp-$t.pdf $1/comp-ctx-$t.dat
+    Rscript plots/diss-ctx-comp/plot.R $1/eval-ctx-comp-$t.tmp.pdf $1/comp-ctx-$t.dat
+    pdfcrop $1/eval-ctx-comp-$t.tmp.pdf $1/eval-ctx-comp-$t.pdf
+    rm $1/eval-ctx-comp-$t.tmp.pdf
 done

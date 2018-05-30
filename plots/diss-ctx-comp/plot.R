@@ -3,25 +3,26 @@ source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.5
-namescale <- 1.6
+namescale <- 1.5
 
 # colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
-colors <- gray.colors(5)
+colors <- gray.colors(1)
 
 ratios <- scan(as.character(args[2]))
 
 print(ratios)
 
-pdf(as.character(args[1]), width=5, height=3)
+pdf(as.character(args[1]), width=10, height=2)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
-par(mar=c(4.5,6.5,1,0))
+par(mar=c(4,8,1,2))
 
-barplot(ratios, beside=T,
-    ylim=c(0.99,1), ylab="Runtime (rel.)", axes=T, xpd=F,
-    col=colors,
-    cex.names=namescale, las=2, mgp=c(5, 1, 0),
-    names.arg=c("1ms","2ms","4ms","8ms","16ms"))
+barplot(ratios, beside=F,
+    xlim=c(0.99,1), xlab="Runtime (rel.)", axes=T, xpd=F,
+    col=colors, horiz=T,
+    cex.names=namescale, las=1, mgp=c(3, 1, 0),
+    names.arg=c("1ms","2ms","4ms","8ms"))
+title(ylab = "Time slice", mgp=c(4, 1, 0))
 
 dev.off()
 embed_fonts(as.character(args[1]))
