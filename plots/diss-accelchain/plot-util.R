@@ -24,7 +24,6 @@ print(sleep)
 barplot(
     as.matrix(utils[[1]]),
     beside=T,
-    border=NA,
     ylab="",
     ylim=c(0, 1),
     mgp=c(3.5, 1, 0),
@@ -44,7 +43,6 @@ for (i in 2:length(utils)) {
     barplot(
         as.matrix(utils[[i]]),
         beside=T,
-        border=NA,
         ylim=c(0, 1),
         mgp=c(3.5, 1, 0),
         las=2,

@@ -22,7 +22,7 @@ barplot(
 )
 
 legend("top", rownames(vals),
-    xpd=TRUE, horiz=TRUE, bty="n", inset=c(0,-0.13), cex=scaling, fill=gray.colors(3))
+    xpd=TRUE, horiz=TRUE, bty="n", inset=c(0,-0.13), cex=scaling, fill=gray.colors(2))
 
 dev.off()
 embed_fonts(as.character(args[1]))

@@ -45,11 +45,15 @@ for(i in 2:length(times)) {
         space=rep(0.15, 3), names.arg=rep("", 3))
     abline(h=c(seq(0,30,5)), col="gray80")
 
+    if(i == 2)
+        names <- c("Linux","M3", "M3-zero")
+    else
+        names <- c("Linux","M3", "Lx-send")
     plot <- barplot(as.matrix(times[[i]]), beside=F, add=T,
         ylim=c(0,30), space=rep(0.15, 3), axes=F,
         col=colors,
         cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-        names.arg=c("Linux","M3", "M3-zero"), sub=subs[[i - 1]])
+        names.arg=names, sub=subs[[i - 1]])
     error.bar(plot, colSums(times[[i]]), stddevs[[i]])
 }
 

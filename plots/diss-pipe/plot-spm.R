@@ -28,9 +28,9 @@ plot <- barplot(as.matrix(spmtimes), beside=F, add=T,
 axis(2, at = seq(0, 20, 5), las = 2)
 error.bar(plot, colSums(spmtimes), stddev)
 
-legend("topright", c("Total", "Idle", "OS", "Xfers"), xpd=TRUE, horiz=F, bty="y",
-    bg="white", box.col = "white",
-    inset=c(0,-0.1), cex=namescale, fill=rev(colors))
+# legend("topright", c("Total", "Idle", "OS", "Xfers"), xpd=TRUE, horiz=F, bty="y",
+#     bg="white", box.col = "white",
+#     inset=c(0,-0.1), cex=namescale, fill=rev(colors))
 
 dev.off()
 embed_fonts(as.character(args[1]))
