@@ -1,5 +1,14 @@
 #!/bin/bash
 
+rscript_crop() {
+    script=$1
+    dst=$2
+    tmp=${dst/.pdf/.tmp.pdf}
+    shift && shift
+    Rscript $script $tmp $@ && pdfcrop $tmp $dst
+    rm $tmp
+}
+
 get_mhz() {
     ghz=`grep 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)GHz.*/\1/g'`
     if [ "$ghz" != "" ]; then

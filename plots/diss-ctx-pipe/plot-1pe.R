@@ -2,8 +2,8 @@ library(extrafont)
 source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 2
-namescale <- 1.6
+scaling <- 1.3
+namescale <- 1.3
 
 # colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
 colors <- gray.colors(2)
@@ -16,54 +16,59 @@ for(i in 1:4) {
     stddevs[[i]] <- read.table(as.character(args[i * 2 + 1]), header=F, sep=" ") / (1000000 * 3)
 }
 
-print(times)
-print(stddevs)
-
-pdf(as.character(args[1]), width=5, height=3)
+pdf(as.character(args[1]), width=5, height=2)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(1.8,1,1.1), heights=c(1,1))
 
-par(mar=c(7.5,6,4,0))
+par(mar=c(5.5,5,4,0))
 
-plot <- barplot(t(as.matrix(times[[1]])), beside=T,
+barplot(t(as.matrix(times[[1]])), beside=T, ylim=c(0,25), axes=F,
+    space=rep(c(0.3, 0), 4), names.arg=rep("", 4))
+abline(h=c(seq(0,20,5)), col="gray80")
+
+plot <- barplot(t(as.matrix(times[[1]])), beside=T, add=T,
     ylim=c(0,25), ylab="", axes=F,
-    space=c(0.5, 0, 0.5, 0, 0.5, 0, 0.5, 0),
+    space=rep(c(0.3, 0), 4),
     col=colors,
-    cex.names=namescale, las=3, mgp=c(5, 0.5, 0),
+    cex.names=namescale, las=3, mgp=c(2.5, 0.5, 0),
     names.arg=c("512","1024","2048","4096"), sub="rand|wc")
-axis(2, at = seq(0, 30, 5), las = 2)
-title(ylab = "Time (ms)", mgp=c(4, 1, 0))
-for(x in 1:4) {
-    for(y in 1:2) {
-        error.bar(plot[y,x], times[[1]][x,y], stddevs[[1]][x,y])
-    }
-}
+axis(2, at = seq(0, 20, 5), las = 2)
+title(ylab = "Time (ms)", mgp=c(2.5, 1, 0))
+# for(x in 1:4) {
+#     for(y in 1:2) {
+#         error.bar(plot[y,x], times[[1]][x,y], stddevs[[1]][x,y])
+#     }
+# }
 
 names <- list("", "rand|sink", "cat|wc", "cat|sink")
 for(i in 2:length(names)) {
-    par(mar=c(7.5,0,4,0))
+    par(mar=c(5.5,0,4,0))
 
-    plot <- barplot(t(as.matrix(times[[i]])), beside=T,
+    barplot(t(as.matrix(times[[i]])), beside=T, ylim=c(0,25), axes=F,
+        space=rep(c(0.3, 0), 4), names.arg=rep("", 4))
+    abline(h=c(seq(0,20,5)), col="gray80")
+
+    plot <- barplot(t(as.matrix(times[[i]])), beside=T, add=T,
         ylim=c(0,25),
-        space=c(0.5, 0, 0.5, 0, 0.5, 0, 0.5, 0),
+        space=rep(c(0.3, 0), 4),
         axes=F,
         col=colors,
-        cex.names=namescale, las=3, mgp=c(5, 0.5, 0),
+        cex.names=namescale, las=3, mgp=c(2.5, 0.5, 0),
         names.arg=c("512","1024","2048","4096"), sub=names[[i]])
-    for(x in 1:4) {
-        for(y in 1:2) {
-            error.bar(plot[y,x], times[[i]][x,y], stddevs[[i]][x,y])
-        }
-    }
+    # for(x in 1:4) {
+    #     for(y in 1:2) {
+    #         error.bar(plot[y,x], times[[i]][x,y], stddevs[[i]][x,y])
+    #     }
+    # }
 }
 
 # legend
-par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
+par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,2,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("Lx", "M3"), xpd=TRUE, horiz=TRUE, bty="n",
+legend("top", c("M3all (1)", "Linux (1)"), xpd=TRUE, horiz=TRUE, bty="n",
     inset=c(0,0), cex=namescale, fill=colors)
 
 dev.off()

@@ -38,7 +38,7 @@ jobs_init $2
 
 ./b
 
-export M3_CORES=6
+export M3_CORES=7
 for sz in 512 1024 2048 4096; do
     jobs_submit run $1 "1 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" shared rand wc $sz
     jobs_submit run $1 "1 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/wc" shared cat wc $sz
@@ -46,7 +46,7 @@ for sz in 512 1024 2048 4096; do
     jobs_submit run $1 "1 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/sink" shared cat sink $sz
 done
 
-export M3_CORES=7
+export M3_CORES=8
 for sz in 512 1024 2048 4096; do
     jobs_submit run $1 "0 0 4 2 1 /bin/rand $(($sz * 1024)) /bin/wc" alone rand wc $sz
     jobs_submit run $1 "0 0 4 2 1 /bin/cat /data/${sz}k.txt /bin/wc" alone cat wc $sz

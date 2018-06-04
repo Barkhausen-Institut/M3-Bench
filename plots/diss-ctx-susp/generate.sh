@@ -110,7 +110,7 @@ nova_total() {
 echo -n > $1/ctx-susp-times.dat
 
 for v in sh-all sh-srv alone; do
-    get_app_idle $1/m3-ctx-susp7-c-$v/gem5.log $v >> $1/ctx-susp-times.dat
+    get_app_idle $1/m3-ctx-susp-c-$v/gem5.log $v >> $1/ctx-susp-times.dat
 done
 for t in b a; do
     for v in shared alone; do
