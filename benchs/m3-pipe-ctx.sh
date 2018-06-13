@@ -34,9 +34,9 @@ run() {
     fi
 }
 
-jobs_init $2
+./b || exit 1
 
-./b
+jobs_init $2
 
 export M3_CORES=7
 for sz in 512 1024 2048 4096; do

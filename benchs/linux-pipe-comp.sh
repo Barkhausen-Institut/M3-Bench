@@ -47,8 +47,8 @@ for comp in 32 64 128 256 512; do
     for per in 100 500 750 1000; do
         slow=$(($comp * 1000))
         fast=$(($comp * $per))
-        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 $wr $datasize $slow $rd $fast" "read-$per-$comp"
-        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 $wr $datasize $fast $rd $slow" "write-$per-$comp"
+        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 0 $wr $datasize $slow $rd $fast" "read-$per-$comp"
+        jobs_submit run $1 "/bench/bin/execpipe 3 2 4 1 1 0 $wr $datasize $fast $rd $slow" "write-$per-$comp"
     done
 done
 

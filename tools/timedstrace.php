@@ -21,15 +21,23 @@ $names = array(
     217 => "getdents64",
     262 => "newfstatat",
     40 => "sendfile",
+    23 => "select",
+    288 => "accept4",
+    45 => "recvfrom",
+    20 => "writev",
+    // 96 => "gettimeofday",
 );
 $numbers = array_flip($names);
 
-if($argc != 4)
-    exit("Usage: {$argv[0]} (trace|waittime|total|human) <strace> <timings>\n");
+if($argc < 4)
+    exit("Usage: {$argv[0]} (trace|waittime|total|human) <strace> <timings> [--no-ioctl]\n");
 
 $mode = $argv[1];
 $strace = file($argv[2]);
 $times = file($argv[3]);
+$seen_ioctl = false;
+if(isset($argv[4]) && $argv[4] == '--no-ioctl')
+    $seen_ioctl = true;
 
 $last = 0;
 $start = 0;
@@ -37,7 +45,6 @@ $timestamp = 0;
 $i = 0;
 $j = 0;
 $waittime = 0;
-$seen_ioctl = false;
 for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
     preg_match('/^\s*\[\s*\d+\]\s+(\d+)\s+(\d+)\s+(\d+)/', $times[$i], $ti);
     preg_match('/^(.+?)\(([^,]*)/', $strace[$j], $st);
@@ -64,8 +71,12 @@ for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
         continue;
 
     if(isset($numbers[$st[1]])) {
-        if(@$names[$ti[1]] != $st[1])
-            @exit("Warning in line $i: syscalls do not match: " . $ti[1] . " vs. " . $st[1] . "\n");
+        if(@$names[$ti[1]] != $st[1]) {
+            @file_put_contents('php://stderr',
+                "Warning in line $j: syscalls do not match: " . $ti[1] . " vs. " . $st[1] . "\n");
+            $i--;
+            continue;
+        }
 
         if($mode == 'trace') {
             // ignore waits of less than 1000 cycles.

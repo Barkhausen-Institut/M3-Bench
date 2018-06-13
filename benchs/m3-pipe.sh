@@ -43,9 +43,9 @@ run() {
     fi
 }
 
-jobs_init $2
+./b || exit 1
 
-./b
+jobs_init $2
 
 ds=$((32 * 1024 * 1024))
 comp=2

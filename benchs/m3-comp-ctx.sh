@@ -43,9 +43,9 @@ run() {
     fi
 }
 
-jobs_init $2
+./b || exit 1
 
-./b
+jobs_init $2
 
 jobs_submit run $1 alone c 1
 for ts in 1 2 4 8; do

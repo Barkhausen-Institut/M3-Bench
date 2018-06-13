@@ -28,7 +28,7 @@ run_bench() {
     /bin/echo -e "\e[1mFinished m3-tlbmiss-$2-$3\e[0m"
 }
 
-./b
+./b || exit 1
 
 jobs_init $2
 

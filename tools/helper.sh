@@ -18,8 +18,12 @@ get_mhz() {
     fi
 }
 
+gen_timedtrace_server() {
+    gen_timedtrace $1 $2 --no-ioctl
+}
+
 gen_timedtrace() {
-    grep -vE '^(Copied|Switched to)' $1 > $1-clean
+    grep -vE '(^(Copied|Switched to|random: crng))|(^Worker pid:)|(^strace\: Process)' $1 > $1-clean
     grep -B10000 "===" $1-clean | grep -v "===" > $1-strace
     grep -A10000 "===" $1-clean | grep -v "===" > $1-timings
 
@@ -36,13 +40,13 @@ gen_timedtrace() {
     # for untar: prefix relative paths with /tmp/
     sed --in-place -e 's/("\([^/]\)/("\/tmp\/\1/g' $1-strace
 
-    ./tools/timedstrace.php trace $1-strace $1-timings-07 > $1-timedstrace
+    ./tools/timedstrace.php trace $1-strace $1-timings-`printf "%02d" $2` $3 > $1-timedstrace
 
     # make the strace a little more friendly for strace2cpp
     sed --in-place -e 's/\/\* \([[:digit:]]*\) entries \*\//\1/' $1-timedstrace
     sed --in-place -e 's/\/\* d_reclen == 0, problem here \*\///' $1-timedstrace
 
-    sed -e 's/^ \[\s*\([[:digit:]]*\)\]/\1/g' $1-timings-07 | \
+    sed -e 's/^ \[\s*\([[:digit:]]*\)\]/\1/g' $1-timings-`printf "%02d" $2` | \
         awk '{ printf "[%3d] %3d %d\n", $1, $2, $4 - $3 }' > $1-timings-human
 }
 

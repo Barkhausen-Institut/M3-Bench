@@ -38,6 +38,6 @@ comp=2
 wr=/bench/bin/pipewr
 rd=/bench/bin/piperd
 
-jobs_submit run $1 "/bench/bin/execpipe 3 2 8 1 1 $wr $datasize $comp $rd $comp"
+jobs_submit run $1 "/bench/bin/execpipe 3 2 8 1 1 0 $wr $datasize $comp $rd $comp"
 
 jobs_wait

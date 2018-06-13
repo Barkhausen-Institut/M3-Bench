@@ -38,7 +38,7 @@ run_bench() {
     fi
 }
 
-./b
+./b || exit 1
 
 jobs_init $2
 

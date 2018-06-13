@@ -26,7 +26,7 @@ run_bench() {
     /bin/echo -e "\e[1mFinished m3-syscall-$2-$3\e[0m"
 }
 
-./b
+./b || exit 1
 
 run_bench $1 0 0
 run_bench $1 1 0

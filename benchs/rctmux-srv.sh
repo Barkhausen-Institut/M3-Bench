@@ -57,9 +57,9 @@ run() {
     fi
 }
 
-jobs_init $2
+./b || exit 1
 
-./b
+jobs_init $2
 
 jobs_submit run $1 a alone
 jobs_submit run $1 a shared

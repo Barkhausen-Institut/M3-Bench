@@ -35,18 +35,18 @@ jobs_init $2
 
 export LX_CORES=2
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/rand $(($sz * 1024)) /bench/bin/wc" rand wc $sz
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/wc" cat wc $sz
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/rand $(($sz * 1024)) /bench/bin/sink" rand sink $sz
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/sink" cat sink $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/rand $(($sz * 1024)) /bench/bin/wc" rand wc $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/wc" cat wc $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/rand $(($sz * 1024)) /bench/bin/sink" rand sink $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/sink" cat sink $sz
 done
 
 export LX_CORES=1
 for sz in 512 1024 2048 4096; do
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/rand $(($sz * 1024)) /bench/bin/wc" 1pe-rand wc $sz
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/wc" 1pe-cat wc $sz
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/rand $(($sz * 1024)) /bench/bin/sink" 1pe-rand sink $sz
-    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/sink" 1pe-cat sink $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/rand $(($sz * 1024)) /bench/bin/wc" 1pe-rand wc $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/wc" 1pe-cat wc $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/rand $(($sz * 1024)) /bench/bin/sink" 1pe-rand sink $sz
+    jobs_submit run $1 "/bench/bin/execpipe 2 1 4 1 1 0 /bench/bin/cat /bench/pipedata/${sz}k.txt /bench/bin/sink" 1pe-cat sink $sz
 done
 
 jobs_wait
