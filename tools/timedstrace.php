@@ -30,14 +30,17 @@ $names = array(
 $numbers = array_flip($names);
 
 if($argc < 4)
-    exit("Usage: {$argv[0]} (trace|waittime|total|human) <strace> <timings> [--no-ioctl]\n");
+    exit("Usage: {$argv[0]} (trace|waittime|total|human) <strace> <timings> [--no-ioctl|--trace-stdout]\n");
 
 $mode = $argv[1];
 $strace = file($argv[2]);
 $times = file($argv[3]);
 $seen_ioctl = false;
+$trace_stdout = false;
 if(isset($argv[4]) && $argv[4] == '--no-ioctl')
     $seen_ioctl = true;
+if(isset($argv[4]) && $argv[4] == '--trace-stdout')
+    $trace_stdout = true;
 
 $last = 0;
 $start = 0;
@@ -45,21 +48,33 @@ $timestamp = 0;
 $i = 0;
 $j = 0;
 $waittime = 0;
+
+if(!$seen_ioctl) {
+    for(; isset($strace[$j]); $j++) {
+        preg_match('/^(.+?)\(([^,]*)/', $strace[$j], $st);
+        if($st && $st[1] == 'ioctl') {
+            preg_match('/^(.+?)\(([^,]*)/', $strace[$j + 1], $st2);
+            if($st2 && $st2[1] == 'ioctl')
+                break;
+        }
+    }
+    for(; isset($times[$i]); $i++) {
+        preg_match('/^\s*\[\s*\d+\]\s+(\d+)\s+(\d+)\s+(\d+)/', $times[$i], $ti);
+        if($ti[1] == 16) {
+            preg_match('/^\s*\[\s*\d+\]\s+(\d+)\s+(\d+)\s+(\d+)/', $times[$i + 1], $ti2);
+            if($ti2[1] == 16)
+                break;
+        }
+    }
+    $j += 2;
+    $i += 2;
+}
+
 for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
     preg_match('/^\s*\[\s*\d+\]\s+(\d+)\s+(\d+)\s+(\d+)/', $times[$i], $ti);
     preg_match('/^(.+?)\(([^,]*)/', $strace[$j], $st);
 
-    // ignore everything up to the first ioctl to ignore the dynamic linking stuff
-    if(!$seen_ioctl && $st[1] != 'ioctl') {
-        if(isset($numbers[$st[1]]) && @$names[$ti[1]] != $st[1]) {
-            @file_put_contents('php://stderr',
-                "Warning in line $i: syscalls do not match: " . $ti[1] . " vs. " . $st[1] . "\n");
-            // use the same entry of $strace again
-            $j--;
-        }
-        continue;
-    }
-    $seen_ioctl = true;
+    // @file_put_contents('php://stderr', $i.' => '.@$names[$ti[1]]. ' :: '.$st[1]." (wait=".$waittime.")\n");
 
     if($mode == 'total' && $start == 0)
         $start = $ti[3];
@@ -67,7 +82,7 @@ for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
     $last = $ti[3];
 
     // ignore writes to stdout/stderr
-    if($st[1] == 'write' && ($st[2] == '1' || $st[2] == '2'))
+    if($st[1] == 'write' && (($st[2] == '1' && !$trace_stdout) || $st[2] == '2'))
         continue;
 
     if(isset($numbers[$st[1]])) {

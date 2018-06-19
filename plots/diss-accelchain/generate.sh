@@ -138,7 +138,7 @@ gen_results() {
     done
 }
 
-gen_results $1
+# gen_results $1
 
 Rscript plots/diss-accelchain/plot-time.R $1/eval-accelchain-times.pdf \
     $1/accelchain-1-times.dat \

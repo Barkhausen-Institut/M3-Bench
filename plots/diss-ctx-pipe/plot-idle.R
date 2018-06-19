@@ -13,6 +13,7 @@ times <- list()
 for(i in 1:4) {
     times[[i]]   <- read.table(as.character(args[i + 1]), header=F, sep=" ")
 }
+zeros <- matrix(rep(c(NA), 4 * 2), nrow=4, ncol=2)
 
 pdf(as.character(args[1]), width=5, height=2)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
@@ -22,28 +23,28 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 
 par(mar=c(5.5,5,4,0))
 
-barplot(t(as.matrix(times[[1]])), beside=T, ylim=c(0,1), axes=F,
+barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,1), axes=F,
     space=rep(c(0.5, 0, 0, 0), 4), names.arg=rep("", 4))
 abline(h=c(seq(0,1,.20)), col="gray80")
 
-plot <- barplot(t(as.matrix(times[[1]])), beside=T, add=T,
+plot <- barplot(t(as.matrix(times[[1]])), beside=T, add=T, width=rep(c(0.95), 4),
     ylim=c(0,1), ylab="", axes=F,
     space=rep(c(0.5, 0, 0, 0), 4),
     col=colors,
     cex.names=namescale, las=3, mgp=c(2.5, 0.5, 0),
-    names.arg=c("512","1024","2048","4096"), sub="rand|wc")
+    names.arg=c("512","1024","2048","4096"), sub="rand|wc  ")
 axis(2, at = seq(0, 1, .20), las = 2)
 title(ylab = "Utilization", mgp=c(2.5, 1, 0))
 
-names <- list("", "rand|sink", "cat|wc", "cat|sink")
+names <- list("", "rand|sink  ", "cat|wc  ", "cat|sink  ")
 for(i in 2:length(names)) {
     par(mar=c(5.5,0,4,0))
 
-    barplot(t(as.matrix(times[[i]])), beside=T, ylim=c(0,1), axes=F,
+    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,1), axes=F,
         space=rep(c(0.5, 0, 0, 0), 4), names.arg=rep("", 4))
     abline(h=c(seq(0,1,.2)), col="gray80")
 
-    plot <- barplot(t(as.matrix(times[[i]])), beside=T, add=T,
+    plot <- barplot(t(as.matrix(times[[i]])), beside=T, add=T, width=rep(c(0.95), 4),
         ylim=c(0,1),
         space=rep(c(0.5, 0, 0, 0), 4),
         axes=F,

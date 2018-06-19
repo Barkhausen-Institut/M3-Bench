@@ -44,7 +44,7 @@ run() {
 
 jobs_init $2
 
-for tr in sort; do
+for tr in tar untar find sqlite leveldb sha256sum sort; do
     jobs_submit run $1 $tr 1 1
     jobs_submit run $1 $tr 2 1
     jobs_submit run $1 $tr 4 1

@@ -15,6 +15,7 @@ for(i in 1:3) {
     times[[i]]   <- read.table(as.character(args[i * 2]), header=TRUE, sep=" ") / (1000000 * 3)
     stddevs[[i]] <- scan(args[i * 2 + 1]) / (1000000 * 3)
 }
+zeros <- matrix(rep(c(NA), 3 * 3), nrow=3, ncol=3)
 
 pdf(as.character(args[1]), width=5, height=4)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
@@ -24,29 +25,29 @@ layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
 
 par(mar=c(8.5,5.5,4,0))
 
-barplot(as.matrix(times[[1]]), beside=F, ylim=c(0,10), axes=F,
+barplot(as.matrix(zeros), beside=F, ylim=c(0,10), axes=F,
     space=rep(0.2, 3), names.arg=rep("", 3))
 abline(h=c(seq(0,9,3)), col="gray80")
 
 plot <- barplot(as.matrix(times[[1]]), beside=F, add=T,
-    ylim=c(0,10), space=rep(0.2, 3), ylab="", axes=F,
+    ylim=c(0,10), space=rep(0.2, 3), ylab="", axes=F, width=rep(c(0.9), 3),
     col=rev(colors),
     cex.names=namescale, las=3, mgp=c(6, 0.5, 0),
-    names.arg=c("M3-A","M3-B","M3-C"), sub="Total")
+    names.arg=c("M3-A","M3-B","M3-C"), sub="Total   ")
 axis(2, at = seq(0, 10, 3), las = 2)
 title(ylab = "Time (ms)", mgp=c(3, 1, 0))
 error.bar(plot, colSums(times[[1]]), stddevs[[1]])
 
-subs <- c("Reader", "Writer")
+subs <- c("Reader   ", "Writer   ")
 for(i in 2:length(times)) {
     par(mar=c(8.5,0,4,0))
 
-    barplot(as.matrix(times[[i]]), beside=F, ylim=c(0,10), axes=F,
+    barplot(as.matrix(zeros), beside=F, ylim=c(0,10), axes=F,
         space=rep(0.2, 3), names.arg=rep("", 3))
     abline(h=c(seq(0,9,3)), col="gray80")
 
     plot <- barplot(as.matrix(times[[i]]), beside=F, add=T,
-        ylim=c(0,10), space=rep(0.2, 3), axes=F,
+        ylim=c(0,10), space=rep(0.2, 3), axes=F, width=rep(c(0.9), 3),
         col=colors,
         cex.names=namescale, las=3, mgp=c(6, 0.5, 0),
         names.arg=c("M3-A","M3-B","M3-C"), sub=subs[[i - 1]])

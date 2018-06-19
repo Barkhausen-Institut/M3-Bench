@@ -10,16 +10,20 @@ rscript_crop() {
 }
 
 get_mhz() {
-    ghz=`grep 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)GHz.*/\1/g'`
+    ghz=`grep --text 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)GHz.*/\1/g'`
     if [ "$ghz" != "" ]; then
         echo $(($ghz * 1000))
     else
-        grep 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)MHz.*/\1/g'
+        grep --text 'cpu-clock=' $1 | sed -re 's/.*cpu-clock=([[:digit:]]+)MHz.*/\1/g'
     fi
 }
 
 gen_timedtrace_server() {
     gen_timedtrace $1 $2 --no-ioctl
+}
+
+gen_timedtrace_pipe() {
+    gen_timedtrace $1 $2 --trace-stdout
 }
 
 gen_timedtrace() {

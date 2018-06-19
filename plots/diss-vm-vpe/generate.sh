@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . tools/helper.sh
 
@@ -37,11 +37,9 @@ for t in clone exec; do
     gen_stddev $1 $t > $1/$t-stddev.dat
 done
 
-Rscript plots/diss-vm-vpe/plot.R $1/eval-vm-vpe-clone.tmp.pdf \
+rscript_crop plots/diss-vm-vpe/plot.R $1/eval-vm-vpe-clone.pdf \
     $1/clone-times.dat \
     $1/clone-stddev.dat
-Rscript plots/diss-vm-vpe/plot.R $1/eval-vm-vpe-exec.tmp.pdf \
+rscript_crop plots/diss-vm-vpe/plot.R $1/eval-vm-vpe-exec.pdf \
     $1/exec-times.dat \
     $1/exec-stddev.dat
-pdfcrop $1/eval-vm-vpe-clone.tmp.pdf $1/eval-vm-vpe-clone.pdf
-pdfcrop $1/eval-vm-vpe-exec.tmp.pdf $1/eval-vm-vpe-exec.pdf

@@ -31,7 +31,5 @@ for t in c; do
         echo $((100.0 * ($stddev * 1. / $time))) >> $1/comp-ctx-$t-stddev.dat
     done
 
-    Rscript plots/diss-ctx-comp/plot.R $1/eval-ctx-comp-$t.tmp.pdf $1/comp-ctx-$t.dat
-    pdfcrop $1/eval-ctx-comp-$t.tmp.pdf $1/eval-ctx-comp-$t.pdf
-    rm $1/eval-ctx-comp-$t.tmp.pdf
+    rscript_crop plots/diss-ctx-comp/plot.R $1/eval-ctx-comp-$t.pdf $1/comp-ctx-$t.dat
 done

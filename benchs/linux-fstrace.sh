@@ -33,12 +33,14 @@ run_lx_bench() {
     gen_timedtrace $1/lx-fstrace-$2/res.txt 3 >> $GEM5_OUT/output.txt 2>&1
 
     # generate trace.c
-    ( cd m3 && M3_BUILD=release ./b )
-    ./m3/build/$M3_TARGET-$LX_ARCH-release/src/apps/fstrace/strace2cpp/strace2cpp \
+    ./m3/build/$M3_TARGET-$LX_ARCH-release/src/apps/fstrace/strace2cpp/strace2cpp $2 \
         < $1/lx-fstrace-$2/res.txt-timedstrace \
-        > $1/lx-fstrace-$2/res.txt-opcodes.c 2>/dev/null
+        > $1/lx-fstrace-$2/res.txt-opcodes.c 2>>$GEM5_OUT/output.txt
     cp $1/lx-fstrace-$2/res.txt-opcodes.c input/trace-$2.c
 }
+
+( cd m3 && M3_BUILD=release ./b )
+[ $? -eq 0 ] || exit 1
 
 jobs_init $2
 

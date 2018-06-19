@@ -22,8 +22,8 @@ run() {
 
     # use a 512 MiB FS image, if many clients are writing to the same image
     if [ "$3 $4" = "16 1" ] || [ "$3 $4" = "32 2" ]; then
-        ./b mkfs=bench-large.img -n build/$M3_TARGET-x86_64-$M3_BUILD/fsdata/bench $((128*1024)) 4096 0
-        export M3_FS=bench-large.img
+        ./b mkfs=bench-$2.img -n build/$M3_TARGET-x86_64-$M3_BUILD/fsdata/bench $((128*1024)) 4096 0
+        export M3_FS=bench-$2.img
     fi
 
     /bin/echo -e "\e[1mStarted m3-scale-ctx-$2-$3-$4\e[0m"

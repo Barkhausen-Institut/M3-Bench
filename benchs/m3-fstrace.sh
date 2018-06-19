@@ -39,13 +39,9 @@ run_m3_bench() {
 
 jobs_init $2
 
-jobs_submit run_m3_bench $1 find
-jobs_submit run_m3_bench $1 tar
-jobs_submit run_m3_bench $1 untar
-jobs_submit run_m3_bench $1 sqlite
-jobs_submit run_m3_bench $1 leveldb
-jobs_submit run_m3_bench $1 sha256sum
-jobs_submit run_m3_bench $1 sort
+for tr in find tar untar sqlite leveldb sha256sum sort; do
+    jobs_submit run_m3_bench $1 $tr
+done
 
 jobs_wait
 

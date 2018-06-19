@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . tools/helper.sh
 
@@ -92,19 +92,15 @@ for b in stencil md fft spmv; do
 done
 
 for t in file anon; do
-    Rscript plots/diss-accel-aladdin/plot-total.R $1/eval-accel-aladdin-$t.tmp.pdf \
+    rscript_crop plots/diss-accel-aladdin/plot-total.R $1/eval-accel-aladdin-$t.pdf \
         $1/stencil-$t-times.dat \
         $1/md-$t-times.dat \
         $1/fft-$t-times.dat \
         $1/spmv-$t-times.dat
-    pdfcrop $1/eval-accel-aladdin-$t.tmp.pdf $1/eval-accel-aladdin-$t.pdf
-    rm $1/eval-accel-aladdin-$t.tmp.pdf
 
-    Rscript plots/diss-accel-aladdin/plot-comp.R $1/eval-accel-aladdin-$t-comp.tmp.pdf \
+    rscript_crop plots/diss-accel-aladdin/plot-comp.R $1/eval-accel-aladdin-$t-comp.pdf \
         $1/stencil-$t-comptimes.dat $1/stencil-$t-compmax.dat \
         $1/md-$t-comptimes.dat $1/md-$t-compmax.dat \
         $1/fft-$t-comptimes.dat $1/fft-$t-compmax.dat \
         $1/spmv-$t-comptimes.dat $1/spmv-$t-compmax.dat
-    pdfcrop $1/eval-accel-aladdin-$t-comp.tmp.pdf $1/eval-accel-aladdin-$t-comp.pdf
-    rm $1/eval-accel-aladdin-$t-comp.tmp.pdf
 done
