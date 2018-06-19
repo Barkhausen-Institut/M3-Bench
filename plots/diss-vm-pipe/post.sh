@@ -128,8 +128,3 @@ gen_data_rw $1 5 > $1/pipe-write.dat
 
 echo "Generating $1/pipe-*-stddev.dat..."
 gen_var $1
-
-Rscript plots/diss-vm-pipe/plot.R $1/eval-pipe.pdf \
-    $1/pipe-total.dat $1/pipe-total-stddev.dat \
-    $1/pipe-read.dat $1/pipe-read-stddev.dat \
-    $1/pipe-write.dat $1/pipe-write-stddev.dat

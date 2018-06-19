@@ -130,11 +130,6 @@ for pe in a b c; do
     gen_read_var $1 $pe > $1/fs-$pe-read-stddev.dat
     gen_write_var $1 $pe > $1/fs-$pe-write-stddev.dat
     gen_copy_var $1 $pe > $1/fs-$pe-copy-stddev.dat
-
-    Rscript plots/diss-fs/plot.R $1/eval-fs-$pe.pdf \
-        $1/fs-$pe-read.dat $1/fs-$pe-read-stddev.dat \
-        $1/fs-$pe-write.dat $1/fs-$pe-write-stddev.dat \
-        $1/fs-$pe-copy.dat $1/fs-$pe-copy-stddev.dat
 done
 
 rel_diff() {

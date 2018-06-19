@@ -15,5 +15,3 @@ for bpe in 2 4 8 16 32 64 128 256; do
     cp=`m3_total $1 copy a $bpe`
     echo "$rd $wr $cp" >> $1/fs-a-ext.dat
 done
-
-Rscript plots/diss-fs-ext/plot.R $1/eval-fs-ext.pdf $1/fs-a-ext.dat

@@ -70,8 +70,3 @@ echo "Generating stddev files..."
 gen_var $1 read > $1/fs-read-stddev.dat
 gen_var $1 write > $1/fs-write-stddev.dat
 gen_var $1 copy > $1/fs-copy-stddev.dat
-
-Rscript plots/diss-vm-fs/plot.R $1/eval-fs.pdf \
-    $1/fs-read.dat $1/fs-read-stddev.dat \
-    $1/fs-write.dat $1/fs-write-stddev.dat \
-    $1/fs-copy.dat $1/fs-copy-stddev.dat

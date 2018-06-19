@@ -93,61 +93,45 @@ get_wakeup_freq() {
     '
 }
 
-gen_results() {
-    for num in 1 2 4 8; do
-        for time in 256 512 1024 2048; do
-            echo "Generating small.log for $time-$num..."
-            for t in 0 1 2; do
-                grep "DEBUG\|Suspending\|Waking\|rv <-" $1/m3-accelchain-$t-$time-$num/gem5.log \
-                    > $1/m3-accelchain-$t-$time-$num/small.log
-            done
+for num in 1 2 4 8; do
+    for time in 256 512 1024 2048; do
+        echo "Generating small.log for $time-$num..."
+        for t in 0 1 2; do
+            grep "DEBUG\|Suspending\|Waking\|rv <-" $1/m3-accelchain-$t-$time-$num/gem5.log \
+                > $1/m3-accelchain-$t-$time-$num/small.log
         done
     done
+done
 
-    for num in 1 2 4 8; do
-        echo -n > $1/accelchain-$num-times.dat
+for num in 1 2 4 8; do
+    echo -n > $1/accelchain-$num-times.dat
 
-        for time in 256 512 1024 2048; do
-            echo "Generating times for comp=$time num=$num..."
-            m30t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-0-$time-$num/small.log`
-            m31t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-1-$time-$num/small.log`
-            m32t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-2-$time-$num/small.log`
-            if [ "$m30t" = "" ]; then m30t=1; fi
-            if [ "$m31t" = "" ]; then m31t=1; fi
-            if [ "$m32t" = "" ]; then m32t=1; fi
-            echo $m30t >> $1/accelchain-$num-times.dat
-            echo $m32t >> $1/accelchain-$num-times.dat
-            echo $m31t >> $1/accelchain-$num-times.dat
+    for time in 256 512 1024 2048; do
+        echo "Generating times for comp=$time num=$num..."
+        m30t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-0-$time-$num/small.log`
+        m31t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-1-$time-$num/small.log`
+        m32t=`./tools/m3-bench.sh time 0000 $mhz 0 < $1/m3-accelchain-2-$time-$num/small.log`
+        if [ "$m30t" = "" ]; then m30t=1; fi
+        if [ "$m31t" = "" ]; then m31t=1; fi
+        if [ "$m32t" = "" ]; then m32t=1; fi
+        echo $m30t >> $1/accelchain-$num-times.dat
+        echo $m32t >> $1/accelchain-$num-times.dat
+        echo $m31t >> $1/accelchain-$num-times.dat
+    done
+
+    echo -n > $1/accelchain-$num-util.dat
+    echo -n > $1/accelchain-$num-sleep.dat
+
+    for time in 256 512 1024 2048; do
+        echo "Generating utilization and sleeps for comp=$time num=$num..."
+
+        for t in 0 2 1; do
+            util=`get_app_idle $1/m3-accelchain-$t-$time-$num/small.log`
+            echo $util >> $1/accelchain-$num-util.dat
         done
 
-        echo -n > $1/accelchain-$num-util.dat
-        echo -n > $1/accelchain-$num-sleep.dat
-
-        for time in 256 512 1024 2048; do
-            echo "Generating utilization and sleeps for comp=$time num=$num..."
-
-            for t in 0 2 1; do
-                util=`get_app_idle $1/m3-accelchain-$t-$time-$num/small.log`
-                echo $util >> $1/accelchain-$num-util.dat
-            done
-
-            for t in 0 2 1; do
-                get_wakeup_freq $1/m3-accelchain-$t-$time-$num/small.log >> $1/accelchain-$num-sleep.dat
-            done
+        for t in 0 2 1; do
+            get_wakeup_freq $1/m3-accelchain-$t-$time-$num/small.log >> $1/accelchain-$num-sleep.dat
         done
     done
-}
-
-# gen_results $1
-
-Rscript plots/diss-accelchain/plot-time.R $1/eval-accelchain-times.pdf \
-    $1/accelchain-1-times.dat \
-    $1/accelchain-2-times.dat \
-    $1/accelchain-4-times.dat \
-    $1/accelchain-8-times.dat
-
-Rscript plots/diss-accelchain/plot-util.R $1/eval-accelchain-util.pdf \
-    $1/accelchain-1-util.dat $1/accelchain-1-sleep.dat \
-    $1/accelchain-2-util.dat $1/accelchain-2-sleep.dat \
-    $1/accelchain-4-util.dat $1/accelchain-4-sleep.dat \
-    $1/accelchain-8-util.dat $1/accelchain-8-sleep.dat
+done

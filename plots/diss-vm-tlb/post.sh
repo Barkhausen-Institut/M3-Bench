@@ -98,7 +98,3 @@ gen_stddev() {
 
 gen_data $1 > $1/tlbmiss.dat
 gen_stddev $1 > $1/tlbmiss-stddev.dat
-
-Rscript plots/diss-vm-tlb/plot.R $1/eval-vm-tlb.pdf \
-    $1/tlbmiss.dat \
-    $1/tlbmiss-stddev.dat

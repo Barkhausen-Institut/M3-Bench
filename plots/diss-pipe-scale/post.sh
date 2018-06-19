@@ -25,5 +25,3 @@ for tr in cat-wc cat-awk grep-wc grep-awk; do
 
     echo >> $1/pipe-scale.dat
 done
-
-rscript_crop plots/diss-pipe-scale/plot.R $1/eval-pipe-scale.pdf $1/pipe-scale.dat

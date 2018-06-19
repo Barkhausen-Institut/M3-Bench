@@ -1,8 +1,6 @@
 #!/bin/sh
 here=$(dirname $(readlink -f $0))
 
-pe="$here/pe_rcv_fib.txt"
-
 awk '
     /xttop_i0/ {
         match($0, /^.*?_([[:digit:]]+)_.log: (.*?): ([0-9\.e-]+)/, m)
@@ -23,6 +21,4 @@ awk '
             print(x, core[x], mem[x], dtu[x])
         }
     }
-    ' < $here/pe_rcv_fib.txt > $1/power-fib.dat
-
-Rscript plots/diss-power-fib/plot.R $1/eval-power-fib.pdf $1/power-fib.dat
+    ' < $here/diss-power-fib.txt > $1/power-fib.dat

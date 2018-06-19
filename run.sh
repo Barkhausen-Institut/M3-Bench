@@ -5,8 +5,8 @@ export GEM5_DIR=/home/hrniels/m3bench/m3/hw/gem5
 
 M3_GEM5_OUT=${M3_GEM5_OUT:-run}
 
-if [ $# -ne 4 ]; then
-    echo "Usage: $0 <name> <benchs> <plots> <jobs>" 1>&2
+if [ $# -ne 5 ]; then
+    echo "Usage: $0 <name> <benchs> <posts> <plots> <jobs>" 1>&2
     exit 1
 fi
 
@@ -28,19 +28,24 @@ esac
 
 name=$1
 benchs=$2
-plots=$3
+posts=$3
+plots=$4
 
 mkdir -p results
 res=$(readlink -f results/$name)
 mkdir -p $res
 
 # increase number of file descriptors
-ulimit -n 8192
+ulimit -n 16384
 
 for b in $benchs; do
-    ./benchs/$b.sh $res $4
+    ./benchs/$b.sh $res $5
+done
+
+for p in $posts; do
+    ./plots/$p/post.sh $res
 done
 
 for p in $plots; do
-    ./plots/$p/generate.sh $res
+    ./plots/$p/plot.sh $res
 done

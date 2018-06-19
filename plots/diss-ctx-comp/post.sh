@@ -30,6 +30,4 @@ for t in c; do
         stddev=`m3_stddev $1 shared $t $ts`
         echo $((100.0 * ($stddev * 1. / $time))) >> $1/comp-ctx-$t-stddev.dat
     done
-
-    rscript_crop plots/diss-ctx-comp/plot.R $1/eval-ctx-comp-$t.pdf $1/comp-ctx-$t.dat
 done

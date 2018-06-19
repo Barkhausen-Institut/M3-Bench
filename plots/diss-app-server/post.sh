@@ -28,6 +28,4 @@ for tr in nginx; do
         done
         echo >> $1/app-server-$tr.dat
     done
-
-    rscript_crop plots/diss-app-server/plot.R $1/eval-app-server-$tr.pdf $1/app-server-$tr.dat
 done

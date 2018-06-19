@@ -83,5 +83,3 @@ nova=`grep -P '! Syscall\.cc.* var: \d+' $1/nre/gem5.log | sed -Ee 's/.* ([[:dig
 nova=$(echo "scale=2;sqrt($nova)" | bc)
 m3=`./tools/m3-bench.sh stddev 0000 $mhz 5 < $1/m3-syscall-2-0/gem5.log`
 echo "$lx $nova $m3" > $1/syscall-stddev.dat
-
-Rscript plots/diss-syscall/plot.R $1/eval-syscall.pdf $1/syscall-times.dat $1/syscall-stddev.dat

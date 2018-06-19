@@ -122,5 +122,3 @@ novarem=`nova_total $1 | head -n 1`
 echo 0 0 0 $((novarem / 3)) >> $1/ctx-susp-times.dat
 novaloc=`nova_total $1 | tail -n 1`
 echo 0 0 0 $((novaloc / 3)) >> $1/ctx-susp-times.dat
-
-Rscript plots/diss-ctx-susp/plot.R $1/eval-ctx-susp.pdf $1/ctx-susp-times.dat

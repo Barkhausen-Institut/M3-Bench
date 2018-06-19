@@ -170,13 +170,3 @@ for type in anon-1 anon-4 file-1 file-4; do
     gen_data $1 $type > $1/$type-times.dat
     gen_stddev $1 $type > $1/$type-stddev.dat
 done
-
-Rscript plots/diss-vm-pf/plot.R $1/eval-pagefaults.pdf \
-    $1/anon-1-times.dat \
-    $1/anon-1-stddev.dat \
-    $1/file-1-times.dat \
-    $1/file-1-stddev.dat \
-    $1/anon-4-times.dat \
-    $1/anon-4-stddev.dat \
-    $1/file-4-times.dat \
-    $1/file-4-stddev.dat

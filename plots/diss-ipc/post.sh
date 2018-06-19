@@ -22,5 +22,3 @@ novaloc=$(echo "scale=2;sqrt($(nova_stddev $1 | tail -n 1))" | bc)
 novarem=$(echo "scale=2;sqrt($(nova_stddev $1 | head -n 1))" | bc)
 m3rem=`./tools/m3-bench.sh stddev 0000 $mhz 2 < $1/m3-syscall-2-0/gem5.log`
 echo "$novaloc $novarem $m3rem" > $1/ipc-stddev.dat
-
-Rscript plots/diss-ipc/plot.R $1/eval-ipc.pdf $1/ipc-times.dat $1/ipc-stddev.dat
