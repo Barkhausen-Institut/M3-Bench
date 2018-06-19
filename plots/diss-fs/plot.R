@@ -26,36 +26,31 @@ layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
 
 par(mar=c(9.5,6,4,0))
 
-barplot(as.matrix(zeros2), beside=F, ylim=c(0,30), axes=F,
-    space=rep(0.15, 2), names.arg=rep("", 2))
-abline(h=c(seq(0,30,5)), col="gray80")
+subs <- c("Read   ", "Write   ", "Copy   ")
+for(i in 1:length(times)) {
+    if(i > 1)
+        par(mar=c(9.5,0,4,0))
 
-plot <- barplot(as.matrix(times[[1]]), beside=F, add=T,
-    ylim=c(0,30), space=rep(0.15, 2), ylab="", axes=F, width=rep(c(0.9), 2),
-    col=colors,
-    cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-    names.arg=c("Linux","M3"), sub="Read   ")
-axis(2, at = seq(0, 30, 5), las = 2)
-title(ylab = "Time (ms)", mgp=c(4, 1, 0))
-error.bar(plot, colSums(times[[1]]), stddevs[[1]])
+    if(i == 1)
+        names <- c("Linux", "M3")
+    else if(i == 2)
+        names <- c("Linux", "M3", "M3-zero")
+    else
+        names <- c("Linux", "M3", "Lx-send")
 
-subs <- c("Write   ", "Copy   ")
-for(i in 2:length(times)) {
-    par(mar=c(9.5,0,4,0))
-
-    barplot(as.matrix(zeros3), beside=F, ylim=c(0,30), axes=F,
-        space=rep(0.15, 3), names.arg=rep("", 3))
+    barplot(as.matrix(if(i == 1) zeros2 else zeros3), beside=F, ylim=c(0,30), axes=F,
+        space=rep(0.15, length(names)), names.arg=rep("", length(names)))
     abline(h=c(seq(0,30,5)), col="gray80")
 
-    if(i == 2)
-        names <- c("Linux","M3", "M3-zero")
-    else
-        names <- c("Linux","M3", "Lx-send")
     plot <- barplot(as.matrix(times[[i]]), beside=F, add=T,
-        ylim=c(0,30), space=rep(0.15, 3), axes=F, width=rep(c(0.9), 3),
+        ylim=c(0,30), space=rep(0.15, length(names)), axes=F, width=rep(c(0.9), length(names)),
         col=colors,
         cex.names=namescale, las=3, mgp=c(7, 0.5, 0),
-        names.arg=names, sub=subs[[i - 1]])
+        names.arg=names, sub=subs[[i]])
+    if(i == 1) {
+        axis(2, at = seq(0, 30, 5), las = 2)
+        title(ylab = "Time (ms)", mgp=c(4, 1, 0))
+    }
     error.bar(plot, colSums(times[[i]]), stddevs[[i]])
 }
 

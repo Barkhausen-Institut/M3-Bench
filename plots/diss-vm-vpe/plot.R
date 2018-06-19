@@ -26,30 +26,23 @@ layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
 
 par(mar=c(8,6,2,0))
 
-barplot(as.matrix(zeros), beside=T, ylim=c(0,0.25), axes=F, space=c(0.1, 0.1, 0.1, 0.1))
-abline(h=c(seq(0,0.2,0.05)), col="gray80")
+subs <- c("Linux  ", "M3-A  ", "M3-B  ", "M3-C  ", "M3-C*  ")
+for(i in 1:length(subs)) {
+    if(i > 1)
+        par(mar=c(8,0,2,0))
 
-plot <- barplot(as.matrix(ctimes[1,]), beside=T, add=T,
-    ylim=c(0,0.25), space=c(0.1, 0.1, 0.1, 0.1), ylab="", axes=F, width=rep(c(0.95), 4),
-    col=colors,
-    cex.names=namescale, las=3, mgp=c(5.5, 0.5, 0),
-    names.arg=c("1 B", "2 MiB", "4 MiB", "8 MiB"), sub="Linux  ")
-axis(2, at = seq(0, 0.22, 0.1), las = 2)
-title(ylab = "Time (ms)", mgp=c(4, 1, 0))
-error.bar(plot, ctimes[1,], stddev[1,])
-
-subs <- c("M3-A  ", "M3-B  ", "M3-C  ", "M3-C*  ")
-for(i in 2:5) {
-    par(mar=c(8,0,2,0))
-
-    barplot(as.matrix(zeros), beside=T, ylim=c(0,0.25), axes=F, space=c(0.1, 0.1, 0.1, 0.1))
+    barplot(as.matrix(zeros), beside=T, ylim=c(0,0.25), axes=F, space=rep(c(0.1), 4))
     abline(h=c(seq(0,0.2,0.05)), col="gray80")
 
     plot <- barplot(as.matrix(ctimes[i,]), beside=T, add=T,
-        ylim=c(0,0.25), space=c(0.1, 0.1, 0.1, 0.1), ylab="", axes=F, width=rep(c(0.95), 4),
+        ylim=c(0,0.25), space=rep(c(0.1), 4), ylab="", axes=F, width=rep(c(0.95), 4),
         col=colors,
         cex.names=namescale, las=3, mgp=c(5.5, 0.5, 0),
-        names.arg=c("1 B", "2 MiB", "4 MiB", "8 MiB"), sub=subs[[i - 1]])
+        names.arg=c("1 B", "2 MiB", "4 MiB", "8 MiB"), sub=subs[[i]])
+    if(i == 1) {
+        axis(2, at = seq(0, 0.22, 0.1), las = 2)
+        title(ylab = "Time (ms)", mgp=c(4, 1, 0))
+    }
     error.bar(plot, ctimes[i,], stddev[i,])
 
     if(times[i,2] > ctimes[i,2]) {

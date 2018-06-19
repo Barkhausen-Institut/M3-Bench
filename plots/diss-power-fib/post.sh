@@ -21,4 +21,4 @@ awk '
             print(x, core[x], mem[x], dtu[x])
         }
     }
-    ' < $here/diss-power-fib.txt > $1/power-fib.dat
+    ' < $here/pe_rcv_fib.txt > $1/power-fib.dat

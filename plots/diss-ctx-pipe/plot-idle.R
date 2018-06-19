@@ -23,22 +23,10 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 
 par(mar=c(5.5,5,4,0))
 
-barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,1), axes=F,
-    space=rep(c(0.5, 0, 0, 0), 4), names.arg=rep("", 4))
-abline(h=c(seq(0,1,.20)), col="gray80")
-
-plot <- barplot(t(as.matrix(times[[1]])), beside=T, add=T, width=rep(c(0.95), 4),
-    ylim=c(0,1), ylab="", axes=F,
-    space=rep(c(0.5, 0, 0, 0), 4),
-    col=colors,
-    cex.names=namescale, las=3, mgp=c(2.5, 0.5, 0),
-    names.arg=c("512","1024","2048","4096"), sub="rand|wc  ")
-axis(2, at = seq(0, 1, .20), las = 2)
-title(ylab = "Utilization", mgp=c(2.5, 1, 0))
-
-names <- list("", "rand|sink  ", "cat|wc  ", "cat|sink  ")
-for(i in 2:length(names)) {
-    par(mar=c(5.5,0,4,0))
+names <- list("rand|wc  ", "rand|sink  ", "cat|wc  ", "cat|sink  ")
+for(i in 1:length(names)) {
+    if(i > 1)
+        par(mar=c(5.5,0,4,0))
 
     barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,1), axes=F,
         space=rep(c(0.5, 0, 0, 0), 4), names.arg=rep("", 4))
@@ -51,6 +39,10 @@ for(i in 2:length(names)) {
         col=colors,
         cex.names=namescale, las=3, mgp=c(2.5, 0.5, 0),
         names.arg=c("512","1024","2048","4096"), sub=names[[i]])
+    if(i == 1) {
+        axis(2, at = seq(0, 1, .20), las = 2)
+        title(ylab = "Utilization", mgp=c(2.5, 1, 0))
+    }
 }
 
 # legend
