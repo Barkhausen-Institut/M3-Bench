@@ -5,7 +5,13 @@ rscript_crop() {
     dst=$2
     tmp=${dst/.pdf/.tmp.pdf}
     shift && shift
-    Rscript $script $tmp $@ && pdfcrop $tmp $dst
+    if [ "$1" = "--clip" ]; then
+        clip=$2
+        shift && shift
+        Rscript $script $tmp $@ && pdfcrop --margins "0 0 $clip 0" $tmp $dst
+    else
+        Rscript $script $tmp $@ && pdfcrop $tmp $dst
+    fi
     rm $tmp
 }
 

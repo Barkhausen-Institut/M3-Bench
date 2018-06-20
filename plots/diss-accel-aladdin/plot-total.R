@@ -29,11 +29,11 @@ for(i in 1:length(times)) {
         par(mar=c(9.5,0,4,0))
 
     barplot(t(as.matrix(zeros)), beside=F, ylim=c(0,1.2), axes=F,
-        space=c(0.3, 0.2), names.arg=rep("", 6))
+        space=rep(c(0.3), 6), names.arg=rep("", 6))
     abline(h=c(seq(0,1.2,0.3)), col="gray80")
 
     plot <- barplot(times[[i]], beside=F, add=T, width=rep(c(0.9), 6),
-        ylim=c(0,1.2), space=c(0.3, 0.2), axes=F,
+        ylim=c(0,1.2), space=rep(c(0.3), 6), axes=F,
         col=colors,
         cex.names=namescale, las=3, mgp=c(0, 0.5, 0),
         sub=subs[[i]])

@@ -15,8 +15,6 @@ for(i in 1:4) {
 }
 zeros <- matrix(rep(c(NA), 6 * 3), nrow=3, ncol=6)
 
-print(times)
-
 pdf(as.character(args[1]), width=7, height=3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
@@ -31,11 +29,11 @@ for(i in 1:length(times)) {
         par(mar=c(9,0,3.5,0))
 
     barplot(as.matrix(zeros), beside=F, axes=F, ylim=c(0,12),
-        space=c(0.1), names.arg=rep("", 6))
+        space=c(0.2), names.arg=rep("", 6))
     abline(h=c(seq(0,12,3)), col="gray80")
 
     barplot(as.matrix(times[[i]]), beside=F, axes=F, add=T,
-        ylim=c(0,12), space=c(0.1), ylab="", width=rep(c(0.97), 6),
+        ylim=c(0,12), space=c(0.2), ylab="", width=rep(c(0.97), 6),
         col=colors,
         cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
         names.arg=c("Lx","M3","Lx-wr","M3-wr","Lx-rd","M3-rd"), sub=subs[[i]])

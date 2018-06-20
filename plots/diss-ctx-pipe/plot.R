@@ -26,7 +26,7 @@ layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
 par(mar=c(5.5,5,4,0))
 
 names <- list("rand|wc  ", "rand|sink  ", "cat|wc  ", "cat|sink  ")
-for(i in 2:length(names)) {
+for(i in 1:length(names)) {
     if(i > 1)
         par(mar=c(5.5,0,4,0))
 

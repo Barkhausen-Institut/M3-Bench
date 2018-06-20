@@ -31,11 +31,11 @@ for(i in 1:length(times)) {
         par(mar=c(9.5,0,4,0))
 
     barplot(t(as.matrix(zeros)), beside=F, ylim=c(100,1000000), axes=F, log="y",
-        space=c(0.3, 0.2), names.arg=rep("", 6))
+        space=rep(c(0.3), 6), names.arg=rep("", 6))
     abline(h=c(10^(seq(log10(100), log10(1000000)))), col="gray80")
 
     plot <- barplot(times[[i]], beside=F, add=T, width=rep(c(0.9), 6),
-        ylim=c(100,1000000), space=c(0.3, 0.2), ylab="", axes=i == 1,
+        ylim=c(100,1000000), space=rep(c(0.3), 6), ylab="", axes=i == 1,
         col=colors, log="y",
         cex.names=namescale, las=1, mgp=c(0, 1, 0),
         sub=subs[[i]])
