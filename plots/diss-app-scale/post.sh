@@ -2,8 +2,6 @@
 
 . tools/helper.sh
 
-set -x
-
 mhz=`get_mhz $1/m3-scale-tar-1-1/output.txt`
 
 get_avg() {
