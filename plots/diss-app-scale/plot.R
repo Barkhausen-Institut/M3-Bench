@@ -1,37 +1,56 @@
 library(extrafont)
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.25
-namescale <- 1.25
+scaling <- 1.8
+namescale <- 1.8
 
-times <- read.table(as.character(args[2]), header=T, sep=" ")
+times <- list()
+for(i in 1:7) {
+    times[[i]] <- read.table(as.character(args[i + 1]), header=T, sep=" ")
+}
 
-print(times)
-
-pdf(as.character(args[1]), width=5, height=3, useDingbats=FALSE)
-par(mar=c(4.1,4.3,2.1,1))
+pdf(as.character(args[1]), width=8, height=6, useDingbats=FALSE)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
-# plot(times, ylim=c(0,100), type="o", pch=0, axes=FALSE, xlab="", ylab="")
-# abline(h=c(seq(0,100,20)), col="gray80")
-# par(new=T)
+layout(matrix(c(1,2,3,4,5,6), 3, 2, byrow = TRUE),
+    widths=c(1.08,1), heights=c(1.25,1,1))
 
-plot(times$s1, ylim=c(0,100), type="o", pch=0, axes=FALSE, ylab="", xlab="")
-lines(times$s2, ylim=c(0,100), type="o", pch=1, lty="dashed")
-lines(times$s4, ylim=c(0,100), type="o", pch=2, lty="dotted")
-lines(times$s8, ylim=c(0,100), type="o", pch=3, lty="dashed")
-title(ylab = "Parallel efficiency (%)", mgp=c(3, 1, 0))
-title(xlab = "# of applications", mgp=c(2, 1, 0))
+par(mar=c(5,6,4,0))
 
-axis(side = 1, at = 1:6, lab = c("1","2","4","8","16","32"), line = -0.5)
-axis(side = 2, at = seq(0, 100, 25), labels = TRUE, las=1)
+subs <- c("tar", "untar", "shasum & sort", "find", "SQLite", "LevelDB")
+for(i in 1:6) {
+    if(i > 1)
+        par(mar=c(5,if(i %% 2 == 1) 6 else 4,if(i == 2) 4 else 0.5,0))
+
+    plot(c(1,2,4,8,16,32), times[[i]]$s1, ylim=c(0,100), type="o", pch=0, axes=FALSE, xlab="", ylab="")
+    abline(h=c(seq(0,100,25)), col="gray80")
+    par(new=T)
+
+    plot(c(1,2,4,8,16,32), times[[i]]$s1, ylim=c(0,100), type="o", pch=0, axes=FALSE, ylab="", xlab="")
+    lines(c(1,2,4,8,16,32), times[[i]]$s2, ylim=c(0,100), type="o", pch=1, lty="dashed")
+    lines(c(1,2,4,8,16,32), times[[i]]$s4, ylim=c(0,100), type="o", pch=2, lty="dotted")
+    lines(c(1,2,4,8,16,32), times[[i]]$s8, ylim=c(0,100), type="o", pch=3, lty="dashed")
+    if(i == 3) {
+        lines(c(1,2,4,8,16,32), times[[7]]$s1, ylim=c(0,100), type="o", pch=0)
+        lines(c(1,2,4,8,16,32), times[[7]]$s2, ylim=c(0,100), type="o", pch=1, lty="dashed")
+        lines(c(1,2,4,8,16,32), times[[7]]$s4, ylim=c(0,100), type="o", pch=2, lty="dotted")
+        lines(c(1,2,4,8,16,32), times[[7]]$s8, ylim=c(0,100), type="o", pch=3, lty="dashed")
+    }
+
+    axis(side = 1, at = seq(0, 32, 4), labels = TRUE, line=-0.3)
+    axis(side = 2, at = seq(0, 100, 25), labels = TRUE, las=1)
+
+    if(i %% 2 == 1)
+        title(ylab = "Paral. eff. (%)", mgp=c(4, 1, 0))
+    title(xlab = paste("# of applications (", subs[[i]] ,")"), mgp=c(2.7, 1, 0))
+}
 
 # legend
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
 linetype <- c(1:4)
-plotchar <- seq(0, 2, 1)
+plotchar <- seq(0, 3, 1)
 legend("top", c("1 srv", "2 srv", "4 srv", "8 srv"), horiz=T, bty="n",
     cex=namescale, pch=plotchar, lty=linetype, inset=c(0,0))
 

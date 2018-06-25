@@ -21,24 +21,24 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(1.45,1,1,1), heights=c(1,1))
 
-par(mar=c(9,5,3.5,0))
+par(mar=c(9,5,4,0))
 
 subs <- c("cat|awk", "cat|wc", "grep|awk", "grep|wc")
 for(i in 1:length(times)) {
     if(i > 1)
-        par(mar=c(9,0,3.5,0))
+        par(mar=c(9,0,4,0))
 
-    barplot(as.matrix(zeros), beside=F, axes=F, ylim=c(0,12),
+    barplot(as.matrix(zeros), beside=F, axes=F, ylim=c(0,10),
         space=c(0.2), names.arg=rep("", 6))
-    abline(h=c(seq(0,12,3)), col="gray80")
+    abline(h=c(seq(0, 10, 2)), col="gray80")
 
     barplot(as.matrix(times[[i]]), beside=F, axes=F, add=T,
-        ylim=c(0,12), space=c(0.2), ylab="", width=rep(c(0.97), 6),
+        ylim=c(0,10), space=c(0.2), ylab="", width=rep(c(0.97), 6),
         col=colors,
         cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
         names.arg=c("Lx","M3","Lx-wr","M3-wr","Lx-rd","M3-rd"), sub=subs[[i]])
     if(i == 1) {
-        axis(2, at = seq(0, 12, 3), las = 2)
+        axis(2, at = seq(0, 10, 2), las = 2)
         title(ylab = "Time (ms)", mgp=c(3, 1, 0))
     }
 }

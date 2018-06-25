@@ -45,10 +45,47 @@ run() {
 
 jobs_init $2
 
+jobs_submit run $1 tar 1 1
+jobs_submit run $1 untar 1 1
+jobs_submit run $1 sha256sum 1 1
+jobs_submit run $1 leveldb 1 1
+jobs_submit run $1 sort 1 1
+jobs_submit run $1 find 1 1
+jobs_submit run $1 sqlite 1 1
+
+jobs_submit run $1 tar 2 1
+jobs_submit run $1 untar 2 1
+jobs_submit run $1 sha256sum 2 1
+jobs_submit run $1 leveldb 2 1
+jobs_submit run $1 sort 2 1
+jobs_submit run $1 find 2 1
+jobs_submit run $1 sqlite 2 1
+
+jobs_submit run $1 tar 4 1
+jobs_submit run $1 untar 4 1
+jobs_submit run $1 sha256sum 4 1
+jobs_submit run $1 leveldb 4 1
+jobs_submit run $1 sort 4 1
+jobs_submit run $1 find 4 1
+jobs_submit run $1 sqlite 4 1
+
+jobs_submit run $1 tar 8 1
+jobs_submit run $1 untar 8 1
+jobs_submit run $1 sha256sum 8 1
+jobs_submit run $1 leveldb 8 2
+jobs_submit run $1 sort 8 1
+jobs_submit run $1 find 8 2
+jobs_submit run $1 sqlite 8 2
+
 jobs_submit run $1 tar 16 4
 jobs_submit run $1 untar 16 4
 jobs_submit run $1 sha256sum 16 1
 jobs_submit run $1 leveldb 16 4
 jobs_submit run $1 sort 16 1
+jobs_submit run $1 find 16 4
+jobs_submit run $1 sqlite 16 4
+
+jobs_submit run $1 sha256sum 32 1
+jobs_submit run $1 sort 32 1
 
 jobs_wait

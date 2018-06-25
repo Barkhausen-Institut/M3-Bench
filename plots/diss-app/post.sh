@@ -85,3 +85,10 @@ for tr in tar untar sha256sum sort find sqlite leveldb; do
     echo "Generating eval-$tr-times.dat..."
     gen_results $1 $tr > $1/eval-app-$tr-times.dat
 done
+
+for tr in tar untar sha256sum sort find sqlite leveldb; do
+    echo -n "$tr: "
+    ./tools/timedstrace.php total \
+        $1/lx-fstrace-$tr/res.txt-strace \
+        $1/lx-fstrace-$tr/res.txt-timings-03 2>&1 | grep Ignored
+done

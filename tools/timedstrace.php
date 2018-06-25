@@ -30,7 +30,7 @@ $names = array(
 $numbers = array_flip($names);
 
 if($argc < 4)
-    exit("Usage: {$argv[0]} (trace|waittime|total|human) <strace> <timings> [--no-ioctl|--trace-stdout]\n");
+    exit("Usage: {$argv[0]} (trace|waittime|total|human|start|end) <strace> <timings> [--no-ioctl|--trace-stdout]\n");
 
 $mode = $argv[1];
 $strace = file($argv[2]);
@@ -48,6 +48,7 @@ $timestamp = 0;
 $i = 0;
 $j = 0;
 $waittime = 0;
+$ignored = 0;
 
 if(!$seen_ioctl) {
     for(; isset($strace[$j]); $j++) {
@@ -76,7 +77,7 @@ for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
 
     // @file_put_contents('php://stderr', $i.' => '.@$names[$ti[1]]. ' :: '.$st[1]." (wait=".$waittime.")\n");
 
-    if($mode == 'total' && $start == 0)
+    if($start == 0)
         $start = $ti[3];
 
     $last = $ti[3];
@@ -109,11 +110,14 @@ for(; isset($strace[$j]) && isset($times[$i]); $i++, $j++) {
         file_put_contents('php://stderr', "Warning in line $i: ignoring system call " . $st[1] . "\n");
         if($timestamp == 0)
             @$timestamp = $ti[2];
+        $ignored += $ti[3] - $ti[2];
     }
 
     if($mode == 'trace')
         echo $strace[$j];
 }
+
+file_put_contents('php://stderr', "Ignored syscalls time: " . $ignored . "\n");
 
 if($mode == 'trace') {
     if($timestamp > 0 && ($last - $timestamp) > 1000)
@@ -126,4 +130,8 @@ else if($mode == 'waittime') {
 }
 else if($mode == 'total')
     echo ($last - $start) . "\n";
+else if($mode == 'start')
+    echo $start . "\n";
+else if($mode == 'end')
+    echo $last . "\n";
 ?>

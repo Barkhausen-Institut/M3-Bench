@@ -71,19 +71,19 @@ gen_results() {
 
 sz=1024
 
-# ( cd m3 && ./b )
+( cd m3 && ./b )
 
-# jobs_init $2
+jobs_init $2
 
-# export LX_CORES=2
-# for t in 3 4; do
-#     jobs_submit run $1 $t 2 3 "/bin/cat /bench/pipedata/${sz}k.txt /usr/bin/awk -f /bench/count-bench.awk" cat awk $sz
-#     jobs_submit run $1 $t 3 1 "/bin/grep ipsum /bench/pipedata/${sz}k.txt /usr/bin/wc" grep wc $sz
-#     jobs_submit run $1 $t 3 3 "/bin/grep ipsum /bench/pipedata/${sz}k.txt /usr/bin/awk -f /bench/count-bench.awk" grep awk $sz
-#     jobs_submit run $1 $t 2 1 "/bin/cat /bench/pipedata/${sz}k.txt /usr/bin/wc" cat wc $sz
-# done
+export LX_CORES=2
+for t in 0 1 2 3 4; do
+    jobs_submit run $1 $t 2 3 "/bin/cat /bench/pipedata/${sz}k.txt /usr/bin/awk -f /bench/count-bench.awk" cat awk $sz
+    jobs_submit run $1 $t 3 1 "/bin/grep ipsum /bench/pipedata/${sz}k.txt /usr/bin/wc" grep wc $sz
+    jobs_submit run $1 $t 3 3 "/bin/grep ipsum /bench/pipedata/${sz}k.txt /usr/bin/awk -f /bench/count-bench.awk" grep awk $sz
+    jobs_submit run $1 $t 2 1 "/bin/cat /bench/pipedata/${sz}k.txt /usr/bin/wc" cat wc $sz
+done
 
-# jobs_wait
+jobs_wait
 
 gen_results $1 cat awk $sz
 gen_results $1 grep wc $sz

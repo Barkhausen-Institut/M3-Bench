@@ -23,7 +23,7 @@ layout(matrix(c(1,2,3,4,5,6,7), 1, 7, byrow = TRUE),
 
 par(mar=c(8,5,3.5,0))
 
-subs <- c("tar  ", "untar  ", "sha  ", "sort  ", "find  ", "sqlite  ", "leveldb  ")
+subs <- c("tar  ", "untar  ", "shasum  ", "sort  ", "find  ", "SQLite  ", "LevelDB  ")
 for(i in 1:length(times)) {
     if(i > 1)
         par(mar=c(8,0,3.5,0))
