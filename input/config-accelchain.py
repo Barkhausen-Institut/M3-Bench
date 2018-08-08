@@ -43,6 +43,7 @@ for i in range(0, num_fft):
                        memPE=mem_pe,
                        spmsize='128kB')
                        #l1size='32kB')
+    pe.accel.buf_size = '2kB'
     pes.append(pe)
 
 for i in range(0, num_indir):

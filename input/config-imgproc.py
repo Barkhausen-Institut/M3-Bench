@@ -9,15 +9,13 @@ root = createRoot(options)
 
 cmd_list = options.cmd.split(",")
 
-ala = ['test_stencil', 'test_md', 'test_spmv', 'test_fft']
 num_mem = 1
 num_pes = int(os.environ.get('M3_GEM5_PES'))
-num_accels = len(ala)
-use_pcie = int(os.environ.get('ACCEL_PCIE')) == 1
 fsimg = os.environ.get('M3_GEM5_FS')
 fsimgnum = os.environ.get('M3_GEM5_FSNUM', '1')
-dtupos = int(os.environ.get('M3_GEM5_DTUPOS', 0))
-mmu = int(os.environ.get('M3_GEM5_MMU', 0))
+num_fft = int(os.environ.get('ACCEL_NUM'))
+num_indir = int(os.environ.get('ACCEL_NUM'))
+use_pcie = int(os.environ.get('ACCEL_PCIE')) == 1
 mem_pe = num_pes
 
 def pes_range(start, end):
@@ -31,7 +29,7 @@ if use_pcie:
     root.bridge_1to2 = Bridge(delay='300ns')
     root.bridge_1to2.master = root.noc2.slave
     root.bridge_1to2.slave = root.noc.master
-    root.bridge_1to2.ranges = [pes_range(num_pes + num_mem, num_pes + num_mem + num_accels - 1)]
+    root.bridge_1to2.ranges = [pes_range(num_pes + num_mem, num_pes + num_mem + num_indir + num_fft - 1)]
 
     root.bridge_2to1 = Bridge(delay='300ns')
     root.bridge_2to1.master = root.noc.slave
@@ -49,8 +47,10 @@ for i in range(0, num_pes):
                       memPE=mem_pe,
                       l1size='32kB',
                       l2size='256kB',
-                      dtupos=dtupos,
-                      mmu=mmu == 1)
+                      dtupos=1,
+                      mmu=2)
+    pe.dtu.max_noc_packet_size = '2kB'
+    pe.dtu.buf_size = '2kB'
     pes.append(pe)
 
 # create the memory PEs
@@ -61,18 +61,36 @@ for i in range(0, num_mem):
                      size='3072MB',
                      image=fsimg if i == 0 else None,
                      imageNum=int(fsimgnum))
+    pe.dtu.max_noc_packet_size = '2kB'
+    pe.dtu.buf_size = '2kB'
     pes.append(pe)
 
+# create the accelerator PEs
 options.cpu_clock = '1GHz'
 
-# create ALADDIN accelerators
-for i in range(0, len(ala)):
-    pe = createAladdinPE(noc=root.noc2 if use_pcie else root.noc,
-                         options=options,
-                         no=num_pes + num_mem + i,
-                         accel=ala[i],
-                         memPE=mem_pe,
-                         l1size='32kB')
+for i in range(0, num_fft):
+    pe = createAccelPE(noc=root.noc2 if use_pcie else root.noc,
+                       options=options,
+                       no=num_pes + num_mem + i,
+                       accel='fft',
+                       memPE=mem_pe,
+                       spmsize='128kB')
+                       #l1size='32kB')
+    pe.dtu.max_noc_packet_size = '2kB'
+    pe.dtu.buf_size = '2kB'
+    pe.accel.buf_size = '2kB'
+    pes.append(pe)
+
+for i in range(0, num_indir):
+    pe = createAccelPE(noc=root.noc2 if use_pcie else root.noc,
+                       options=options,
+                       no=num_pes + num_mem + num_fft + i,
+                       accel='indir',
+                       memPE=mem_pe,
+                       spmsize='128kB')
+                       #l1size='32kB')
+    pe.dtu.max_noc_packet_size = '2kB'
+    pe.dtu.buf_size = '2kB'
     pes.append(pe)
 
 runSimulation(root, options, pes)
