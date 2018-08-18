@@ -3,7 +3,7 @@
 . tools/helper.sh
 
 get_app_idle() {
-    awk -v type=$2 '
+    awk -v type=$2 -v mode=$3 '
         START {
             c = 0
         }
@@ -73,10 +73,19 @@ get_app_idle() {
             }
         }
 
+        function stddev(vals, avg) {
+            sum = 0
+            for(v in vals) {
+                sum += (vals[v] - avg) * (vals[v] - avg)
+            }
+            return sqrt(sum / length(vals))
+        }
+
         END {
             len = 0
             for(i in totals) len++
 
+            sum = 0
             wakeup_sum = 0
             switch_sum = 0
             fwds_sum = 0
@@ -93,11 +102,18 @@ get_app_idle() {
                 switch_sum += switches[i] / 1000
                 fwds_sum += fwds[i] / 1000
                 rem_sum  += (totals[i] - (wakes[i] + switches[i] + fwds[i])) / 1000
+
+                vals[i] = totals[i] / 1000
+                sum += vals[i]
             }
-            print(wakeup_sum / (len - warmup),
-                  switch_sum / (len - warmup),
-                  fwds_sum / (len - warmup),
-                  rem_sum / (len - warmup))
+            if(mode == "avg") {
+                print(wakeup_sum / (len - warmup),
+                      switch_sum / (len - warmup),
+                      fwds_sum / (len - warmup),
+                      rem_sum / (len - warmup))
+            }
+            else
+                print(stddev(vals, sum / (len - warmup)))
         }
     ' < $1
 }
@@ -106,15 +122,22 @@ nova_total() {
     grep -P '! PingpongXPd\.cc.* \d+ cycles' $1/nre/gem5.log | \
         sed -Ee 's/.* ([[:digit:]]+) cycles.*/\1/'
 }
+nova_stddev() {
+    grep -P '! PingpongXPd\.cc.* var: \d+' $1/nre/gem5.log | \
+        sed -Ee 's/.* ([[:digit:]]+).*/\1/'
+}
 
 echo -n > $1/ctx-susp-times.dat
+echo -n > $1/ctx-susp-stddev.dat
 
 for v in sh-all sh-srv alone; do
-    get_app_idle $1/m3-ctx-susp-c-$v/gem5.log $v >> $1/ctx-susp-times.dat
+    get_app_idle $1/m3-ctx-susp-c-$v/gem5.log $v avg >> $1/ctx-susp-times.dat
+    get_app_idle $1/m3-ctx-susp-c-$v/gem5.log $v stddev >> $1/ctx-susp-stddev.dat
 done
 for t in b a; do
     for v in shared alone; do
-        get_app_idle $1/m3-ctx-susp-$t-$v/gem5.log $v >> $1/ctx-susp-times.dat
+        get_app_idle $1/m3-ctx-susp-$t-$v/gem5.log $v avg >> $1/ctx-susp-times.dat
+        get_app_idle $1/m3-ctx-susp-$t-$v/gem5.log $v stddev >> $1/ctx-susp-stddev.dat
     done
 done
 
@@ -122,3 +145,8 @@ novarem=`nova_total $1 | head -n 1`
 echo 0 0 0 $((novarem / 3)) >> $1/ctx-susp-times.dat
 novaloc=`nova_total $1 | tail -n 1`
 echo 0 0 0 $((novaloc / 3)) >> $1/ctx-susp-times.dat
+
+novaloc=$(echo "scale=2;sqrt($(nova_stddev $1 | tail -n 1))" | bc)
+echo $novaloc >> $1/ctx-susp-stddev.dat
+novarem=$(echo "scale=2;sqrt($(nova_stddev $1 | head -n 1))" | bc)
+echo $novarem >> $1/ctx-susp-stddev.dat
