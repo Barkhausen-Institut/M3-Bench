@@ -23,12 +23,12 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(2.35,1,1,1), heights=c(1,1))
 
-par(mar=c(9.5,7.5,4,0))
+par(mar=c(9.5,7.5,3.5,0))
 
 subs <- c("Stencil ", "MD ", "FFT ", "SPMV ")
 for(i in 1:length(times)) {
     if(i > 1)
-        par(mar=c(9.5,0,4,0))
+        par(mar=c(9.5,0,3.5,0))
 
     barplot(t(as.matrix(zeros)), beside=F, ylim=c(100,1000000), axes=F, log="y",
         space=rep(c(0.3), 6), names.arg=rep("", 6))
@@ -43,6 +43,13 @@ for(i in 1:length(times)) {
         title(ylab = "Time (ns)", mgp=c(5.5, 1, 0))
     segments(plot - 0.2, max[[i]], plot + 0.2, max[[i]], lwd=2)
 }
+
+# legend
+par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
+
+plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
+legend("top", c("1", "4", "16", "64", "256", "N"), xpd=TRUE, horiz=TRUE, bty="n",
+    inset=c(0,-0.01), cex=namescale -.1, fill=colors, x.intersp=0.2, text.width=rep(.15, 6))
 
 dev.off()
 embed_fonts(as.character(args[1]))
