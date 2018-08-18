@@ -65,18 +65,18 @@ gen_results() {
     rm $1/m3-fstrace-$2-$t/gem5-04
 
     handle_m3_files $1 $2 $t > $1/eval-app-m3-$2-$t.dat
-    m3tota[$t]=`grep 'TIME: 0000' $1/eval-app-m3-$2-$t.dat | tail -n 3 | ./tools/m3-avg.awk`
-    m3xfer[$t]=`grep 'TIME: aaaa' $1/eval-app-m3-$2-$t.dat | tail -n 3 | ./tools/m3-avg.awk`
-    m3xfer[$t]=$((${m3xfer[$t]} * 1))
+    m3tota=`grep 'TIME: 0000' $1/eval-app-m3-$2-$t.dat | tail -n 3 | ./tools/m3-avg.awk`
+    m3xfer=`grep 'TIME: aaaa' $1/eval-app-m3-$2-$t.dat | tail -n 3 | ./tools/m3-avg.awk`
+    m3xfer=$(($m3xfer * 1))
 
     stddev=`grep 'TIME: 0000' $1/eval-app-m3-$2-$t.dat | tail -n 3 | ./tools/m3-stddev.awk`
-    echo "M3-$2:" $stddev $((100. * (($stddev * 1.) / ($m3tota[$t] + $lxwait)))) >> $1/eval-app-stddev.dat
+    echo "M3-$2:" $stddev $((100. * (($stddev * 1.) / ($m3tota + $lxwait)))) >> $1/eval-app-stddev.dat
 
     echo "Lx M3"
     echo $(($lxtota - $lxxfer - $lxwait)) \
-         $((${m3tota[1-2]} - ${m3xfer[1-2]}))
+         $(($m3tota - $m3xfer))
 
-    echo $lxxfer ${m3xfer[1-2]}
+    echo $lxxfer $m3xfer
     echo $lxwait $lxwait
 }
 
