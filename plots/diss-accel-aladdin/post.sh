@@ -2,7 +2,7 @@
 
 . tools/helper.sh
 
-mhz=`get_mhz $1/m3-aladdin-fft-0-anon/output.txt`
+mhz=`get_mhz $1/m3-aladdin-fft-0-0-anon-1/output.txt`
 
 get_comp_times() {
     awk -v mhz=1000 '
@@ -61,7 +61,7 @@ get_comp_times() {
 
 get_times() {
     for s in 1 4 16 64 256 0; do
-        time=`./tools/m3-bench.sh time 1234 $mhz 1 < $1/m3-aladdin-$2-$s-$3/gem5.log`
+        time=`./tools/m3-bench.sh time 1234 $mhz 1 < $1/m3-aladdin-$2-$s-0-$3-1/gem5.log`
         echo $time
     done
 }
@@ -80,12 +80,12 @@ for b in stencil md fft spmv; do
     echo -n > $1/$b-file-compmax.dat
     for s in 1 4 16 64 256 0; do
         echo "Generating compute times for $b-$s-anon..."
-        anon=`get_comp_times $1/m3-aladdin-$b-$s-anon/gem5.log`
+        anon=`get_comp_times $1/m3-aladdin-$b-$s-0-anon-1/gem5.log`
         echo $anon | cut -d ' ' -f 1 >> $1/$b-anon-comptimes.dat
         echo $anon | cut -d ' ' -f 2 >> $1/$b-anon-compmax.dat
 
         echo "Generating compute times for $b-$s-file..."
-        file=`get_comp_times $1/m3-aladdin-$b-$s-file/gem5.log`
+        file=`get_comp_times $1/m3-aladdin-$b-$s-0-file-1/gem5.log`
         echo $file | cut -d ' ' -f 1 >> $1/$b-file-comptimes.dat
         echo $file | cut -d ' ' -f 2 >> $1/$b-file-compmax.dat
     done
