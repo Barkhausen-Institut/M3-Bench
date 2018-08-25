@@ -53,8 +53,8 @@ run_bench() {
 
 jobs_init $2
 
-for kernel in kernel; do
-    for test in rust-unittests unittests; do
+for kernel in kernel rust-kernel; do
+    for test in rust-unittests unittests rust-benchs cpp-benchs; do
         for isa in arm x86_64; do
             for bpe in 2 4 8 16 32 64; do
                 for pe in a b c; do
