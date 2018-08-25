@@ -98,12 +98,15 @@ for num in 1 2 3 4; do
     done
 done
 
-#for num in 1 2 3 4; do
-#    echo -n > $1/imgproc-$num-ctxsw.dat
-#    echo "Generating ctxsw overhead for num=$num..."
-#    base=`get_runtime $1/m3-imgproc-2-$num-$((num * 2))-1/gem5.log`
-#    for ts in 1 2 4; do
-#        time=`get_runtime $1/m3-imgproc-1-$num-$((num * 2))-$ts/gem5.log`
-#        echo $((($time * 1.0) / $base)) >> $1/imgproc-$num-ctxsw.dat
-#    done
-#done
+for num in 1 2 3 4; do
+   echo -n > $1/imgproc-$num-ctxsw.dat
+   echo -n > $1/imgproc-$num-ctxsw-stddev.dat
+   echo "Generating ctxsw overhead for num=$num..."
+   base=`get_runtime $1/m3-imgproc-2-$num-$((num * 2))-1/gem5.log`
+   for ts in 1 2 4; do
+       time=`get_runtime $1/m3-imgproc-1-$num-$((num * 2))-$ts/gem5.log`
+       stddev=`get_stddev $1/m3-imgproc-1-$num-$((num * 2))-$ts/gem5.log`
+       echo $((($time * 1.0) / $base)) >> $1/imgproc-$num-ctxsw.dat
+       echo $((($stddev * 1.0) / $time)) >> $1/imgproc-$num-ctxsw-stddev.dat
+   done
+done

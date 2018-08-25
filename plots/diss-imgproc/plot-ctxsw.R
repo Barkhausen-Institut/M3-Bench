@@ -1,7 +1,7 @@
 library(extrafont)
 source("tools/helper.R")
 
-scaling <- 2.5
+scaling <- 1.9
 args <- commandArgs(trailingOnly=TRUE)
 colors <- gray.colors(3)
 
@@ -15,13 +15,13 @@ pdf(as.character(args[1]), width=3, height=2.5)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow=TRUE),
-    widths=c(3,1,1,1), heights=c(1,1))
+    widths=c(2.5,1,1,1), heights=c(1,1))
 
-par(mar=c(3,7.5,4,0))
+par(mar=c(2.5,6.2,3,0))
 
 for (i in 1:length(overhead)) {
     if(i > 1)
-        par(mar=c(3,0,4,0))
+        par(mar=c(2.5,0,3,0))
 
     barplot(t(as.matrix(zeros)), beside=T, ylim=c(0.98,1.062), axes=F, xpd=F,
         space=c(0.1, 0.3), names.arg=rep("", 3))
@@ -41,7 +41,7 @@ for (i in 1:length(overhead)) {
         axes=F
     )
     if(i == 1) {
-        title(ylab = "Runtime (rel)", mgp=c(5.5, 1, 0))
+        title(ylab = "Runtime (rel)", mgp=c(4.5, 1, 0))
         axis(2, at=seq(0.98, 1.06, 0.02), las=2)
     }
 }
