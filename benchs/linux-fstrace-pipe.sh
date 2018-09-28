@@ -6,8 +6,8 @@ export GEM5_DIR=`readlink -f gem5`
 . tools/jobs.sh
 . tools/helper.sh
 
-# ( cd xtensa-linux && ./b mklx && ./b mkapps && ./b mkbenchfs )
-# [ $? -eq 0 ] || exit 1
+( cd xtensa-linux && ./b mklx && ./b mkapps && ./b mkbenchfs )
+[ $? -eq 0 ] || exit 1
 
 export M3_BUILD=release
 export GEM5_CPUFREQ=3GHz GEM5_MEMFREQ=1GHz
