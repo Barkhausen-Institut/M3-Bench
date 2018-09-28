@@ -23,16 +23,16 @@ for (i in 1:length(overhead)) {
     if(i > 1)
         par(mar=c(2.5,0,3,0))
 
-    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0.98,1.062), axes=F, xpd=F,
+    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0.98,1.102), axes=F, xpd=F,
         space=c(0.1, 0.3), names.arg=rep("", 3))
-    abline(h=c(seq(0.98, 1.06, 0.02)), col="gray80")
+    abline(h=c(seq(0.98, 1.10, 0.02)), col="gray80")
 
     barplot(
         as.matrix(overhead[[i]]),
         beside=T,
         add=T,
         xpd=F,
-        ylim=c(0.98,1.062),
+        ylim=c(0.98,1.102),
         mgp=c(3.5, 1, 0),
         las=1,
         space=c(0.1, 0.3),
@@ -42,7 +42,7 @@ for (i in 1:length(overhead)) {
     )
     if(i == 1) {
         title(ylab = "Runtime (rel)", mgp=c(4.5, 1, 0))
-        axis(2, at=seq(0.98, 1.06, 0.02), las=2)
+        axis(2, at=seq(0.98, 1.10, 0.02), las=2)
     }
 }
 

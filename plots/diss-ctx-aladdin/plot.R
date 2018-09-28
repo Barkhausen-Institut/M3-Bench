@@ -26,18 +26,18 @@ for(i in 1:length(times)) {
     if(i > 1)
         par(mar=c(2.5,0,3,0))
 
-    barplot(t(as.matrix(zeros)), beside=F, ylim=c(0.98,1.06), axes=F, xpd=F,
+    barplot(t(as.matrix(zeros)), beside=F, ylim=c(0.98,1.1), axes=F, xpd=F,
         space=0.1, names.arg=rep("", 3))
-    abline(h=c(seq(0.98,1.06,0.02)), col="gray80")
+    abline(h=c(seq(0.98,1.1,0.02)), col="gray80")
 
     plot <- barplot(times[[i]], beside=F, add=T, width=rep(c(0.9), 3), xpd=F,
-        ylim=c(0.98,1.06), axes=F,
+        ylim=c(0.98,1.1), axes=F,
         space=0.1,
         col=colors,
         las=3, mgp=c(0, 0.5, 0),
         sub=subs[[i]])
     if(i == 1) {
-        axis(2, at = seq(0.98, 1.06, 0.02), las = 2)
+        axis(2, at = seq(0.98, 1.1, 0.02), las = 2)
         title(ylab = "Runtime (rel)", mgp=c(4.5, 1, 0))
     }
 }

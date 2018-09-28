@@ -26,12 +26,12 @@ def pes_range(start, end):
 if use_pcie:
     root.noc2 = IOXBar()
 
-    root.bridge_1to2 = Bridge(delay='300ns')
+    root.bridge_1to2 = Bridge(delay='500ns')
     root.bridge_1to2.master = root.noc2.slave
     root.bridge_1to2.slave = root.noc.master
     root.bridge_1to2.ranges = [pes_range(num_pes + num_mem, num_pes + num_mem + num_indir + num_fft - 1)]
 
-    root.bridge_2to1 = Bridge(delay='300ns')
+    root.bridge_2to1 = Bridge(delay='500ns')
     root.bridge_2to1.master = root.noc.slave
     root.bridge_2to1.slave = root.noc2.master
     root.bridge_2to1.ranges = [pes_range(0, num_pes + num_mem - 1)]

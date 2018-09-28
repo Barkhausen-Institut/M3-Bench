@@ -24,16 +24,16 @@ for (i in 1:length(vs)) {
     if(i > 1)
         par(mar=c(3,0,4,0))
 
-    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,60), axes=F,
+    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,80), axes=F,
         space=c(0.1, 0.3), names.arg=rep("", 2))
-    abline(h=c(seq(0, 60, 15)), col="gray80")
+    abline(h=c(seq(0, 80, 15)), col="gray80")
 
     barplot(
         as.matrix(vs[[i]]),
         beside=T,
         axes=F,
         add=T,
-        ylim=c(0, 60),
+        ylim=c(0, 80),
         mgp=c(3.5, 1, 0),
         las=1,
         space=c(0.1, 0.3),
@@ -42,7 +42,7 @@ for (i in 1:length(vs)) {
     )
     if(i == 1) {
         title(ylab = "Runtime (ms)", mgp=c(4, 1, 0))
-        axis(2, at=seq(0, 60, 15), las=2)
+        axis(2, at=seq(0, 80, 15), las=2)
     }
 }
 
