@@ -24,7 +24,7 @@ abline(h=c(seq(0,20,5)), col="gray80")
 plot <- barplot(as.matrix(cmptimes), beside=F, add=T,
     ylim=c(0,20), space=c(0.2, 0.2, 0.2, 0.4, 0.2, 0.2), ylab="", axes=F,
     col=colors, cex.names=namescale, las=2, mgp=c(3, 1, 0),
-    names.arg=c("Linux", "Lx-rd", "Lx-wr", "M3", "M3-rd", "M3-wr"))
+    names.arg=c("Linux", "Lx-rd", "Lx-wr", "M³", "M³-rd", "M³-wr"))
 axis(2, at = seq(0, 20, 5), las = 2)
 title(ylab = "Time (ms)", mgp=c(3, 1, 0))
 error.bar(plot, colSums(cmptimes), stddev)

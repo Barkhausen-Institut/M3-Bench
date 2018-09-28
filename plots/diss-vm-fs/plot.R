@@ -38,7 +38,7 @@ for(i in 1:length(times)) {
         ylim=c(0,10), space=rep(0.2, 3), axes=F, width=rep(c(0.9), 3),
         col=colors,
         cex.names=namescale, las=3, mgp=c(5.5, 0.5, 0),
-        names.arg=c("M3-A","M3-B","M3-C"), sub=subs[[i]])
+        names.arg=c("M³-A","M³-B","M³-C"), sub=subs[[i]])
     if(i == 1) {
         axis(2, at = seq(0, 10, 3), las = 2)
         title(ylab = "Time (ms)", mgp=c(3, 1, 0))

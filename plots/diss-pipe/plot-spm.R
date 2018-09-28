@@ -24,7 +24,7 @@ abline(h=c(seq(0,20,5)), col="gray80")
 plot <- barplot(as.matrix(spmtimes), beside=F, add=T,
     ylim=c(0,20), space=c(0.2, 0.2, 0.2), ylab="", axes=F,
     col=colors, cex.names=namescale, las=2, mgp=c(4, 0.8, 1),
-    names.arg=c("M3", "M3-rd", "M3-wr"))
+    names.arg=c("M³", "M³-rd", "M³-wr"))
 axis(2, at = seq(0, 20, 5), las = 2)
 error.bar(plot, colSums(spmtimes), stddev)
 

@@ -36,9 +36,9 @@ for(i in 1:length(times)) {
         par(mar=c(7,0,4,0))
 
     if(i <= 2)
-        names <- c("Linux","M3-B","M3-C","M3-C*")
+        names <- c("Linux","M³-B","M³-C","M³-C*")
     else
-        names <- c("M3-B","M3-C","M3-C*")
+        names <- c("M³-B","M³-C","M³-C*")
 
     barplot(as.matrix(if(i <= 2) zeros4 else zeros3), beside=F, ylim=c(0,10.21), axes=F,
         space=rep(0.2, length(names)), names.arg=rep("", length(names)))

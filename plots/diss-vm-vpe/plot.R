@@ -26,7 +26,7 @@ layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
 
 par(mar=c(8,6,2,0))
 
-subs <- c("Linux  ", "M3-A  ", "M3-B  ", "M3-C  ", "M3-C*  ")
+subs <- c("Linux  ", "M³-A  ", "M³-B  ", "M³-C  ", "M³-C*  ")
 for(i in 1:length(subs)) {
     if(i > 1)
         par(mar=c(8,0,2,0))

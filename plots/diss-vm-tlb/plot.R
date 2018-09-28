@@ -25,7 +25,7 @@ plot <- barplot(as.matrix(times), beside=F, add=T,
     ylim=c(0,1.021), space=rep(0.2, 3), ylab="", axes=F,
     col=colors,
     cex.names=namescale, las=3, mgp=c(4.5, 0.5, 0),
-    names.arg=c("M3-B","M3-C","M3-C*"), sub="TLB miss")
+    names.arg=c("M³-B","M³-C","M³-C*"), sub="TLB miss")
 axis(2, at = seq(0, 1, .2), las = 2)
 title(ylab = "Time (µs)", mgp=c(4, 1, 0))
 error.bar(plot, colSums(times), stddev)

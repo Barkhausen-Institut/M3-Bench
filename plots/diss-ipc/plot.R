@@ -14,7 +14,7 @@ dev = scan(args[3]) / 1000
 
 plot = barplot(
     vals,
-    names=c("NOVA (loc)", "NOVA (rem)", "M3 (rem)"),
+    names=c("NOVA (loc)", "NOVA (rem)", "M³ (rem)"),
     ylab = "Duration (K Cycles)",
     ylim = c(0, 10),
     col=gray.colors(3)

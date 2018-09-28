@@ -51,7 +51,7 @@ for(i in 1:length(names)) {
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,2,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("M3all (1)", "Linux (1)"), xpd=TRUE, horiz=TRUE, bty="n",
+legend("top", c("M³-all (1)", "Linux (1)"), xpd=TRUE, horiz=TRUE, bty="n",
     inset=c(0,0), cex=namescale, fill=colors)
 
 dev.off()

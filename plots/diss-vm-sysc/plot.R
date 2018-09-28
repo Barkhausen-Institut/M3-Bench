@@ -23,7 +23,7 @@ plot = barplot(
 )
 error.bar(plot, syscv, syscd, horizontal=T)
 
-legend("top", c("M3-A", "M3-B", "M3-C", "M3-C*"), xpd=TRUE, horiz=T, bty="n",
+legend("top", c("M³-A", "M³-B", "M³-C", "M³-C*"), xpd=TRUE, horiz=T, bty="n",
     inset=c(0,-0.55), cex=scaling, fill=gray.colors(4))
 
 dev.off()

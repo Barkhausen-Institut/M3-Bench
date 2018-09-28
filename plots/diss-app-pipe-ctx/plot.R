@@ -32,7 +32,7 @@ title(ylab = "Relative runtime", mgp=c(4, 1, 0))
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("M3 (5 PEs)", "M3 (3 PEs)", "M3 (2 PEs)", "Linux (2 cores)"), xpd=TRUE, horiz=TRUE, bty="n",
+legend("top", c("M³ (5 PEs)", "M³ (3 PEs)", "M³ (2 PEs)", "Linux (2 cores)"), xpd=TRUE, horiz=TRUE, bty="n",
     inset=c(0,-0.01), cex=namescale, fill=colors)
 
 dev.off()
