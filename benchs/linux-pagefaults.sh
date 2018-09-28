@@ -4,7 +4,7 @@ cd xtensa-linux
 
 ./b mkapps
 ./b mklx
-./b mkbr
+./b mkbenchfs
 
 export GEM5_CPUFREQ=3GHz GEM5_MEMFREQ=1GHz
 export GEM5_OUT=$1/lx-pagefaults

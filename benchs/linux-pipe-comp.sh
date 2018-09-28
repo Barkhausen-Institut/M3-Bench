@@ -19,7 +19,7 @@ cd xtensa-linux
 
 ./b mkapps
 ./b mklx
-./b mkbr
+./b mkbenchfs
 
 run() {
     /bin/echo -e "\e[1mStarting $3\e[0m"
