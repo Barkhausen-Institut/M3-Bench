@@ -47,15 +47,25 @@ jobs_init $2
 
 for m in 0 1; do
     jobs_submit run $1 nginx 1 1 $m
+
     jobs_submit run $1 nginx 2 1 $m
+    jobs_submit run $1 nginx 2 2 $m
+
     jobs_submit run $1 nginx 4 1 $m
     jobs_submit run $1 nginx 4 2 $m
+    jobs_submit run $1 nginx 4 4 $m
+
     jobs_submit run $1 nginx 8 1 $m
     jobs_submit run $1 nginx 8 2 $m
     jobs_submit run $1 nginx 8 4 $m
+    jobs_submit run $1 nginx 8 8 $m
+
     jobs_submit run $1 nginx 16 1 $m
     jobs_submit run $1 nginx 16 2 $m
     jobs_submit run $1 nginx 16 4 $m
+    jobs_submit run $1 nginx 16 8 $m
+
+    jobs_submit run $1 nginx 32 1 $m
     jobs_submit run $1 nginx 32 2 $m
     jobs_submit run $1 nginx 32 4 $m
     jobs_submit run $1 nginx 32 8 $m

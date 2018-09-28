@@ -2,7 +2,7 @@
 
 . tools/helper.sh
 
-mhz=`get_mhz $1/m3-server-nginx-1-1/output.txt`
+mhz=`get_mhz $1/m3-server-nginx-1-1-0/output.txt`
 
 get_max() {
     ./m3/src/tools/bench.sh $1 $mhz | grep "TIME: 0000" | awk '{ if($4 > max) max = $4 } END { print(max) }'
@@ -14,8 +14,8 @@ for tr in nginx; do
 
     for apps in 1 2 4 8 16 32; do
         for srv in 1 2 4 8; do
-            if [ -f $1/m3-server-$tr-$apps-$srv/gem5.log ]; then
-                time=`get_max $1/m3-server-$tr-$apps-$srv/gem5.log`
+            if [ -f $1/m3-server-$tr-$apps-$srv-0/gem5.log ]; then
+                time=`get_max $1/m3-server-$tr-$apps-$srv-0/gem5.log`
                 echo -n $(($apps * 33 * (1000000000 / ($time / 3)))) >> $1/app-server-$tr.dat
             else
                 echo -n "NA" >> $1/app-server-$tr.dat

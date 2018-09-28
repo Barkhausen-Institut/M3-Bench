@@ -27,8 +27,8 @@ lines(c(1,2,4,8,16,32), times$s8, ylim=c(0,256), type="o", pch=3, lty="dashed")
 title(ylab = "Requests / s (x 1000)", mgp=c(3, 1, 0))
 title(xlab = "# of nginx VPEs", mgp=c(2, 1, 0))
 
-axis(side = 1, at = seq(0, 32, 8), line = -0.32)
-axis(side = 2, at = seq(0, 256, 64), labels = TRUE, las=1)
+axis(side = 1, at = seq(0, 32, 8), line = -0.31)
+axis(side = 2, at = seq(0, 256, 64), labels = TRUE, las=1, line = -0.14)
 
 # legend
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
