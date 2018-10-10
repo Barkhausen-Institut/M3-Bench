@@ -10,7 +10,7 @@ print(times)
 
 pdf(as.character(args[1]), width=5, height=3, useDingbats=FALSE)
 par(mar=c(4.1,4.3,2.5,1))
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 plot(c(1,2,4,8,16,32), times$s1, ylim=c(0,256), type="o", pch=0, axes=FALSE, xlab="", ylab="")
 abline(h=c(seq(0,256,64)), col="gray80")

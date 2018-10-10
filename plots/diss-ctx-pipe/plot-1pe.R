@@ -2,8 +2,8 @@ library(extrafont)
 source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 1.3
-namescale <- 1.3
+scaling <- 1.1
+namescale <- 1.1
 
 # colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
 colors <- gray.colors(2)
@@ -18,17 +18,17 @@ for(i in 1:4) {
 zeros <- matrix(rep(c(NA), 4 * 2), nrow=4, ncol=2)
 
 pdf(as.character(args[1]), width=5, height=2)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(1.8,1,1.1), heights=c(1,1))
 
-par(mar=c(5.5,5,4,0))
+par(mar=c(5.5,5,3.2,0))
 
 names <- list("rand|wc  ", "rand|sink  ", "cat|wc  ", "cat|sink  ")
 for(i in 1:length(names)) {
     if(i > 1)
-        par(mar=c(5.5,0,4,0))
+        par(mar=c(5.5,0,3.2,0))
 
     barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,25), axes=F,
         space=rep(c(0.3, 0), 4), names.arg=rep("", 4))

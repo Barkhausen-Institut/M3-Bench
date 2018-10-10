@@ -19,7 +19,7 @@ zeros  <- matrix(rep(c(NA), 4 * 1), nrow=1, ncol=4)
 ctimes <- replace(times, T, pmin(0.22, times))
 
 pdf(as.character(args[1]), width=10, height=4)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
     widths=c(1.45,1,1,1,1), heights=c(1,1))

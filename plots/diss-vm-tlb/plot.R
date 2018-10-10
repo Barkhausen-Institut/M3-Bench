@@ -13,7 +13,7 @@ times  <- read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000 * 3)
 stddev <- scan(args[3]) / (1000 * 3)
 
 pdf(as.character(args[1]), width=3.5, height=6)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(7,6,4,1))
 

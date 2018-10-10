@@ -13,7 +13,7 @@ step  <- if(args[3] == "1") 5 else 2
 
 pdf(as.character(args[1]), width=5, height=3)
 par(mar=c(3.1,4.5,3.5,0))
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 plot(as.numeric(rep(NA, 5)), ylim=c(start,100), type="o", pch=0, axes=FALSE, xlab="", ylab="")
 abline(h=c(seq(start,100,step)), col="gray80")

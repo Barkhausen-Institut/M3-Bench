@@ -12,7 +12,7 @@ ratios <- read.table(as.character(args[2]), header=TRUE, sep=" ")
 print(ratios)
 
 pdf(as.character(args[1]), width=9, height=3)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(3,5,2.5,0))
 

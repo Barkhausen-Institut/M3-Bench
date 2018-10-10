@@ -5,7 +5,7 @@ scaling <- 1.3
 args <- commandArgs(trailingOnly = TRUE)
 
 pdf(as.character(args[1]), width=5, height=4.5)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(4.5,4.5,2,0))
 

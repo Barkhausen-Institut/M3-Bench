@@ -5,7 +5,7 @@ scaling <- 1.1
 args <- commandArgs(trailingOnly = TRUE)
 
 pdf(as.character(args[1]), width=8, height=2.2)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 syscv  = rev(scan(args[2]))
 syscd  = rev(scan(args[3]))

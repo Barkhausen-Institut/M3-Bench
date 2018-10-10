@@ -18,7 +18,7 @@ for(i in 1:3) {
 zeros <- matrix(rep(c(NA), 3 * 3), nrow=3, ncol=3)
 
 pdf(as.character(args[1]), width=5, height=4)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
     widths=c(1.5,1,1), heights=c(1,1))

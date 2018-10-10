@@ -23,7 +23,7 @@ zeros3 <- matrix(rep(c(NA), 3 * 4), nrow=4, ncol=3)
 zeros4 <- matrix(rep(c(NA), 4 * 4), nrow=4, ncol=4)
 
 pdf(as.character(args[1]), width=6, height=4)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(1.42,1,0.8,0.8), heights=c(1,1))
@@ -61,7 +61,7 @@ for(i in 1:length(times)) {
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0.1,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("Kernel", "m3fs", "Pager", "VMA/DTU"), xpd=TRUE, horiz=T, bty="n",
+legend("top", c("Kernel", "M³FS", "Pager", "VMA/DTU"), xpd=TRUE, horiz=T, bty="n",
     inset=c(0,0), cex=namescale, fill=rev(colors))
 
 dev.off()

@@ -14,7 +14,7 @@ pes   <- read.table(as.character(args[3]), header=F, sep=" ")
 print(times)
 
 pdf(as.character(args[1]), width=9, height=3.5)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(6.5,4.2,2,0))
 

@@ -10,7 +10,7 @@ for(i in 1:7) {
 }
 
 pdf(as.character(args[1]), width=8, height=6, useDingbats=FALSE)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3,4,5,6), 3, 2, byrow = TRUE),
     widths=c(1.08,1), heights=c(1.25,1,1))

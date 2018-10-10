@@ -12,7 +12,7 @@ for(i in 1:4) {
 zeros <- matrix(rep(c(NA), 12 * 1), nrow=12, ncol=1)
 
 pdf(as.character(args[1]), width=5, height=3.2)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow=TRUE),
     widths=c(1.65,1,1,1), heights=c(1,1))

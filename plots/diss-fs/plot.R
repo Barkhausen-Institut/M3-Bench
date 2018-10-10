@@ -19,7 +19,7 @@ zeros2 <- matrix(rep(c(NA), 2 * 2), nrow=2, ncol=2)
 zeros3 <- matrix(rep(c(NA), 3 * 2), nrow=2, ncol=3)
 
 pdf(as.character(args[1]), width=5, height=4)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 layout(matrix(c(1,2,3), 1, 3, byrow = TRUE),
     widths=c(1.15,1,1), heights=c(1,1))

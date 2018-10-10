@@ -13,7 +13,7 @@ spmtimes <- read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000000 *
 stddev <- scan(args[3]) / (1000000 * 3)
 
 pdf(as.character(args[1]), width=3, height=3.2)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(5,3,1,1))
 

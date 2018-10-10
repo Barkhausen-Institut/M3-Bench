@@ -12,7 +12,7 @@ times  <- read.table(as.character(args[2]), header=F, sep=" ") / 1000
 stddev <- read.table(as.character(args[3]), header=F, sep=" ") / 1000
 
 pdf(as.character(args[1]), width=10, height=4)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(5,10.5,3,1))
 
