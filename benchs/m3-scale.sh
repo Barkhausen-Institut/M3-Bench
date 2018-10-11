@@ -21,8 +21,9 @@ run() {
 
     # use a 512 MiB FS image, if many clients are writing to the same image
     if [ "$3 $4" = "16 1" ] || [ "$3 $4" = "32 2" ]; then
-        ./b mkfs=bench-large.img -n build/$M3_TARGET-x86_64-$M3_BUILD/fsdata/bench $((128*1024)) 4096 0
         export M3_FS=bench-large.img
+    elif [ "$3 $4" = "32 1" ]; then
+        export M3_FS=bench-huge.img
     fi
 
     export M3_SCALE_ARGS="$2 0 0 1 $3 $4 `stat --format="%s" build/$M3_TARGET-x86_64-$M3_BUILD/$M3_FS`"
@@ -42,19 +43,28 @@ run() {
 
 ./b || exit 1
 
+# build images upfront
+./b mkfs=bench-large.img -n build/$M3_TARGET-x86_64-$M3_BUILD/fsdata/bench $((128*1024)) 4096 0
+./b mkfs=bench-huge.img -n build/$M3_TARGET-x86_64-$M3_BUILD/fsdata/bench $((256*1024)) 4096 0
+
 jobs_init $2
 
 for tr in tar untar find sqlite leveldb sha256sum sort; do
     jobs_submit run $1 $tr 1 1
     jobs_submit run $1 $tr 2 1
+    jobs_submit run $1 $tr 2 2
     jobs_submit run $1 $tr 4 1
     jobs_submit run $1 $tr 4 2
+    jobs_submit run $1 $tr 4 4
     jobs_submit run $1 $tr 8 1
     jobs_submit run $1 $tr 8 2
     jobs_submit run $1 $tr 8 4
+    jobs_submit run $1 $tr 8 8
     jobs_submit run $1 $tr 16 1
     jobs_submit run $1 $tr 16 2
     jobs_submit run $1 $tr 16 4
+    jobs_submit run $1 $tr 16 8
+    jobs_submit run $1 $tr 32 1
     jobs_submit run $1 $tr 32 2
     jobs_submit run $1 $tr 32 4
     jobs_submit run $1 $tr 32 8
