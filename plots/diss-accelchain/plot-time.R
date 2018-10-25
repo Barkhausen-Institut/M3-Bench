@@ -23,9 +23,9 @@ for (i in 1:length(vs)) {
     if(i > 1)
         par(mar=c(9.5,0,4,0))
 
-    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,11), axes=F,
+    barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,12), axes=F,
         space=c(0.3, 0.2), names.arg=rep("", 12))
-    abline(h=c(seq(0, 10, 2)), col="gray80")
+    abline(h=c(seq(0, 12, 2)), col="gray80")
 
     barplot(
         as.matrix(vs[[i]]),
@@ -42,7 +42,7 @@ for (i in 1:length(vs)) {
     )
     if(i == 1) {
         title(ylab = "Time (ms)", mgp=c(3.5, 1, 0))
-        axis(2, at=seq(0, 10, 2), las=2)
+        axis(2, at=seq(0, 12, 2), las=2)
     }
 }
 

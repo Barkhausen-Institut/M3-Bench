@@ -9,6 +9,10 @@ get_app_idle() {
         /pe05.*DEBUG.*1ff10000/ {
             match($1, /^[[:space:]]*([[:digit:]]+):/, m)
             start=m[1]
+            for(i in active)
+                active[i] = 0
+            for(i in wake)
+                wake[i] = 0
             p=1
         }
         /pe05.*DEBUG.*1ff20000/ {
