@@ -70,7 +70,7 @@ for bpe in 2 4 8 16 32 64 128 256; do
     jobs_submit run_bench $1 copy "" $cpcfg a $bpe 1
 done
 
-bpe=64
+bpe=128
 for pe in a b c; do
     jobs_submit run_bench $1 read "-r" $rdcfg $pe $bpe 5
     jobs_submit run_bench $1 write "-r" $wrcfg $pe $bpe 5
