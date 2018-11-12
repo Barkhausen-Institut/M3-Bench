@@ -1,9 +1,10 @@
 library(extrafont)
+library(RColorBrewer)
 source("tools/helper.R")
 
 scaling <- 1.9
 args <- commandArgs(trailingOnly=TRUE)
-colors <- gray.colors(3)
+colors <- brewer.pal(n = 3, name = "Pastel1")
 
 overhead <- list()
 for(i in 1:4) {
@@ -37,7 +38,7 @@ for (i in 1:length(overhead)) {
         las=1,
         space=c(0.1, 0.3),
         names.arg=i,
-        col=,
+        col=colors,
         axes=F
     )
     if(i == 1) {

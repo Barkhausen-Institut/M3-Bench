@@ -1,8 +1,10 @@
 library(extrafont)
+library(RColorBrewer)
 source("tools/helper.R")
 
 scaling <- 2
 args <- commandArgs(trailingOnly=TRUE)
+colors <- brewer.pal(n = 3, name = "Pastel1")
 
 # convert back to time (cycles / 3)
 vs <- list()
@@ -38,7 +40,7 @@ for (i in 1:length(vs)) {
         space=rep(c(0.5, 0, 0), 4),
         names.arg=c("", "4GB/s", "", "", "2GB/s", "", "", "1GB/s", "", "", "0.5GB/s", ""),
         sub=paste(2^(i - 1), "Accel."),
-        col=rep(gray.colors(3), 4)
+        col=rep(colors, 4)
     )
     if(i == 1) {
         title(ylab = "Time (ms)", mgp=c(3.5, 1, 0))
@@ -51,7 +53,7 @@ par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
 legend("top", c("Assisted", "Auto-Pipes", "Autonomous"), xpd=TRUE, horiz=TRUE, bty="n",
-    inset=c(0,-0.01), cex=scaling -.1, fill=gray.colors(3), x.intersp=0.4)
+    inset=c(0,-0.01), cex=scaling -.1, fill=colors, x.intersp=0.4)
 
 dev.off()
 embed_fonts(as.character(args[1]))

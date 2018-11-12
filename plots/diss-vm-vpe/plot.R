@@ -1,14 +1,13 @@
 library(extrafont)
 library(plotrix)
+library(RColorBrewer)
 source("tools/helper.R")
 options(warn=1)
 
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 2.2
 namescale <- 2.2
-
-# colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
-colors <- gray.colors(4)
+colors <- brewer.pal(n = 4, name = "Pastel1")
 
 # convert back to time (cycles / 3)
 times  <- t(read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000000 * 3))

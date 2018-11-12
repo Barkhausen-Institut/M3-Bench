@@ -1,12 +1,11 @@
 library(extrafont)
+library(RColorBrewer)
 source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.4
 namescale <- 1.4
-
-# colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
-colors <- gray.colors(4)
+colors <- brewer.pal(n = 4, name = "Pastel1")
 
 # convert back to time (cycles / 3)
 spmtimes <- read.table(as.character(args[2]), header=TRUE, sep=" ") / (1000000 * 3)

@@ -1,7 +1,10 @@
 library(extrafont)
+library(RColorBrewer)
 source("tools/helper.R")
 
 scaling <- 1.3
+colors <- brewer.pal(n = 3, name = "Pastel1")[1:2]
+
 args <- commandArgs(trailingOnly = TRUE)
 
 pdf(as.character(args[1]), width=5, height=4.5)
@@ -16,13 +19,13 @@ barplot(
     ylim=c(0,3.5),
     xlab="Message size (Bytes)",
     ylab="Avg Power (mW)",
-    col=gray.colors(2),
+    col=colors,
     names=c("8","64","128","256","512"),
     beside=TRUE
 )
 
 legend("top", rownames(vals),
-    xpd=TRUE, horiz=TRUE, bty="n", inset=c(0,-0.13), cex=scaling, fill=gray.colors(2))
+    xpd=TRUE, horiz=TRUE, bty="n", inset=c(0,-0.13), cex=scaling, fill=colors)
 
 dev.off()
 embed_fonts(as.character(args[1]))

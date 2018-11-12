@@ -1,8 +1,10 @@
 library(extrafont)
+library(RColorBrewer)
 
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.8
 namescale <- 1.8
+colors <- brewer.pal(n = 4, name = "Set1")
 
 times <- list()
 for(i in 1:7) {
@@ -26,15 +28,15 @@ for(i in 1:6) {
     abline(h=c(seq(0,100,25)), col="gray80")
     par(new=T)
 
-    plot(c(1,2,4,8,16,32), times[[i]]$s1, ylim=c(0,100), type="o", pch=0, axes=FALSE, ylab="", xlab="")
-    lines(c(1,2,4,8,16,32), times[[i]]$s2, ylim=c(0,100), type="o", pch=1, lty="dashed")
-    lines(c(1,2,4,8,16,32), times[[i]]$s4, ylim=c(0,100), type="o", pch=2, lty="dotted")
-    lines(c(1,2,4,8,16,32), times[[i]]$s8, ylim=c(0,100), type="o", pch=3, lty="dashed")
+    plot(c(1,2,4,8,16,32), times[[i]]$s1, ylim=c(0,100), type="o", col=colors[1], lwd=1.5, pch=0, axes=FALSE, ylab="", xlab="")
+    lines(c(1,2,4,8,16,32), times[[i]]$s2, ylim=c(0,100), type="o", col=colors[2], lwd=1.5, pch=1, lty="dashed")
+    lines(c(1,2,4,8,16,32), times[[i]]$s4, ylim=c(0,100), type="o", col=colors[3], lwd=1.5, pch=2, lty="dotted")
+    lines(c(1,2,4,8,16,32), times[[i]]$s8, ylim=c(0,100), type="o", col=colors[4], lwd=1.5, pch=3, lty="dashed")
     if(i == 3) {
-        lines(c(1,2,4,8,16,32), times[[7]]$s1, ylim=c(0,100), type="o", pch=0)
-        lines(c(1,2,4,8,16,32), times[[7]]$s2, ylim=c(0,100), type="o", pch=1, lty="dashed")
-        lines(c(1,2,4,8,16,32), times[[7]]$s4, ylim=c(0,100), type="o", pch=2, lty="dotted")
-        lines(c(1,2,4,8,16,32), times[[7]]$s8, ylim=c(0,100), type="o", pch=3, lty="dashed")
+        lines(c(1,2,4,8,16,32), times[[7]]$s1, ylim=c(0,100), type="o", col=colors[1], lwd=1.5, pch=0)
+        lines(c(1,2,4,8,16,32), times[[7]]$s2, ylim=c(0,100), type="o", col=colors[2], lwd=1.5, pch=1, lty="dashed")
+        lines(c(1,2,4,8,16,32), times[[7]]$s4, ylim=c(0,100), type="o", col=colors[3], lwd=1.5, pch=2, lty="dotted")
+        lines(c(1,2,4,8,16,32), times[[7]]$s8, ylim=c(0,100), type="o", col=colors[4], lwd=1.5, pch=3, lty="dashed")
     }
 
     axis(side = 1, at = seq(0, 32, 4), labels = TRUE, line=-0.3)
@@ -52,7 +54,7 @@ plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
 linetype <- c(1:4)
 plotchar <- seq(0, 3, 1)
 legend("top", c("1 srv", "2 srv", "4 srv", "8 srv"), horiz=T, bty="n",
-    cex=namescale, pch=plotchar, lty=linetype, inset=c(0,0))
+    cex=namescale, pch=plotchar, lty=linetype, col=colors, lwd=1.5, inset=c(0,0))
 
 dev.off()
 embed_fonts(as.character(args[1]))

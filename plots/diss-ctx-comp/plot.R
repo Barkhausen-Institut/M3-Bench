@@ -1,12 +1,11 @@
 library(extrafont)
+library(RColorBrewer)
 source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 scaling <- 1.3
 namescale <- 1.3
-
-# colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
-colors <- gray.colors(1)
+colors <- brewer.pal(n = 3, name = "Pastel1")[1]
 
 ratios <- scan(as.character(args[2]))
 

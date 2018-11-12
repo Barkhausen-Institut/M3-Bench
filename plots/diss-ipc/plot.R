@@ -1,7 +1,10 @@
 library(extrafont)
+library(RColorBrewer)
 source("tools/helper.R")
 
 scaling <- 1.4
+colors <- brewer.pal(n = 3, name = "Pastel1")
+
 args <- commandArgs(trailingOnly = TRUE)
 
 pdf(as.character(args[1]), width=5, height=4.5)
@@ -18,7 +21,7 @@ plot = barplot(
     space=rep(0.1, 3),
     ylab = "Duration (K Cycles)",
     ylim = c(0, 10),
-    col=gray.colors(3)
+    col=colors
 )
 error.bar(plot, vals, dev)
 

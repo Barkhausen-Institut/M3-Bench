@@ -61,6 +61,9 @@ gen_data_total() {
     toc=`total $dirc/times.log 1234`
 
     echo "M3-a M3-b M3-c"
+    echo "0 0 0"
+    echo "0 0 0"
+    echo "0 0 0"
     echo "$toa $tob $toc"
 }
 

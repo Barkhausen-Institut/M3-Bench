@@ -2,7 +2,7 @@
 
 . tools/helper.sh
 
-m3bpe=64
+m3bpe=128
 mhz=`get_mhz $1/m3-fs-read-a-$m3bpe/output.txt`
 
 sum() {
