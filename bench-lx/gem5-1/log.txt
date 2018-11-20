@@ -1,0 +1,15 @@
+gem5 Simulator System.  http://gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 compiled Dec  6 2017 14:03:46
+gem5 started Jun 10 2018 08:26:51
+gem5 executing on chipdemo, pid 22324
+command line: /home/hrniels/m3bench/gem5/build/X86/gem5.opt --outdir=gem5-1 --debug-file=gem5.log /home/hrniels/m3bench/gem5/configs/example/linux_fs.py --cpu-type TimingSimpleCPU --cpu-clock=1GHz --sys-clock=333MHz --caches --l2cache -n 1 '--command-line=ttyS0 console=ttyS0 lpj=7999923 root=/dev/sda1' --checkpoint-at-end
+
+Global frequency set at 1000000000000 ticks per second
+info: kernel located at: gem5-1/binaries/x86_64-vmlinux-2.6.22.9
+**** REAL SIMULATION ****
+info: Entering event queue @ 0.  Starting simulation...
+Exiting @ tick 7524605356000 because user interrupt received
+info: Entering event queue @ 7524605356000.  Starting simulation...
+Writing checkpoint

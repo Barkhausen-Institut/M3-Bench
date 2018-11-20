@@ -1,8 +1,8 @@
 [submodule "m3"]
 	path = m3
 	url = nils@os:m3.git
-[submodule "xtensa-linux"]
-	path = xtensa-linux
+[submodule "bench-lx"]
+	path = bench-lx
 	url = nils@os:xtensa-linux
 [submodule "NRE"]
 	path = NRE

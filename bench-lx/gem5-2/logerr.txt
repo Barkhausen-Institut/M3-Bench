@@ -1,0 +1,16 @@
+warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (512 Mbytes)
+Listening for com_1 connection on port 3456
+0: system.remote_gdb.listener: listening for remote gdb #0 on port 7000
+0: system.remote_gdb.listener: listening for remote gdb #1 on port 7001
+warn: Reading current count from inactive timer.
+warn: ClockedObject: More than one power state change request encountered within the same simulation tick
+warn: instruction 'fninit' unimplemented
+warn: Don't know what interrupt to clear for console.
+warn: ClockedObject: Already in the requested power state, request ignored
+warn: instruction 'wbinvd' unimplemented
+hack: Assuming logical destinations are 1 << id.
+warn: i8042 "Write output port" command not implemented.
+warn: i8042 "Write keyboard output buffer" command not implemented.
+warn: Write to unknown i8042 (keyboard controller) command port.
+warn: Tried to clear PCI interrupt 14
+warn: instruction 'fwait' unimplemented

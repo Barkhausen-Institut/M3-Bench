@@ -1,0 +1,25 @@
+# 
+# ls /
+[1;34mbench[0m       [1;36minit[0m        [1;34mlost+found[0m  [1;34mopt[0m         [1;34msbin[0m        [1;34mvar[0m
+[1;34mbin[0m         [1;34mlib[0m         [1;34mmedia[0m       [1;34mproc[0m        [1;34msys[0m
+[1;34mdev[0m         [1;36mlib64[0m       [1;34mmnt[0m         [1;34mroot[0m        [1;34mtmp[0m
+[1;34metc[0m         [1;36mlinuxrc[0m     [1;32mmount.sh[0m    [1;34mrun[0m         [1;34musr[0m
+# 
+# sed
+BusyBox v1.26.2 (2017-09-25 16:53:13 CEST) multi-call binary.
+
+Usage: sed [-inrE] [-f FILE]... [-e CMD]... [FILE]...
+or: sed [-inrE] CMD [FILE]...
+
+	-e CMD	Add CMD to sed commands to be executed
+	-f FILE	Add FILE contents to sed commands to be executed
+	-i[SFX]	Edit files in-place (otherwise sends to stdout)
+		Optionally back files up, appending SFX
+	-n	Suppress automatic printing of pattern space
+	-r,-E	Use extended regex syntax
+
+If no -e or -f, the first non-option argument is the sed command stserial8250: too much work for irq4
+ring.
+Remaining arguments are input files (stdin if none).
+# 
+# 

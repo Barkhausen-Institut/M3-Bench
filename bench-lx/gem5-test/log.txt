@@ -1,0 +1,12 @@
+gem5 Simulator System.  http://gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 compiled Dec  6 2017 14:03:46
+gem5 started Jun 12 2018 14:21:19
+gem5 executing on chipdemo, pid 13981
+command line: /home/hrniels/m3bench/gem5/build/X86/gem5.opt --outdir=gem5-test --debug-file=gem5.log /home/hrniels/m3bench/gem5/configs/example/linux_fs.py --cpu-type DerivO3CPU --cpu-clock=1GHz --sys-clock=333MHz --caches --l2cache -n 2 '--command-line=ttyS0 console=ttyS0 lpj=7999923 root=/dev/sda1' --restore-with-cpu DerivO3CPU --checkpoint-restore=1
+
+Global frequency set at 1000000000000 ticks per second
+info: kernel located at: gem5-test/binaries/x86_64-vmlinux-2.6.22.9
+**** REAL SIMULATION ****
+info: Entering event queue @ 8877563633000.  Starting simulation...

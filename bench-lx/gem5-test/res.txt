@@ -1,0 +1,1 @@
+Usage: /bench/bin/cp <in> <out>
