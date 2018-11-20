@@ -3,7 +3,7 @@
 . tools/jobs.sh
 
 # use this gem5 version, because the atomic rwm operations do not work on the new version
-export GEM5_DIR=`readlink -f gem5`
+export GEM5_DIR=`readlink -f gem5-lx`
 
 cd xtensa-linux
 

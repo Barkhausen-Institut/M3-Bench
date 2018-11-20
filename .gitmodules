@@ -7,3 +7,6 @@
 [submodule "NRE"]
 	path = NRE
 	url = https://github.com/TUD-OS/NRE.git
+[submodule "gem5-lx"]
+	path = gem5-lx
+	url = https://github.com/TUD-OS/gem5-dtu.git
