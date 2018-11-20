@@ -3,7 +3,7 @@
 	url = nils@os:m3.git
 [submodule "bench-lx"]
 	path = bench-lx
-	url = nils@os:xtensa-linux
+	url = https://github.com/Nils-TUD/bench-lx
 [submodule "NRE"]
 	path = NRE
 	url = https://github.com/TUD-OS/NRE.git

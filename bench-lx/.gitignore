@@ -1,7 +1,0 @@
-/build/**
-/benchfs/bin/*
-/gem5/**
-.scons*
-*.o
-*~
-*.sublime-workspace

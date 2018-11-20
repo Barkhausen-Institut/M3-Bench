@@ -1,2 +1,0 @@
-Import('env')
-env.LxProgram(env, target = 'pagefault', source = 'pagefault.c')
