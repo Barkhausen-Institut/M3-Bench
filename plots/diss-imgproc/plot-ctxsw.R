@@ -26,7 +26,7 @@ for (i in 1:length(overhead)) {
 
     barplot(t(as.matrix(zeros)), beside=T, ylim=c(0.98,1.082), axes=F, xpd=F,
         space=c(0.1, 0.3), names.arg=rep("", 3))
-    abline(h=c(seq(0.98, 1.08, 0.02)), col="gray80")
+    abline(h=c(seq(0.98, 1.08, 0.02)), col="gray80", lwd=2)
 
     barplot(
         as.matrix(overhead[[i]]),

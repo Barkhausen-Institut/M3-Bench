@@ -18,7 +18,7 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family
 par(mar=c(3.1,4.5,3.5,0))
 
 plot(as.numeric(rep(NA, 7)), ylim=c(0,100), type="o", pch=0, lty=1, axes=FALSE, ylab="", xlab="")
-abline(h=c(seq(0,100,25)), col="gray80")
+abline(h=c(seq(0,100,25)), col="gray80", lwd=2)
 par(new=T)
 
 for(i in 1:7) {

@@ -17,7 +17,7 @@ par(mar=c(3,4,2,0))
 
 barplot(as.matrix(t(ratios)), beside=T, axes=F,
     ylim=c(0,3.5), space=rep(c(0.4, 0.1, 0.1, 0.1), 7), names.arg=rep("", 7))
-abline(h=c(seq(0,3.5,1)), col="gray80")
+abline(h=c(seq(0,3.5,1)), col="gray80", lwd=2)
 
 barplot(as.matrix(t(ratios)), beside=T, axes=F, add=T,
     ylim=c(0,3.5), space=rep(c(0.4, 0.1, 0.1, 0.1), 7), ylab="",

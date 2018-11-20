@@ -41,7 +41,7 @@ for(i in 1:length(times)) {
 
     barplot(as.matrix(if(i <= 2) zeros4 else zeros3), beside=F, ylim=c(0,10.21), axes=F,
         space=rep(0.2, length(names)), names.arg=rep("", length(names)))
-    abline(h=c(seq(0,10,2)), col="gray80")
+    abline(h=c(seq(0,10,2)), col="gray80", lwd=2)
 
     plot <- barplot(as.matrix(times[[i]]), beside=F, add=T,
         ylim=c(0,10.21), space=rep(0.2, length(names)), axes=F,

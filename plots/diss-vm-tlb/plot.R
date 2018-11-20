@@ -18,7 +18,7 @@ par(mar=c(7,6,4,1))
 
 barplot(as.matrix(times), beside=F, ylim=c(0,1.021), axes=F,
     space=rep(0.2, 3), names.arg=rep("", 3))
-abline(h=c(seq(0,1.0,0.2)), col="gray80")
+abline(h=c(seq(0,1.0,0.2)), col="gray80", lwd=2)
 
 plot <- barplot(as.matrix(times), beside=F, add=T,
     ylim=c(0,1.021), space=rep(0.2, 3), ylab="", axes=F,

@@ -28,7 +28,7 @@ for (i in 1:length(utils)) {
 
     barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,1), axes=F,
         space=c(0.3, 0.2), names.arg=rep("", 12))
-    abline(h=c(seq(0, 1, 0.2)), col="gray80")
+    abline(h=c(seq(0, 1, 0.2)), col="gray80", lwd=2)
 
     barplot(
         as.matrix(utils[[i]]),

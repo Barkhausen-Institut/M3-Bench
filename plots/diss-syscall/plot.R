@@ -14,13 +14,19 @@ par(mar=c(2.5,5,1,0))
 
 vals = scan(args[2])
 dev = scan(args[3])
+zeros = rep(c(NA), 3)
+
+barplot(zeros, ylim=c(0, 500), axes=F,
+    space=rep(0.1, 3), names.arg=rep("", 3))
+abline(h=c(seq(0,500,100)), col="gray80", lwd=2)
 
 plot = barplot(
     vals,
+    add=T,
     names=c("Linux", "NOVA", "M³"),
     space=rep(0.1, 3),
     ylab = "Duration (Cycles)",
-    ylim = c(0, 450),
+    ylim = c(0, 500),
     col=colors
 )
 error.bar(plot, vals, dev)

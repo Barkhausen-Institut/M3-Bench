@@ -15,11 +15,11 @@ par(mar=c(4.1,4.3,2.5,1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 plot(c(1,2,4,8,16,32), times$s1, ylim=c(0,256), type="o", pch=0, axes=FALSE, xlab="", ylab="")
-abline(h=c(seq(0,256,64)), col="gray80")
+abline(h=c(seq(0,256,64)), col="gray80", lwd=2)
 par(new=T)
 
 plot(c(1,2,4,8,16,32), times$s1, ylim=c(0,256), type="o", pch=0, axes=FALSE, xlab="", ylab="")
-abline(v=c(seq(0,32,8)), col="gray80")
+abline(v=c(seq(0,32,8)), col="gray80", lwd=2)
 par(new=T)
 
 plot(c(1,2,4,8,16,32), times$s1, ylim=c(0,256), type="o", col=colors[1], lwd=1.5, pch=0, axes=FALSE, ylab="", xlab="")

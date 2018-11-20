@@ -29,7 +29,7 @@ for(i in 1:length(times)) {
 
     barplot(as.matrix(zeros), beside=F, axes=F, ylim=c(0,10),
         space=c(0.2), names.arg=rep("", 6))
-    abline(h=c(seq(0, 10, 2)), col="gray80")
+    abline(h=c(seq(0, 10, 2)), col="gray80", lwd=2)
 
     barplot(as.matrix(times[[i]]), beside=F, axes=F, add=T,
         ylim=c(0,10), space=c(0.2), ylab="", width=rep(c(0.97), 6),

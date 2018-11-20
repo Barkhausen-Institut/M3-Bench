@@ -18,7 +18,7 @@ par(mar=c(5,3,1,1))
 
 barplot(as.matrix(spmtimes), beside=F, ylim=c(0,20), axes=F,
     space=c(0.2, 0.2, 0.2), names.arg=rep("", 3))
-abline(h=c(seq(0,20,5)), col="gray80")
+abline(h=c(seq(0,20,5)), col="gray80", lwd=2)
 
 plot <- barplot(as.matrix(spmtimes), beside=F, add=T,
     ylim=c(0,20), space=c(0.2, 0.2, 0.2), ylab="", axes=F,

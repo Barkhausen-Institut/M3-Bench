@@ -19,7 +19,7 @@ par(mar=c(6.5,4.2,2,0))
 
 barplot(t(as.matrix(times[,-1])), beside=T, axes=F, ylim=c(0,112),
     space=rep(c(0.3, 0), 11), names.arg=rep("", 22))
-abline(h=c(seq(0, 100, 20)), col="gray80")
+abline(h=c(seq(0, 100, 20)), col="gray80", lwd=2)
 
 plot <- barplot(t(as.matrix(times[,-1])), beside=T, add=T,
     ylim=c(0,112),

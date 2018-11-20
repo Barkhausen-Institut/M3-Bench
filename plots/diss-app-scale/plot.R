@@ -25,7 +25,7 @@ for(i in 1:6) {
         par(mar=c(5,if(i %% 2 == 1) 6 else 4,if(i == 2) 4 else 0.5,0))
 
     plot(c(1,2,4,8,16,32), times[[i]]$s1, ylim=c(0,100), type="o", pch=0, axes=FALSE, xlab="", ylab="")
-    abline(h=c(seq(0,100,25)), col="gray80")
+    abline(h=c(seq(0,100,25)), col="gray80", lwd=2)
     par(new=T)
 
     plot(c(1,2,4,8,16,32), times[[i]]$s1, ylim=c(0,100), type="o", col=colors[1], lwd=1.5, pch=0, axes=FALSE, ylab="", xlab="")

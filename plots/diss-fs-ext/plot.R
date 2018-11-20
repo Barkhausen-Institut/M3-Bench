@@ -13,7 +13,7 @@ par(mar=c(4.1,4.3,2.1,1))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 plot(times$Read, ylim=c(0,20), type="o", pch=0, axes=FALSE, xlab="", ylab="")
-abline(h=c(seq(0,20,5)), col="gray80")
+abline(h=c(seq(0,20,5)), col="gray80", lwd=2)
 par(new=T)
 
 plot(times$Read, ylim=c(0,20), type="o", pch=0, col=colors[1], lwd=1.5, axes=FALSE,

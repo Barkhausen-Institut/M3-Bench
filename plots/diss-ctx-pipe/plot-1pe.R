@@ -31,7 +31,7 @@ for(i in 1:length(names)) {
 
     barplot(t(as.matrix(zeros)), beside=T, ylim=c(0,25), axes=F,
         space=rep(c(0.3, 0), 4), names.arg=rep("", 4))
-    abline(h=c(seq(0,20,5)), col="gray80")
+    abline(h=c(seq(0,20,5)), col="gray80", lwd=1.3)
 
     plot <- barplot(t(as.matrix(times[[i]])), beside=T, add=T, width=rep(c(0.95), 4),
         ylim=c(0,25),

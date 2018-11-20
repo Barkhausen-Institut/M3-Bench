@@ -18,7 +18,7 @@ par(mar=c(3.1,4.5,3.5,0))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 plot(as.numeric(rep(NA, 5)), ylim=c(start,100), type="o", pch=0, axes=FALSE, xlab="", ylab="")
-abline(h=c(seq(start,100,step)), col="gray80")
+abline(h=c(seq(start,100,step)), col="gray80", lwd=2)
 par(new=T)
 
 plot(c(1,2,4,8,16), as.numeric(times[1,]), ylim=c(start,100), type="o", col=colors[1], lwd=1.5, pch=0, lty=1, axes=F, ylab="", xlab="")
