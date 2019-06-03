@@ -1,8 +1,8 @@
 library(extrafont)
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 2.2
-namescale <- 2.2
+scaling <- 2.4
+namescale <- 2.4
 
 # colors <- c("#2b8cbe","#a6bddb","#ece7f2")
 colors <- gray.colors(3)
@@ -16,14 +16,14 @@ for(i in 1:7) {
 zeros <- matrix(rep(c(NA), 6), nrow=3, ncol=3)
 
 pdf(as.character(args[1]), width=7, height=3)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Linux Biolinum")
 
 layout(matrix(c(1,2,3,4,5,6,7), 1, 7, byrow = TRUE),
     widths=c(1.85,1,1,1,1,1,1), heights=c(1,1))
 
 par(mar=c(12,6,4,0))
 
-subs <- c("tar", "untar", "sha", "sort", "find", "SQLite", "LvlDB")
+subs <- c("tar", "untar", "sha", "sort", "find", "SQLi", "LDB")
 for(i in 1:length(times)) {
     if(i > 1)
         par(mar=c(12,0,4,0))
@@ -37,10 +37,10 @@ for(i in 1:length(times)) {
         ylim=c(0,10), space=c(0.1), ylab="", width=c(0.98, 0.98, 0.98),
         col=colors,
         cex.names=namescale, las=3, mgp=c(4, 0.5, 0),
-        names.arg=c("Lx","A²o","A²n"), sub=subs[[i]])
+        names.arg=c("Lx","M3","M3x"), sub=subs[[i]])
     if(i == 1) {
         axis(2, at = seq(0, 10, 5), las = 2)
-        title(ylab = "Time (ms)", mgp=c(3.6, 1, 0))
+        title(ylab = "Runtime (ms)", mgp=c(3.6, 1, 0))
     }
 }
 

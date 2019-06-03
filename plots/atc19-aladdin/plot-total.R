@@ -2,8 +2,8 @@ library(extrafont)
 source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 2.2
-namescale <- 2.2
+scaling <- 2.4
+namescale <- 2.4
 
 # colors <- c("#FF8B8B","#CCCCCC","#AFDDFF")
 colors <- gray.colors(6)
@@ -16,17 +16,17 @@ for(i in 1:4) {
 zeros <- matrix(rep(c(NA), 6 * 1), nrow=6, ncol=1)
 
 pdf(as.character(args[1]), width=4, height=3)
-par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
+par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Linux Biolinum")
 
 layout(matrix(c(1,2,3,4), 1, 4, byrow = TRUE),
     widths=c(1.86,1,1,1), heights=c(1,1))
 
-par(mar=c(9.5,5.5,4,0))
+par(mar=c(9.5,5.5,4.2,0))
 
 subs <- c("Stencil ", "MD ", "FFT ", "SPMV ")
 for(i in 1:length(times)) {
     if(i > 1)
-        par(mar=c(9.5,0,4,0))
+        par(mar=c(9.5,0,4.2,0))
 
     barplot(t(as.matrix(zeros)), beside=F, ylim=c(0,1.2), axes=F,
         space=rep(c(0.3), 6), names.arg=rep("", 6))
@@ -39,7 +39,7 @@ for(i in 1:length(times)) {
         sub=subs[[i]])
     if(i == 1) {
         axis(2, at = seq(0, 1.2, 0.3), las = 2)
-        title(ylab = "Time (ms)", mgp=c(3.8, 1, 0))
+        title(ylab = "Runtime (ms)", mgp=c(3.8, 1, 0))
     }
 }
 
@@ -48,7 +48,7 @@ par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
 legend("top", c("1", "4", "16", "64", "256", "N"), xpd=TRUE, horiz=TRUE, bty="n",
-    inset=c(0,-0.01), cex=namescale -.1, fill=colors, x.intersp=0.2, text.width=rep(.15, 6))
+    inset=c(0,-0.01), cex=namescale -.1, fill=colors, x.intersp=0.2, text.width=rep(.12, 6))
 
 dev.off()
 embed_fonts(as.character(args[1]))
