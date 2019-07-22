@@ -12,7 +12,7 @@ ratios <- read.table(as.character(args[2]), header=F, sep=" ")
 
 print(ratios)
 
-pdf(as.character(args[1]), width=5, height=3)
+cairo_pdf(as.character(args[1]), width=5, height=3)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
 par(mar=c(3.1,4.5,3.5,0))
@@ -30,14 +30,14 @@ for(i in 1:7) {
 
 axis(side = 1, at = 1:6, lab = c("1","2","4","8","16","32"), line=-0.33)
 axis(side = 2, at = seq(0, 100, 25), labels = TRUE, las=1)
-title(ylab = "Paral. eff. (%)", mgp=c(3.2, 1, 0))
+title(ylab = "Paral. ef\u200Cf. (%)", mgp=c(3.2, 1, 0))
 title(xlab = "# of applications", mgp=c(2, 1, 0))
 
 # legend
 par(fig=c(0,1,0,1), oma=c(0,0,0,0), mar=c(0,0,0,0), new=TRUE)
 
 plot(0, 0, type="n", bty="n", xaxt="n", yaxt="n")
-legend("top", c("tar","untar","find","sqlite"),
+legend("top", c("tar","untar","f\u200Cind","sqlite"),
     horiz=T, bty="n",
     cex=namescale, pch=seq(0, 3, 1), lty=c(1:4), col=colors[1:4], lwd=1.5, inset=c(0,-.03))
 legend("top", c("leveldb","shasum","sort"),
@@ -45,4 +45,4 @@ legend("top", c("leveldb","shasum","sort"),
     cex=namescale, pch=seq(4, 7, 1), lty=c(5:7), col=colors[5:7], lwd=1.5, inset=c(0,.06))
 
 dev.off()
-embed_fonts(as.character(args[1]))
+embedFonts(as.character(args[1]))

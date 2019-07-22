@@ -13,7 +13,7 @@ print(as.numeric(times[1,]))
 start <- if(args[3] == "1") 80 else 90
 step  <- if(args[3] == "1") 5 else 2
 
-pdf(as.character(args[1]), width=5, height=3)
+cairo_pdf(as.character(args[1]), width=5, height=3)
 par(mar=c(3.1,4.5,3.5,0))
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling, family="Ubuntu")
 
@@ -25,7 +25,7 @@ plot(c(1,2,4,8,16), as.numeric(times[1,]), ylim=c(start,100), type="o", col=colo
 lines(c(1,2,4,8,16), as.numeric(times[2,]), ylim=c(start,100), type="o", col=colors[2], lwd=1.5, pch=1, lty=2)
 lines(c(1,2,4,8,16), as.numeric(times[3,]), ylim=c(start,100), type="o", col=colors[3], lwd=1.5, pch=2, lty=3)
 lines(c(1,2,4,8,16), as.numeric(times[4,]), ylim=c(start,100), type="o", col=colors[4], lwd=1.5, pch=3, lty=4)
-title(ylab = "Paral. eff. (%)", mgp=c(3.2, 1, 0))
+title(ylab = "Paral. ef\u200Cf. (%)", mgp=c(3.2, 1, 0))
 title(xlab = "# of pipes", mgp=c(2, 1, 0))
 
 axis(side = 1, at = seq(0, 16, 2), labels = TRUE, line = -0.33)
