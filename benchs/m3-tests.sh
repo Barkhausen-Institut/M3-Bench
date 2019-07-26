@@ -2,6 +2,7 @@
 
 cfgfstrace=`readlink -f input/fstrace.cfg`
 cfgscale=`readlink -f input/bench-scale-pipe.cfg`
+lbfile=`readlink -f .lastbuild`
 
 . tools/jobs.sh
 
@@ -11,6 +12,9 @@ export M3_BUILD=release
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
+
+echo -n > $lbfile
+trap "rm -f $lbfile" EXIT ERR INT TERM
 
 run_bench() {
     export M3_FSBPE=$5
@@ -56,7 +60,10 @@ run_bench() {
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-    ./b 2>&1 > $M3_GEM5_OUT/output.txt || exit
+    if [ "$M3_FSBPE-$M3_ISA" != "`cat $lbfile`" ]; then
+        ./b 2>&1 > $M3_GEM5_OUT/output.txt || exit
+        echo -n $M3_FSBPE-$M3_ISA > $lbfile
+    fi
 
     /bin/echo -e "\e[1mStarted $dirname\e[0m"
     jobs_started
