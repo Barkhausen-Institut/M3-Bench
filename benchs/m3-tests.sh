@@ -68,6 +68,10 @@ run_bench() {
     /bin/echo -e "\e[1mStarted $dirname\e[0m"
     jobs_started
 
+    # set memory and time limits
+    ulimit -v 4000000   # 4GB virt mem
+    ulimit -t 3600      # 1h CPU time
+
     ./b run $bench -n >> $M3_GEM5_OUT/output.txt
 
     gzip -f $M3_GEM5_OUT/gem5.log
