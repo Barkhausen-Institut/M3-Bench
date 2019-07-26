@@ -13,7 +13,7 @@ export M3_GEM5_CFG=$cfg
 export M3_GEM5_DBG=DtuAccelAladdin,DtuAccelAladdinState,Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
-export M3_CORES=5
+export M3_CORES=6
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 
@@ -30,21 +30,23 @@ run_bench() {
     else
         export ALADDIN_ARGS="-s $3 -m $4 $2"
     fi
-    export KERNEL_ARGS="-t=$(($6 * 3000000))"
+    export KERNEL_ARGS="-t $(($6 * 3000000))"
     export ACCEL_PCIE=0
 
     ./b run $input -n > $M3_GEM5_OUT/output.txt 2>&1
-    [ $? -eq 0 ] || exit 1
 
-    /bin/echo -e "\e[1mFinished m3-aladdin-$2-$3-$4-$5-$6\e[0m"
+    if [ $? -eq 0 ] && [ "`grep 'Benchmark took' $M3_GEM5_OUT/output.txt | wc -l`" = "4" ]; then
+        /bin/echo -e "\e[1mFinished m3-aladdin-$2-$3-$4-$5-$6:\e[0m \e[1;32mSUCCESS\e[0m"
+    else
+        /bin/echo -e "\e[1mFinished m3-aladdin-$2-$3-$4-$5-$6:\e[0m \e[1;31mFAILED\e[0m"
+    fi
 }
 
 ./b || exit 1
 
 jobs_init $2
 
-# for b in stencil md fft spmv; do
-for b in fft; do
+for b in stencil md fft spmv; do
     for s in 1 4 16 64 256 0; do
         jobs_submit run_bench $1 $b $s 0 file 1
         jobs_submit run_bench $1 $b $s 0 anon 1

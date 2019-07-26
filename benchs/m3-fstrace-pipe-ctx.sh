@@ -18,14 +18,14 @@ run() {
     export M3_GEM5_OUT=$1/m3-fstrace-pipe-$2-$3-$4
     mkdir -p $M3_GEM5_OUT
 
-    export M3_SCALE_ARGS="$2_$3_$2 $2_$3_$3 4 1 1 1"
+    export M3_SCALE_ARGS="-m -i 1 -r 4 $2_$3_$2 $2_$3_$3"
 
     if [ "$4" = "1" ]; then
-        export M3_CORES=6
+        export M3_CORES=8
     elif [ "$4" = "2" ]; then
-        export M3_CORES=7
+        export M3_CORES=9
     else
-        export M3_CORES=10
+        export M3_CORES=12
     fi
 
     /bin/echo -e "\e[1mStarted m3-fstrace-pipe-$2-$3-$4\e[0m"

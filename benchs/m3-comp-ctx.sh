@@ -2,7 +2,7 @@
 
 . tools/jobs.sh
 
-cfg=`readlink -f input/rctmux.cfg`
+cfg=`readlink -f input/bench-compute.cfg`
 
 cd m3
 export M3_BUILD=release M3_FS=bench.img
@@ -10,6 +10,7 @@ export M3_BUILD=release M3_FS=bench.img
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector,DtuMsgs
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_GEM5_CFG=config/caches.py
+
 # export M3_GEM5_CPU=TimingSimpleCPU
 
 run() {
@@ -20,12 +21,12 @@ run() {
     export M3_GEM5_OUT=$1/m3-comp-ctx-$2-$3-$4
     mkdir -p $M3_GEM5_OUT
 
-    export M3_KERNEL_ARGS="-t=$(($4 * 3000000))"
+    export M3_KERNEL_ARGS="-t $(($4 * 3000000))"
     COMP_CYCLES=60000000
     if [ "$2" = "alone" ]; then
-        export M3_CORES=6 M3_RCTMUX_ARGS="0 4 2 /bin/rctmux-util-compute $COMP_CYCLES /bin/rctmux-util-compute $COMP_CYCLES"
+        export M3_CORES=8 M3_BENCH_ARGS="-r 4 2 /bin/compute $COMP_CYCLES /bin/compute $COMP_CYCLES"
     else
-        export M3_CORES=5 M3_RCTMUX_ARGS="1 4 2 /bin/rctmux-util-compute $COMP_CYCLES /bin/rctmux-util-compute $COMP_CYCLES"
+        export M3_CORES=7 M3_BENCH_ARGS="-m 1 -r 4 2 /bin/compute $COMP_CYCLES /bin/compute $COMP_CYCLES"
     fi
 
     if [ "$3" = "c" ]; then

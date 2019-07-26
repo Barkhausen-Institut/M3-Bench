@@ -11,7 +11,7 @@ export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_GEM5_CFG=config/caches.py
 export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
-export M3_CORES=10
+export M3_CORES=11
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 
@@ -19,7 +19,7 @@ run() {
     export M3_GEM5_OUT=$1/m3-fstrace-pipe-$2-$3
     mkdir -p $M3_GEM5_OUT
 
-    export M3_SCALE_ARGS="$2_$3_$2 $2_$3_$3 4 1 0 1"
+    export M3_SCALE_ARGS="-i 1 -r 4 $2_$3_$2 $2_$3_$3"
 
     /bin/echo -e "\e[1mStarted m3-fstrace-pipe-$2-$3\e[0m"
     jobs_started

@@ -7,7 +7,7 @@ export M3_BUILD=release
 
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
-export M3_CORES=6
+export M3_CORES=7
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 

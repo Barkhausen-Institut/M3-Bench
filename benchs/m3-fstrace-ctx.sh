@@ -19,17 +19,17 @@ run() {
     mkdir -p $M3_GEM5_OUT
 
     if [ "$4" = "1" ]; then
-        export M3_CORES=5
+        export M3_CORES=7
     elif [ "$4" = "2" ]; then
-        export M3_CORES=6
-    else
         export M3_CORES=8
+    else
+        export M3_CORES=10
     fi
 
     /bin/echo -e "\e[1mStarted m3-fstrace-ctx-$2-$3-$4\e[0m"
     jobs_started
 
-    export M3_SCALE_ARGS="$2 1 0 4 $3 1 `stat --format="%s" build/$M3_TARGET-x86_64-$M3_BUILD/$M3_FS`"
+    export M3_SCALE_ARGS="-m -r 4 $2 `stat --format="%s" build/$M3_TARGET-x86_64-$M3_BUILD/$M3_FS`"
 
     ./b run $cfg -n &>$M3_GEM5_OUT/output.txt
 

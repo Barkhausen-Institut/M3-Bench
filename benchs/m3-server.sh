@@ -21,14 +21,15 @@ run() {
     export M3_GEM5_OUT=$1/m3-server-$2-$3-$4-$5
     mkdir -p $M3_GEM5_OUT
 
-    export M3_SCALE_ARGS="$2 $5 1 1 $3 $4 `stat --format="%s" build/$M3_TARGET-x86_64-$M3_BUILD/$M3_FS`"
-    export M3_GEM5_FSNUM=$4
-
-    if [ "$m" = "0" ]; then
+    if [ "$5" = "0" ]; then
         export M3_CORES=52
+        mux=""
     else
-        export M3_CORES=$((12 + $3))
+        export M3_CORES=$((14 + $3))
+        mux="-m"
     fi
+    export M3_SCALE_ARGS="$mux -l -i $3 -s $4 -r 1 $2 `stat --format="%s" build/$M3_TARGET-x86_64-$M3_BUILD/$M3_FS`"
+    export M3_GEM5_FSNUM=$4
 
     /bin/echo -e "\e[1mStarted m3-server-$2-$3-$4-$5\e[0m"
 

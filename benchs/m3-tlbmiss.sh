@@ -2,15 +2,13 @@
 
 . tools/jobs.sh
 
-cfg=`readlink -f input/bench-tlbmiss.cfg`
-
 cd m3
 export M3_BUILD=release
 
 export M3_GEM5_CFG=config/caches.py
-export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector,DtuPf,Exec
+export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
-export M3_CORES=2
+export M3_CORES=3
 
 # export M3_GEM5_CPU=TimingSimpleCPU
 
@@ -22,7 +20,7 @@ run_bench() {
 
     /bin/echo -e "\e[1mStarted m3-tlbmiss-$2-$3\e[0m"
 
-    ./b run $cfg -n > $M3_GEM5_OUT/output.txt 2>&1
+    ./b run boot/bench-tlbmiss.cfg -n > $M3_GEM5_OUT/output.txt 2>&1
     [ $? -eq 0 ] || exit 1
 
     /bin/echo -e "\e[1mFinished m3-tlbmiss-$2-$3\e[0m"
