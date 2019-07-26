@@ -1,6 +1,7 @@
 #!/bin/bash
 
-fstrace=`readlink -f input/fstrace.cfg`
+cfgfstrace=`readlink -f input/fstrace.cfg`
+cfgscale=`readlink -f input/bench-scale-pipe.cfg`
 
 . tools/jobs.sh
 
@@ -29,11 +30,17 @@ run_bench() {
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
-        export FSTRACE_ARGS="-n 4 $bench"
         if [[ "$bench" =~ "bench" ]]; then
             bench=boot/$bench.cfg
+        elif [[ "$bench" =~ "_" ]]; then
+            IFS='_' read -ra parts <<< "$bench"
+            writer=${parts[0]}_${parts[1]}_${parts[0]}
+            reader=${parts[0]}_${parts[1]}_${parts[1]}
+            export M3_SCALE_ARGS="-i 1 -r 4 -w 1 $writer $reader"
+            bench=$cfgscale
         else
-            bench=$fstrace
+            export FSTRACE_ARGS="-n 4 -t -u 1 $bench"
+            bench=$cfgfstrace
         fi
     fi
 
@@ -69,9 +76,14 @@ run_bench() {
 
 jobs_init $2
 
-for test in rust-unittests rust-benchs unittests cpp-benchs find tar untar sqlite leveldb sha256sum sort; do
+benchs=""
+benchs+="rust-unittests rust-benchs unittests cpp-benchs"
+benchs+=" find tar untar sqlite leveldb sha256sum sort"
+benchs+=" cat_awk cat_wc grep_awk grep_wc"
+
+for bpe in 2 4 8 16 32 64; do
     for isa in arm x86_64; do
-        for bpe in 2 4 8 16 32 64; do
+        for test in $benchs; do
             for pe in a b c; do
                 if [ "$isa" = "arm" ] && [ "$pe" = "c" ]; then
                     continue;

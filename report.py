@@ -12,6 +12,7 @@ pp = pprint.PrettyPrinter()
 tests = [
     'cpp-benchs', 'rust-benchs', 'rust-unittests', 'unittests',
     'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb',
+    'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
 ]
 colors = ['red', 'blue', 'green', 'orange', 'purple']
 
@@ -74,7 +75,7 @@ def parse_output(file):
     failed_asserts = 0
     res = Result()
     seen_shutdown = False
-    with open(file, 'r') as reader:
+    with open(file, 'r', errors='replace') as reader:
         line = reader.readline()
         test = ""
         while line != '':
@@ -242,6 +243,7 @@ with open('reports/summary.html', 'w') as report:
         # collect relative performance changes
         base = {}
         rel = {}
+        lastperf = ''
         for date in sorted(results.keys()):
             for cfg in cfgs:
                 if not cfg in base:
@@ -257,8 +259,10 @@ with open('reports/summary.html', 'w') as report:
                         else:
                             base[cfg][perf.name] = perf.time
                             rel[cfg][perf.name] = ["1"]
+                        lastperf = perf.name
                 except:
-                    rel[cfg][perf.name].append("null")
+                    if lastperf != '':
+                        rel[cfg][lastperf].append("null")
 
         chart_name = 'changes_' + re.sub(r'[^a-zA-Z0-9_]', '', test)
         report.write("    <td>\n")
