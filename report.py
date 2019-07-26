@@ -386,6 +386,9 @@ for test in tests:
             report.write("    legend: {\n")
             report.write("      position: 'top',\n")
             report.write("    },\n")
+            report.write("    scales: {\n")
+            report.write("      yAxes: [{ ticks: { suggestedMin: 0 } }],\n")
+            report.write("    },\n")
             report.write("  },\n")
             report.write("})\n")
 
