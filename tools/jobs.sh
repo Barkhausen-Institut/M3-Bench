@@ -23,7 +23,7 @@ jobs_init() {
 
     # let the spawned jobs signal us
     trap sigusr1 USR1
-    trap sigint INT
+    trap sigint INT TERM EXIT ERR
 }
 
 jobs_submit() {
