@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export M3_TARGET=gem5
+
 branch=cc
 if [ $# -gt 0 ]; then
     branch=$1
