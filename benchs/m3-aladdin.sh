@@ -26,9 +26,9 @@ run_bench() {
     /bin/echo -e "\e[1mStarted m3-aladdin-$2-$3-$4-$5-$6\e[0m"
 
     if [ "$5" = "file" ]; then
-        export ALADDIN_ARGS="-s $3 -f -m $4 $2"
+        export ALADDIN_ARGS="-s $3 -f -m $4 -r 4 $2"
     else
-        export ALADDIN_ARGS="-s $3 -m $4 $2"
+        export ALADDIN_ARGS="-s $3 -m $4 -r 4 $2"
     fi
     export KERNEL_ARGS="-t $(($6 * 3000000))"
     export ACCEL_PCIE=0
