@@ -16,6 +16,8 @@ fsimgnum = os.environ.get('M3_GEM5_FSNUM', '1')
 num_fft = int(os.environ.get('ACCEL_NUM'))
 num_indir = int(os.environ.get('ACCEL_NUM'))
 use_pcie = int(os.environ.get('ACCEL_PCIE')) == 1
+dtupos = int(os.environ.get('M3_GEM5_DTUPOS', 0))
+mmu = int(os.environ.get('M3_GEM5_MMU', 0))
 mem_pe = num_pes
 
 def pes_range(start, end):
@@ -47,8 +49,8 @@ for i in range(0, num_pes):
                       memPE=mem_pe,
                       l1size='32kB',
                       l2size='256kB',
-                      dtupos=1,
-                      mmu=2)
+                      dtupos=dtupos,
+                      mmu=mmu == 1)
     pe.dtu.max_noc_packet_size = '2kB'
     pe.dtu.buf_size = '2kB'
     pes.append(pe)

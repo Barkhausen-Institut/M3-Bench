@@ -24,8 +24,9 @@ run_bench() {
 
     /bin/echo -e "\e[1mStarted m3-imgproc-$2-$3-$4-$5\e[0m"
 
-    export ACCEL_DIRECT=$2 ACCEL_NUM=$(($3 * 3)) CHAIN_NUM=$4 ACCEL_REPEATS=4 ACCEL_PCIE=$6
-    export M3_KERNEL_ARGS="-t=$(($5 * 3000000))"
+    export ACCEL_NUM=$(($3 * 3)) ACCEL_PCIE=$5
+    export M3_IMGPROC_ARGS="-m $2 -n $3 -r 4 /small.bin"
+    export M3_KERNEL_ARGS="-t $(($4 * 3000000))"
 
     ./b run $script -n > $M3_GEM5_OUT/output.txt 2>&1
     [ $? -eq 0 ] || exit 1
@@ -43,16 +44,16 @@ jobs_init $2
 
 for pcie in 0 1; do
     for num in 1 2 3 4; do
-        jobs_submit run_bench $1 0 $num $num 1 $pcie
-        jobs_submit run_bench $1 1 $num $num 1 $pcie
+        jobs_submit run_bench $1 indir $num 1 $pcie
+        jobs_submit run_bench $1 dir $num 1 $pcie
     done
 
-    for num in 1 2 3 4; do
-       jobs_submit run_bench $1 2 $num $((num * 2)) 1 $pcie
-       for ts in 1 2 4; do
-           jobs_submit run_bench $1 1 $num $((num * 2)) $ts $pcie
-       done
-    done
+    # for num in 1 2 3 4; do
+    #    jobs_submit run_bench $1 2 $num $((num * 2)) 1 $pcie
+    #    for ts in 1 2 4; do
+    #        jobs_submit run_bench $1 1 $num $((num * 2)) $ts $pcie
+    #    done
+    # done
 done
 
 jobs_wait
