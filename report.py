@@ -14,6 +14,7 @@ tests = [
     'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb',
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
+    'aladdin-stencil', 'aladdin-md', 'aladdin-fft', 'aladdin-spmv',
 ]
 colors = ['red', 'blue', 'green', 'orange', 'purple']
 
