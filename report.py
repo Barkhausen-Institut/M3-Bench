@@ -244,7 +244,6 @@ with open('reports/summary.html', 'w') as report:
         # collect relative performance changes
         base = {}
         rel = {}
-        lastperf = ''
         for date in sorted(results.keys()):
             for cfg in cfgs:
                 if not cfg in base:
@@ -255,15 +254,19 @@ with open('reports/summary.html', 'w') as report:
                     res = results[date][test][cfg]
                     for pname in res.perfs:
                         perf = res.perfs[pname]
+                        # set all entries to invalid
+                        if not perf.name in rel[cfg]:
+                            rel[cfg][perf.name] = {}
+                            for d in results:
+                                rel[cfg][perf.name][d] = "null";
+
                         if perf.name in base[cfg]:
-                            rel[cfg][perf.name].append(str(perf.time / base[cfg][perf.name]))
+                            rel[cfg][perf.name][date] = str(perf.time / base[cfg][perf.name])
                         else:
                             base[cfg][perf.name] = perf.time
-                            rel[cfg][perf.name] = ["1"]
-                        lastperf = perf.name
+                            rel[cfg][perf.name][date] = "1"
                 except:
-                    if lastperf != '':
-                        rel[cfg][lastperf].append("null")
+                    pass
 
         chart_name = 'changes_' + re.sub(r'[^a-zA-Z0-9_]', '', test)
         report.write("    <td>\n")
@@ -287,7 +290,10 @@ with open('reports/summary.html', 'w') as report:
                 report.write("          pointHoverRadius: 7,\n")
                 report.write("          fill: false,\n")
                 report.write("          lineTension: 0.1,\n")
-                report.write("          data: [{}],\n".format(', '.join(vals)))
+                relvals = []
+                for val_date in sorted(vals.keys()):
+                    relvals.append(vals[val_date])
+                report.write("          data: [{}],\n".format(', '.join(relvals)))
                 report.write("        },\n")
                 i += 1
         report.write("      ],\n")
