@@ -18,7 +18,7 @@ tests = [
 ]
 colors = ['red', 'blue', 'green', 'orange', 'purple']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(tests) + ')-(.)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(tests) + ')-(a|b|c|host-debug|host-release)-(\S+?)-(\d+)$')
 re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": (\d+) cycles/iter \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
@@ -147,8 +147,8 @@ cfgs = {}
 for date in results:
     for test in results[date]:
         for cfg in results[date][test]:
-            # only consider the benchmarks with 64 blocks per extent
-            if cfg[-3:] != "-64":
+            # only consider the benchmarks on gem5 with 64 blocks per extent
+            if cfg[-3:] != "-64" or "host" in cfg:
                 continue
             res = results[date][test][cfg]
             for pname in res.perfs:
