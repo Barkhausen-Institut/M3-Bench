@@ -1,5 +1,8 @@
 #!/bin/bash
 
+root=$(dirname $(readlink -f $0))
+cd $root
+
 export M3_TARGET=gem5
 
 branch=cc
@@ -25,3 +28,4 @@ echo -e "\033[1mRunning tests...\033[0m"
 
 echo -e "\033[1mGenerating report...\033[0m"
 ./report.py
+
