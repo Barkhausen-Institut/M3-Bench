@@ -130,6 +130,17 @@ def write_html_footer(report):
     report.write("</body>\n")
     report.write("</html>\n")
 
+def write_results(report, date, test):
+    report.write("<h2>Results of {} on {}:</h2>".format(test, date))
+    for cfg in results[date][test]:
+        report.write("<h3>{}: (results/tests-{}/m3-tests-{}-{}/output.txt)</h3>"
+            .format(cfg, date, test, cfg))
+        res = results[date][test][cfg]
+        report.write("<ul>\n")
+        for failed in res.failures:
+            report.write("  <li>{} <span class=\"failed\">failed</span></li>\n".format(failed))
+        report.write("</ul>\n")
+
 results = {}
 commits = {}
 for dir in Path('results').glob('tests-*'):
@@ -163,20 +174,16 @@ for date in results:
             cfgs[cfg] = 1
 
 for date in results:
+    with open('reports/log-' + date + '.html', 'w') as report:
+        write_html_header(report)
+        for test in results[date]:
+            write_results(report, date, test)
+        write_html_footer(report)
+
     for test in results[date]:
         with open('reports/log-' + test + '-' + date + '.html', 'w') as report:
             write_html_header(report)
-
-            report.write("<h2>Results of {} on {}:</h2>".format(test, date))
-            for cfg in results[date][test]:
-                report.write("<h3>{}: (results/tests-{}/m3-tests-{}-{}/output.txt)</h3>"
-                    .format(cfg, date, test, cfg))
-                res = results[date][test][cfg]
-                report.write("<ul>\n")
-                for failed in res.failures:
-                    report.write("  <li>{} <span class=\"failed\">failed</span></li>\n".format(failed))
-                report.write("</ul>\n")
-
+            write_results(report, date, test)
             write_html_footer(report)
 
 with open('reports/style.css', 'w') as report:
@@ -228,8 +235,8 @@ with open('reports/summary.html', 'w') as report:
     report.write("  <tr>\n")
     report.write("  <th>Tests</th>\n")
     for date in sorted(results.keys()):
-        report.write("    <th>{}<br/>(<span title=\"{}\">{}</span>)</th>\n"
-            .format(date, commits[date], commits[date][:8]))
+        report.write("    <th><a href=\"log-{}.html\">{}</a><br/>(<span title=\"{}\">{}</span>)</th>\n"
+            .format(date, date, commits[date], commits[date][:8]))
     report.write("  <th>Performance</th>\n")
     report.write("  </tr>\n")
 
