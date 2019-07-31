@@ -80,7 +80,7 @@ run_bench() {
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
     if [ "$M3_FSBPE-$M3_ISA" != "`cat $lbfile`" ]; then
-        ./b 2>&1 > $M3_GEM5_OUT/output.txt || exit
+        ./b > $M3_GEM5_OUT/output.txt 2>&1 || exit
         echo -n $M3_FSBPE-$M3_ISA > $lbfile
     fi
 
@@ -91,7 +91,7 @@ run_bench() {
     ulimit -v 4000000   # 4GB virt mem
     ulimit -t 3600      # 1h CPU time
 
-    ./b run $bench -n >> $M3_GEM5_OUT/output.txt
+    ./b run $bench -n >> $M3_GEM5_OUT/output.txt 2>&1
 
     gzip -f $M3_GEM5_OUT/gem5.log
 

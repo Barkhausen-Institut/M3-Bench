@@ -42,13 +42,13 @@ run_bench() {
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
     if [ "$M3_FSBPE-$M3_BUILD" != "`cat $lbfile`" ]; then
-        ./b 2>&1 > $M3_OUT/output.txt || exit
+        ./b > $M3_OUT/output.txt 2>&1 || exit
         echo -n $M3_FSBPE-$M3_BUILD > $lbfile
     fi
 
     /bin/echo -e "\e[1mStarted $dirname\e[0m"
 
-    ./b run $bench -n >> $M3_OUT/output.txt
+    ./b run $bench -n >> $M3_OUT/output.txt 2>&1
 
     if [ $? -eq 0 ] && [ "`grep 'Shutting down' $M3_OUT/output.txt`" != "" ]; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
@@ -57,12 +57,14 @@ run_bench() {
     fi
 }
 
+export M3_TARGET=host
+./b || exit 1
+
 benchs=""
 benchs+="rust-unittests rust-benchs unittests cpp-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 
-export M3_TARGET=host
 for bpe in 2 4 8 16 32 64; do
     for build in debug release; do
         export M3_BUILD=$build
