@@ -23,6 +23,7 @@ re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": (\d+) cycles/iter \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
 re_shdn   = re.compile('^.*\[kernel\s*@0\].*Shutting down$')
+re_fsck   = re.compile('^.*(m3fsck:.*)$')
 
 class PerfResult:
     def __init__(self, name, time, variance, runs):
@@ -77,6 +78,7 @@ def parse_output(file):
     failed_asserts = 0
     res = Result()
     seen_shutdown = False
+    seen_fsck = ''
     with open(file, 'r', errors='replace') as reader:
         line = reader.readline()
         test = ""
@@ -103,11 +105,16 @@ def parse_output(file):
                         res.succ_tests += 1
                     elif re_shdn.match(line):
                         seen_shutdown = True
+                    elif re_fsck.match(line):
+                        seen_fsck = re_fsck.match(line).group(1)
 
             line = reader.readline()
     if not seen_shutdown:
         res.failed_tests += 1
         res.add_failed_test("", "Test did not complete (no kernel shutdown)")
+    if seen_fsck != '':
+        res.failed_tests += 1
+        res.add_failed_test("", seen_fsck)
     return res
 
 def write_html_header(report):
