@@ -5,7 +5,7 @@ cd $root
 
 export M3_TARGET=gem5
 
-branch=cc
+branch=dev
 if [ $# -gt 0 ]; then
     branch=$1
 fi
