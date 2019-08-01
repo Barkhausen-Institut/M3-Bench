@@ -120,9 +120,10 @@ def parse_output(file):
 
 def write_html_header(report):
     report.write("<!DOCTYPE html>\n")
-    report.write("<html>\n")
+    report.write("<html lang=\"en\">\n")
     report.write("<head>\n")
-    report.write("  <meta charset=\"UTF-8\">\n")
+    report.write("  <title>M³ Unittests and Benchmarks</title>\n")
+    report.write("  <meta charset=\"UTF-8\"/>\n")
     report.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n")
     report.write("</head>\n")
     report.write("<body>\n")
@@ -294,7 +295,7 @@ with open('reports/summary.html', 'w') as report:
         report.write("    <div style=\"width: 300px; height: 80px\">\n")
         report.write("      <canvas id=\"{}\"></canvas>\n".format(chart_name))
         report.write("    </div>\n")
-        report.write("    <script type=\"text/javascript\">\n")
+        report.write("    <script>\n")
         report.write("    var changeData{} = {{\n".format(chart_name))
         report.write("      labels: [")
         for date in sorted(results.keys()):
@@ -345,7 +346,7 @@ for test in TESTS:
         write_html_header(report)
 
         report.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js\"></script>\n")
-        report.write("<script type=\"text/javascript\">\n")
+        report.write("<script>\n")
         report.write("Chart.defaults.global.defaultFontFamily = 'Helvetica';\n")
         report.write("Chart.defaults.global.defaultFontSize = 16;\n")
 
@@ -404,7 +405,7 @@ for test in TESTS:
             report.write("<div style=\"width: 60%;\">\n")
             report.write("  <canvas id=\"chart_{}\"></canvas>\n".format(chart_name))
             report.write("</div>\n")
-            report.write("<script type=\"text/javascript\">\n")
+            report.write("<script>\n")
             report.write("var {0} = document.getElementById(\"chart_{0}\").getContext(\"2d\");\n".format(chart_name))
             report.write("new Chart({}, {{\n".format(chart_name))
             report.write("  type: 'line',\n")
