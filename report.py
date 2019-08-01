@@ -9,16 +9,17 @@ from datetime import datetime
 
 pp = pprint.PrettyPrinter()
 
-tests = [
+NUM_DAYS = 7
+TESTS = [
     'cpp-benchs', 'rust-benchs', 'rust-unittests', 'unittests',
     'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb',
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'aladdin-stencil', 'aladdin-md', 'aladdin-fft', 'aladdin-spmv',
 ]
-colors = ['red', 'blue', 'green', 'orange', 'purple']
+COLORS = ['red', 'blue', 'green', 'orange', 'purple']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(tests) + ')-(a|b|c|host-debug|host-release)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|c|host-debug|host-release)-(\S+?)-(\d+)$')
 re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": (\d+) cycles/iter \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
@@ -141,12 +142,12 @@ def write_results(report, date, test):
             report.write("  <li>{} <span class=\"failed\">failed</span></li>\n".format(failed))
         report.write("</ul>\n")
 
-results = {}
+all_results = {}
 commits = {}
 for dir in Path('results').glob('tests-*'):
     dirname = str(dir)[14:]
-    results[dirname] = {}
-    commits[dirname] = file_contents(str(dir) + '/git-commit')
+    all_results[dirname] = {}
+    commits[dirname] = file_contents(str(dir) + '/git-commit').strip()
     for f in os.listdir(dir):
         match = re_name.match(f)
         if match:
@@ -155,10 +156,15 @@ for dir in Path('results').glob('tests-*'):
             isa = match.group(3)
             bpe = match.group(4)
 
-            if test not in results[dirname]:
-                results[dirname][test] = {}
+            if test not in all_results[dirname]:
+                all_results[dirname][test] = {}
             key = "{}-{}-{}".format(petype, isa, bpe)
-            results[dirname][test][key] = parse_output(str(dir) + '/' + str(f) + '/output.txt')
+            all_results[dirname][test][key] = parse_output(str(dir) + '/' + str(f) + '/output.txt')
+
+# use only the last NUM_DAYS days
+results = {}
+for date in sorted(all_results.keys())[-NUM_DAYS:]:
+    results[date] = all_results[date]
 
 benchs = {}
 cfgs = {}
@@ -237,10 +243,10 @@ with open('reports/summary.html', 'w') as report:
     for date in sorted(results.keys()):
         report.write("    <th><a href=\"log-{}.html\">{}</a><br/>(<span title=\"{}\">{}</span>)</th>\n"
             .format(date, date, commits[date], commits[date][:8]))
-    report.write("  <th>Performance</th>\n")
+    report.write("  <th>Performance History</th>\n")
     report.write("  </tr>\n")
 
-    for test in tests:
+    for test in TESTS:
         report.write("  <tr>\n")
         report.write("    <td><a href=\"{0}.html\">{0}</a></td>\n".format(test))
         for date in sorted(results.keys()):
@@ -285,7 +291,7 @@ with open('reports/summary.html', 'w') as report:
 
         chart_name = 'changes_' + re.sub(r'[^a-zA-Z0-9_]', '', test)
         report.write("    <td>\n")
-        report.write("    <div style=\"width: 200px; height: 80px\">\n")
+        report.write("    <div style=\"width: 300px; height: 80px\">\n")
         report.write("      <canvas id=\"{}\"></canvas>\n".format(chart_name))
         report.write("    </div>\n")
         report.write("    <script type=\"text/javascript\">\n")
@@ -300,7 +306,7 @@ with open('reports/summary.html', 'w') as report:
             for name, vals in rbenchs.items():
                 report.write("        {\n")
                 report.write("          label: \"{}\",\n".format(cfg + " : " + name))
-                report.write("          borderColor: \"{}\",\n".format(colors[i % len(colors)]))
+                report.write("          borderColor: \"{}\",\n".format(COLORS[i % len(COLORS)]))
                 report.write("          pointRadius: 6,\n")
                 report.write("          pointHoverRadius: 7,\n")
                 report.write("          fill: false,\n")
@@ -334,7 +340,7 @@ with open('reports/summary.html', 'w') as report:
     report.write("</table>\n")
     write_html_footer(report)
 
-for test in tests:
+for test in TESTS:
     with open('reports/' + test + '.html', 'w') as report:
         write_html_header(report)
 
@@ -382,7 +388,7 @@ for test in tests:
             for cfg in cfgs:
                 report.write("    {\n")
                 report.write("      label: \"{}\",\n".format(cfg))
-                report.write("      borderColor: \"{}\",\n".format(colors[i % len(colors)]))
+                report.write("      borderColor: \"{}\",\n".format(COLORS[i % len(COLORS)]))
                 report.write("      pointRadius: 6,\n")
                 report.write("      pointHoverRadius: 7,\n")
                 report.write("      lineTension: 0.1,\n")
