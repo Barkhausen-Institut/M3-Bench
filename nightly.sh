@@ -36,7 +36,7 @@ for dir in results/tests-*; do
         break
     fi
 
-    echo "$dir: removing unnecessary files and compressing into $dir.tar.xz..."
+    echo "$dir: removing unnecessary files and compressing into archive-$dir.tar.xz..."
     # remove everything but the output.txt
     for sub in $dir/*; do
         if [ -d $sub ]; then
@@ -45,7 +45,7 @@ for dir in results/tests-*; do
     done
 
     # pack the output.txt's into an archive
-    tar cf - $dir | xz > $dir.tar.xz
+    tar cf - $dir | xz > archive-$dir.tar.xz
     rm -rf $dir
 
     total=$((total - 1))
