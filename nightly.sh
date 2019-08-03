@@ -45,7 +45,7 @@ for dir in results/tests-*; do
     done
 
     # pack the output.txt's into an archive
-    tar cf - $dir | xz > archive-$dir.tar.xz
+    tar -cf - $dir | xz > results/archive-$(basename $dir).tar.xz
     rm -rf $dir
 
     total=$((total - 1))
