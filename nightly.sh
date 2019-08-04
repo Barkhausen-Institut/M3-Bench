@@ -23,7 +23,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 for dir in results/tests-*; do
     if [ "$dir" != "$out" ] && cmp $out/git-commit $dir/git-commit &>/dev/null; then
         echo "Current commit $(cat $dir/git-commit) has been already tested in $dir. Exiting." | tee -a $out/nightly.log
-        exit 1
+        exit 0
     fi
 done
 
