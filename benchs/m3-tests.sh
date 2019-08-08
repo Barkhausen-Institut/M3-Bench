@@ -79,6 +79,7 @@ run_bench() {
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
+    echo -n > $M3_GEM5_OUT/output.txt
     if [ "$M3_FSBPE-$M3_ISA" != "`cat $lbfile`" ]; then
         ./b > $M3_GEM5_OUT/output.txt 2>&1 || exit
         echo -n $M3_FSBPE-$M3_ISA > $lbfile
