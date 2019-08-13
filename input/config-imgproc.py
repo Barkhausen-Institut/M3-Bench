@@ -76,8 +76,7 @@ for i in range(0, num_fft):
                        no=num_pes + num_mem + i,
                        accel='fft',
                        memPE=mem_pe,
-                       spmsize='128kB')
-                       #l1size='32kB')
+                       spmsize='2MB')
     pe.dtu.max_noc_packet_size = '2kB'
     pe.dtu.buf_size = '2kB'
     pe.accel.buf_size = '2kB'
@@ -89,8 +88,7 @@ for i in range(0, num_indir):
                        no=num_pes + num_mem + num_fft + i,
                        accel='indir',
                        memPE=mem_pe,
-                       spmsize='128kB')
-                       #l1size='32kB')
+                       spmsize='2MB')
     pe.dtu.max_noc_packet_size = '2kB'
     pe.dtu.buf_size = '2kB'
     pes.append(pe)
