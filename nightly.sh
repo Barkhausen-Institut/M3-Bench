@@ -31,8 +31,8 @@ for dir in results/tests-*; do
 done
 
 echo -e "\033[1mStarting garbage collection...\033[0m"
-# only keep the last 7 days in full size; reduce the older ones to the minimum
-num_days=7
+# only keep the last 30 days in full size; reduce the older ones to the minimum
+num_days=30
 total=$(find results -maxdepth 1 -name "tests-*" -type d | wc -l)
 for dir in results/tests-*; do
     if [ $total -le $num_days ]; then

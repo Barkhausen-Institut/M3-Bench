@@ -9,7 +9,7 @@ from datetime import datetime
 
 pp = pprint.PrettyPrinter()
 
-NUM_DAYS = 7
+NUM_DAYS = 10
 TESTS = [
     'cpp-benchs', 'rust-benchs', 'rust-unittests', 'unittests',
     'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb',
