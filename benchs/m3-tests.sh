@@ -9,8 +9,6 @@ cfgimgproc=`readlink -f input/config-imgproc.py`
 cfgaladdin=`readlink -f input/config-aladdin.py`
 bootaladdin=`readlink -f input/aladdin.cfg`
 
-lbfile=`readlink -f .lastbuild`
-
 . tools/jobs.sh
 
 cd m3
@@ -20,13 +18,10 @@ export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
 
-echo -n > $lbfile
-trap "rm -f $lbfile" EXIT ERR INT TERM
-
 run_bench() {
-    export M3_FSBPE=$5
     export M3_ISA=$4
     dirname=m3-tests-$2-$3-$4-$5
+    bpe=$5
     export M3_GEM5_OUT=$1/$dirname
     mkdir -p $M3_GEM5_OUT
 
@@ -44,10 +39,10 @@ run_bench() {
 
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
-        export M3_FS=default.img
+        export M3_FS=default-$bpe.img
         bench=boot/$bench.cfg
     else
-        export M3_FS=bench.img
+        export M3_FS=bench-$bpe.img
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
@@ -78,21 +73,13 @@ run_bench() {
     fi
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
-
-    echo -n > $M3_GEM5_OUT/output.txt
-    if [ "$M3_FSBPE-$M3_ISA" != "`cat $lbfile`" ]; then
-        ./b > $M3_GEM5_OUT/output.txt 2>&1 || exit
-        echo -n $M3_FSBPE-$M3_ISA > $lbfile
-    fi
-
-    /bin/echo -e "\e[1mStarted $dirname\e[0m"
     jobs_started
 
     # set memory and time limits
     ulimit -v 4000000   # 4GB virt mem
     ulimit -t 3600      # 1h CPU time
 
-    ./b run $bench -n >> $M3_GEM5_OUT/output.txt 2>&1
+    ./b run $bench > $M3_GEM5_OUT/output.txt 2>&1
 
     gzip -f $M3_GEM5_OUT/gem5.log
 
@@ -103,7 +90,18 @@ run_bench() {
     fi
 }
 
-./b || exit 1
+for isa in arm x86_64; do
+    # build everything
+    export M3_ISA=$isa
+    ./b || exit 1
+
+    # create FS images
+    build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
+    for bpe in 2 4 8 16 32 64; do
+        $build/tools/mkm3fs $build/bench-$bpe.img $build/fsdata/bench 65536 4096 $bpe
+        $build/tools/mkm3fs $build/default-$bpe.img $build/fsdata/default 16384 512 $bpe
+    done
+done
 
 jobs_init $2
 

@@ -3,16 +3,12 @@
 bootscale=`readlink -f input/bench-scale-pipe.cfg`
 bootfstrace=`readlink -f input/fstrace.cfg`
 
-lbfile=`readlink -f .lastbuild`
-
 cd m3
 
-echo -n > $lbfile
-trap "rm -f $lbfile" EXIT ERR INT TERM
+export M3_TARGET=host
 
 run_bench() {
-    export M3_FSBPE=$5
-
+    bpe=$5
     dirname=m3-tests-$2-$3-$4-$5
     export M3_OUT=$1/$dirname
     mkdir -p $M3_OUT
@@ -20,10 +16,10 @@ run_bench() {
     bench=$2
 
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
-        export M3_FS=default.img
+        export M3_FS=default-$bpe.img
         bench=boot/$bench.cfg
     else
-        export M3_FS=bench.img
+        export M3_FS=bench-$bpe.img
 
         if [[ "$bench" =~ "bench" ]]; then
             bench=boot/$bench.cfg
@@ -41,14 +37,7 @@ run_bench() {
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-    if [ "$M3_FSBPE-$M3_BUILD" != "`cat $lbfile`" ]; then
-        ./b > $M3_OUT/output.txt 2>&1 || exit
-        echo -n $M3_FSBPE-$M3_BUILD > $lbfile
-    fi
-
-    /bin/echo -e "\e[1mStarted $dirname\e[0m"
-
-    ./b run $bench -n >> $M3_OUT/output.txt 2>&1
+    ./b run $bench > $M3_OUT/output.txt 2>&1
 
     if [ $? -eq 0 ] && [ "`grep 'Shutting down' $M3_OUT/output.txt`" != "" ]; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
@@ -57,8 +46,18 @@ run_bench() {
     fi
 }
 
-export M3_TARGET=host
-./b || exit 1
+for btype in debug release; do
+    # build everything
+    export M3_BUILD=$btype
+    ./b || exit 1
+
+    # create FS images
+    build=build/$M3_TARGET-x86_64-$M3_BUILD
+    for bpe in 2 4 8 16 32 64; do
+        $build/tools/mkm3fs $build/bench-$bpe.img $build/fsdata/bench $((160 * 1024)) 4096 $bpe
+        $build/tools/mkm3fs $build/default-$bpe.img $build/fsdata/default $((160 * 1024)) 512 $bpe
+    done
+done
 
 benchs=""
 benchs+="rust-unittests rust-benchs unittests cpp-benchs"
