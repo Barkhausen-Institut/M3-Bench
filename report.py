@@ -25,6 +25,7 @@ re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": (\d+) cycles/iter \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
 re_shdn   = re.compile('^.*\[kernel\s*@0\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
+re_exit   = re.compile('^.*Child .*? exited with exitcode \d+$')
 
 class PerfResult:
     def __init__(self, name, time, variance, runs):
@@ -106,6 +107,9 @@ def parse_output(file):
                         res.succ_tests += 1
                     elif re_shdn.match(line):
                         seen_shutdown = True
+                    elif re_exit.match(line):
+                        res.failed_tests += 1
+                        res.add_failed_test("", line)
                     elif re_fsck.match(line):
                         seen_fsck = re_fsck.match(line).group(1)
 
