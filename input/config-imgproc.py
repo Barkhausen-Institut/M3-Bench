@@ -13,12 +13,12 @@ num_mem = 1
 num_pes = int(os.environ.get('M3_GEM5_PES'))
 fsimg = os.environ.get('M3_GEM5_FS')
 fsimgnum = os.environ.get('M3_GEM5_FSNUM', '1')
-num_fft = int(os.environ.get('ACCEL_NUM'))
+num_copy = int(os.environ.get('ACCEL_NUM'))
 num_indir = int(os.environ.get('ACCEL_NUM'))
 use_pcie = int(os.environ.get('ACCEL_PCIE')) == 1
 dtupos = int(os.environ.get('M3_GEM5_DTUPOS', 0))
 mmu = int(os.environ.get('M3_GEM5_MMU', 0))
-mem_pe = num_pes + num_fft + num_indir
+mem_pe = num_pes + num_copy + num_indir
 
 def pes_range(start, end):
     begin = 0x8000000000000000 + start * 0x0100000000000000
@@ -31,7 +31,7 @@ if use_pcie:
     root.bridge_1to2 = Bridge(delay='500ns')
     root.bridge_1to2.master = root.noc2.slave
     root.bridge_1to2.slave = root.noc.master
-    root.bridge_1to2.ranges = [pes_range(num_pes + num_mem, num_pes + num_mem + num_indir + num_fft - 1)]
+    root.bridge_1to2.ranges = [pes_range(num_pes + num_mem, num_pes + num_mem + num_indir + num_copy - 1)]
 
     root.bridge_2to1 = Bridge(delay='500ns')
     root.bridge_2to1.master = root.noc.slave
@@ -58,11 +58,11 @@ for i in range(0, num_pes):
 # create the accelerator PEs
 options.cpu_clock = '1GHz'
 
-for i in range(0, num_fft):
+for i in range(0, num_copy):
     pe = createAccelPE(noc=root.noc2 if use_pcie else root.noc,
                        options=options,
                        no=num_pes + i,
-                       accel='fft',
+                       accel='copy',
                        memPE=mem_pe,
                        spmsize='2MB')
     pe.dtu.max_noc_packet_size = '2kB'
@@ -73,7 +73,7 @@ for i in range(0, num_fft):
 for i in range(0, num_indir):
     pe = createAccelPE(noc=root.noc2 if use_pcie else root.noc,
                        options=options,
-                       no=num_pes + num_fft + i,
+                       no=num_pes + num_copy + i,
                        accel='indir',
                        memPE=mem_pe,
                        spmsize='2MB')
@@ -85,7 +85,7 @@ for i in range(0, num_indir):
 for i in range(0, num_mem):
     pe = createMemPE(noc=root.noc,
                      options=options,
-                     no=num_pes + num_fft + num_indir + i,
+                     no=num_pes + num_copy + num_indir + i,
                      size='3072MB',
                      image=fsimg if i == 0 else None,
                      imageNum=int(fsimgnum))

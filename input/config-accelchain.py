@@ -39,7 +39,7 @@ for i in range(0, num_fft):
     pe = createAccelPE(noc=root.noc,
                        options=options,
                        no=num_pes + i,
-                       accel='fft',
+                       accel='copy',
                        memPE=mem_pe,
                        spmsize='128kB')
                        #l1size='32kB')

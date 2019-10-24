@@ -52,18 +52,23 @@ run_bench() {
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
-            export M3_SCALE_ARGS="-i 1 -r 4 -w 1 $writer $reader"
+            export M3_SCALE_ARGS="-i 1 -r 4 -w 1 $writer $reader pes=core:6"
             bench=$bootscale
         elif [[ "$bench" =~ "imgproc" ]]; then
             IFS='-' read -ra parts <<< "$bench"
+            if [ "${parts[1]}" = "indir" ]; then
+                petype="indir"
+            else
+                petype="copy"
+            fi
             export ACCEL_NUM=$((${parts[2]} * 3)) ACCEL_PCIE=0
-            export M3_IMGPROC_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt"
+            export M3_IMGPROC_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt pes=$petype:$ACCEL_NUM"
             export M3_GEM5_CFG=$cfgimgproc
             bench=$bootimgproc
         elif [[ "$bench" =~ "aladdin" ]]; then
             IFS='-' read -ra parts <<< "$bench"
             export ACCEL_PCIE=0
-            export ALADDIN_ARGS="-s 0 -f -m 0 -r 4 -w 1 ${parts[1]}"
+            export ALADDIN_ARGS="-s 0 -f -m 0 -r 4 -w 1 ${parts[1]} pes=${parts[1]}"
             export M3_GEM5_CFG=$cfgaladdin
             bench=$bootaladdin
         else
