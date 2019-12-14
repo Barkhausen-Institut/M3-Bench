@@ -6,9 +6,6 @@ bootfstrace=`readlink -f input/fstrace.cfg`
 bootimgproc=`readlink -f input/imgproc.cfg`
 cfgimgproc=`readlink -f input/config-imgproc.py`
 
-cfgaladdin=`readlink -f input/config-aladdin.py`
-bootaladdin=`readlink -f input/aladdin.cfg`
-
 . tools/jobs.sh
 
 cd m3
@@ -31,10 +28,10 @@ run_bench() {
         export M3_GEM5_CFG=config/spm.py
     elif [ "$3" = "b" ]; then
         export M3_GEM5_CFG=config/caches.py
-        export M3_GEM5_MMU=0 M3_GEM5_DTUPOS=0
+        export M3_GEM5_DTUPOS=0
     elif [ "$3" = "c" ]; then
         export M3_GEM5_CFG=config/caches.py
-        export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
+        export M3_GEM5_DTUPOS=2
     fi
 
     export M3_GEM5_CPU=TimingSimpleCPU
@@ -65,12 +62,6 @@ run_bench() {
             export M3_IMGPROC_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt pes=$petype:$ACCEL_NUM"
             export M3_GEM5_CFG=$cfgimgproc
             bench=$bootimgproc
-        elif [[ "$bench" =~ "aladdin" ]]; then
-            IFS='-' read -ra parts <<< "$bench"
-            export ACCEL_PCIE=0
-            export ALADDIN_ARGS="-s 0 -f -m 0 -r 4 -w 1 ${parts[1]} pes=${parts[1]}"
-            export M3_GEM5_CFG=$cfgaladdin
-            bench=$bootaladdin
         else
             export FSTRACE_ARGS="-n 4 -t -u 1 $bench"
             bench=$bootfstrace
@@ -118,7 +109,7 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 for bpe in 2 4 8 16 32 64; do
     for isa in arm x86_64; do
         for pe in a b c; do
-            if [ "$isa" = "arm" ] && [ "$pe" = "c" ]; then
+            if [ "$isa" = "arm" ] && [ "$pe" != "a" ]; then
                 continue;
             fi
 
@@ -131,12 +122,6 @@ for bpe in 2 4 8 16 32 64; do
             for num in 1 2 3 4; do
                 jobs_submit run_bench $1 imgproc-dir-$num $pe $isa $bpe
             done
-
-            if [ $bpe -eq 64 ]; then
-                for b in stencil md fft spmv; do
-                    jobs_submit run_bench $1 aladdin-$b $pe $isa $bpe
-                done
-            fi
         done
     done
 done

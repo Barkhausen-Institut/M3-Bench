@@ -17,7 +17,7 @@ num_copy = int(os.environ.get('ACCEL_NUM'))
 num_indir = int(os.environ.get('ACCEL_NUM'))
 use_pcie = int(os.environ.get('ACCEL_PCIE')) == 1
 dtupos = int(os.environ.get('M3_GEM5_DTUPOS', 0))
-mmu = int(os.environ.get('M3_GEM5_MMU', 0))
+isa = os.environ.get('M3_ISA')
 mem_pe = num_pes + num_copy + num_indir
 
 def pes_range(start, end):
@@ -47,10 +47,10 @@ for i in range(0, num_pes):
                       no=i,
                       cmdline=cmd_list[i],
                       memPE=mem_pe,
-                      l1size='32kB',
-                      l2size='256kB',
-                      dtupos=dtupos,
-                      mmu=mmu == 1)
+                      l1size=None if isa == 'arm' else '32kB',
+                      l2size=None if isa == 'arm' else '256kB',
+                      spmsize='32MB' if isa == 'arm' else None,
+                      dtupos=dtupos)
     pe.dtu.max_noc_packet_size = '2kB'
     pe.dtu.buf_size = '2kB'
     pes.append(pe)
