@@ -3,6 +3,9 @@
 export XTENSA_DIR=/home/hrniels/Applications/xtensa
 export GEM5_DIR=/home/hrniels/m3bench/m3/hw/gem5
 
+# TODO until we have support for scons 3.1
+export SCONS_LIB_DIR=/home/nils/scons-3.0.5/engine
+
 M3_GEM5_OUT=${M3_GEM5_OUT:-run}
 
 if [ $# -ne 5 ]; then
