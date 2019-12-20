@@ -2,9 +2,9 @@
 
 bootscale=`readlink -f input/bench-scale-pipe.cfg`
 bootfstrace=`readlink -f input/fstrace.cfg`
-
 bootimgproc=`readlink -f input/imgproc.cfg`
-cfgimgproc=`readlink -f input/config-imgproc.py`
+
+cfg=`readlink -f input/test-config.py`
 
 . tools/jobs.sh
 
@@ -14,25 +14,18 @@ export M3_BUILD=release
 export M3_GEM5_DBG=Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
+export M3_GEM5_CFG=$cfg
 
 run_bench() {
     export M3_ISA=$4
+    export M3_PETYPE=$3
+    export ACCEL_NUM=0
     dirname=m3-tests-$2-$3-$4-$5
     bpe=$5
     export M3_GEM5_OUT=$1/$dirname
     mkdir -p $M3_GEM5_OUT
 
     bench=$2
-
-    if [ "$3" = "a" ]; then
-        export M3_GEM5_CFG=config/spm.py
-    elif [ "$3" = "b" ]; then
-        export M3_GEM5_CFG=config/caches.py
-        export M3_GEM5_DTUPOS=0
-    elif [ "$3" = "c" ]; then
-        export M3_GEM5_CFG=config/caches.py
-        export M3_GEM5_DTUPOS=2
-    fi
 
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
@@ -58,9 +51,8 @@ run_bench() {
             else
                 petype="copy"
             fi
-            export ACCEL_NUM=$((${parts[2]} * 3)) ACCEL_PCIE=0
+            export ACCEL_NUM=$((${parts[2]} * 3))
             export M3_IMGPROC_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt pes=$petype:$ACCEL_NUM"
-            export M3_GEM5_CFG=$cfgimgproc
             bench=$bootimgproc
         else
             export FSTRACE_ARGS="-n 4 -t -u 1 $bench"
@@ -93,7 +85,7 @@ for isa in arm x86_64; do
 
     # create FS images
     build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
-    for bpe in 2 4 8 16 32 64; do
+    for bpe in 16 32 64; do
         $build/tools/mkm3fs $build/bench-$bpe.img $build/fsdata/bench 65536 4096 $bpe
         $build/tools/mkm3fs $build/default-$bpe.img $build/fsdata/default 16384 512 $bpe
     done
@@ -103,12 +95,13 @@ jobs_init $2
 
 benchs=""
 benchs+="rust-unittests rust-benchs unittests cpp-benchs"
+benchs+=" bench-netbandwidth bench-netlatency bench-netstream"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 
-for bpe in 2 4 8 16 32 64; do
+for bpe in 16 32 64; do
     for isa in arm x86_64; do
-        for pe in a b c; do
+        for pe in a b; do
             if [ "$isa" = "arm" ] && [ "$pe" != "a" ]; then
                 continue;
             fi

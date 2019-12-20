@@ -15,27 +15,28 @@ TESTS = [
     'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb',
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
-    'aladdin-stencil', 'aladdin-md', 'aladdin-fft', 'aladdin-spmv',
+    'bench-netlatency', 'bench-netbandwidth', 'bench-netstream',
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple']
 
 re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|c|host-debug|host-release)-(\S+?)-(\d+)$')
 re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
-re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": (\d+) cycles/iter \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
+re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
 re_shdn   = re.compile('^.*\[kernel\s*@0\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
 re_exit   = re.compile('^.*Child .*? exited with exitcode \d+$')
 
 class PerfResult:
-    def __init__(self, name, time, variance, runs):
+    def __init__(self, name, time, unit, variance, runs):
         self.name = name
         self.time = time
+        self.unit = unit
         self.variance = variance
         self.runs = runs
 
     def __repr__(self):
-        return "PERF[{}] = {} ({} with {} runs)\n".format(self.name, self.time, self.variance, self.time)
+        return "PERF[{}] = {} {} ({} with {} runs)\n".format(self.name, self.time, self.unit, self.variance, self.runs)
 
 class TestResult:
     def __init__(self, name, desc):
@@ -60,9 +61,10 @@ class Result:
     def add_perf(self, pmatch):
         name = re.sub(r"^.*/([^/]+)$", r"\1", pmatch.group(1)) + ": " + pmatch.group(3)
         self.perfs[name] = PerfResult(name,
-                                      int(pmatch.group(4)),
-                                      float(pmatch.group(5)),
-                                      int(pmatch.group(6)))
+                                      float(pmatch.group(4)),
+                                      pmatch.group(5),
+                                      float(pmatch.group(6)),
+                                      int(pmatch.group(7)))
 
     def __repr__(self):
         str = "{} / {} succeeded".format(self.failed_tests, self.succ_tests + self.failed_tests)
@@ -356,6 +358,7 @@ for test in TESTS:
 
         for bench in benchs:
             cfgdata = {}
+            label = ''
             for cfg in cfgs:
                 # collect the benchmark results
                 tbenchs = {}
@@ -365,6 +368,7 @@ for test in TESTS:
                         if bench in res.perfs:
                             perf = res.perfs[bench]
                             tbenchs[date] = perf.time
+                            label = perf.unit
                 # if none are part of this test, stop
                 if len(tbenchs) == 0:
                     cfgdata[cfg] = []
@@ -420,7 +424,7 @@ for test in TESTS:
             report.write("      position: 'top',\n")
             report.write("    },\n")
             report.write("    scales: {\n")
-            report.write("      yAxes: [{ ticks: { suggestedMin: 0 } }],\n")
+            report.write("      yAxes: [{ ticks: { suggestedMin: 0, callback: function(value, index, values) { return value + ' " + label + "'; } } }],\n")
             report.write("    },\n")
             report.write("  },\n")
             report.write("})\n")
