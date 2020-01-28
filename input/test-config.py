@@ -15,8 +15,8 @@ num_nic = 2
 num_pes = int(os.environ.get('M3_GEM5_PES'))
 fsimg = os.environ.get('M3_GEM5_FS')
 fsimgnum = os.environ.get('M3_GEM5_FSNUM', '1')
-num_copy = int(os.environ.get('ACCEL_NUM'))
-num_indir = int(os.environ.get('ACCEL_NUM'))
+num_copy = int(os.environ.get('M3_ACCEL_COUNT', '0'))
+num_indir = int(os.environ.get('M3_ACCEL_COUNT', '0'))
 petype = os.environ.get('M3_PETYPE')
 isa = os.environ.get('M3_ISA')
 

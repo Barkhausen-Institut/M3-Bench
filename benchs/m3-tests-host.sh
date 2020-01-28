@@ -17,27 +17,27 @@ run_bench() {
 
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
         export M3_FS=default-$bpe.img
-        bench=boot/$bench.cfg
+        cp boot/$bench.xml $M3_OUT/boot.gen.xml
     else
         export M3_FS=bench-$bpe.img
 
         if [[ "$bench" =~ "bench" ]]; then
-            bench=boot/$bench.cfg
+            cp boot/$bench.xml $M3_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
-            export M3_SCALE_ARGS="-i 1 -r 4 -w 1 $writer $reader pes=core:6"
-            bench=$bootscale
+            export M3_ACCEL_COUNT=0 M3_ARGS="-i 1 -r 4 -w 1 $writer $reader"
+            $bootscale > $M3_OUT/boot.gen.xml
         else
-            export FSTRACE_ARGS="-n 4 -t -u 1 $bench"
-            bench=$bootfstrace
+            export M3_ARGS="-n 4 -t -u 1 $bench"
+            $bootfstrace > $M3_OUT/boot.gen.xml
         fi
     fi
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-    ./b run $bench > $M3_OUT/output.txt 2>&1
+    ./b run $M3_OUT/boot.gen.xml > $M3_OUT/output.txt 2>&1
 
     if [ $? -eq 0 ] && [ "`grep 'Shutting down' $M3_OUT/output.txt`" != "" ]; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"

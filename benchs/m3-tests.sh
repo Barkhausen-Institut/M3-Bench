@@ -30,33 +30,33 @@ run_bench() {
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
         export M3_FS=default-$bpe.img
-        bench=boot/$bench.cfg
+        cp boot/$bench.xml $M3_GEM5_OUT/boot.gen.xml
     else
         export M3_FS=bench-$bpe.img
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
         if [[ "$bench" =~ "bench" ]]; then
-            bench=boot/$bench.cfg
+            cp boot/$bench.xml $M3_GEM5_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
-            export M3_SCALE_ARGS="-i 1 -r 4 -w 1 $writer $reader pes=core:6"
-            bench=$bootscale
+            export M3_ARGS="-i 1 -r 4 -w 1 $writer $reader"
+            $bootscale > $M3_GEM5_OUT/boot.gen.xml
         elif [[ "$bench" =~ "imgproc" ]]; then
             IFS='-' read -ra parts <<< "$bench"
             if [ "${parts[1]}" = "indir" ]; then
-                petype="indir"
+                export M3_ACCEL_TYPE="indir"
             else
-                petype="copy"
+                export M3_ACCEL_TYPE="copy"
             fi
-            export ACCEL_NUM=$((${parts[2]} * 3))
-            export M3_IMGPROC_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt pes=$petype:$ACCEL_NUM"
-            bench=$bootimgproc
+            export M3_ACCEL_COUNT=$((${parts[2]} * 3))
+            export M3_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt"
+            $bootimgproc > $M3_GEM5_OUT/boot.gen.xml
         else
-            export FSTRACE_ARGS="-n 4 -t -u 1 $bench"
-            bench=$bootfstrace
+            export M3_ARGS="-n 4 -t -u 1 $bench"
+            $bootfstrace > $M3_GEM5_OUT/boot.gen.xml
         fi
     fi
 
@@ -67,7 +67,7 @@ run_bench() {
     ulimit -v 4000000   # 4GB virt mem
     ulimit -t 3600      # 1h CPU time
 
-    ./b run $bench > $M3_GEM5_OUT/output.txt 2>&1
+    ./b run $M3_GEM5_OUT/boot.gen.xml > $M3_GEM5_OUT/output.txt 2>&1
 
     gzip -f $M3_GEM5_OUT/gem5.log
 
@@ -101,11 +101,12 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 
 for bpe in 16 32 64; do
     for isa in arm x86_64; do
-        for pe in a b; do
-            if [ "$isa" = "arm" ] && [ "$pe" != "a" ]; then
-                continue;
-            fi
+        # TODO for now, don't run the 64 tests on ARM
+        if [ "$isa" = "arm" ] && [ $bpe -eq 64 ]; then
+            continue;
+        fi
 
+        for pe in a b; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe
             done
