@@ -101,11 +101,6 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 
 for bpe in 16 32 64; do
     for isa in arm x86_64; do
-        # TODO for now, don't run the 64 tests on ARM
-        if [ "$isa" = "arm" ] && [ $bpe -eq 64 ]; then
-            continue;
-        fi
-
         for pe in a b; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe

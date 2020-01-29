@@ -25,7 +25,7 @@ hard_disk0 = os.environ.get('M3_GEM5_IDE_DRIVE')
 if not os.path.isfile(hard_disk0):
     num_sto = 0
 
-if petype == 'a' or isa == 'arm':
+if petype == 'a':
     l1size = None
     l2size = None
     spmsize = '32MB'
