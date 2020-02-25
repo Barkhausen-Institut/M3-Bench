@@ -65,4 +65,4 @@ echo -e "\033[1mRunning host tests...\033[0m"
 ./run.sh $outname "m3-tests-host" "" "" 1 2>&1 | tee -a $out/nightly.log
 
 echo -e "\033[1mGenerating report...\033[0m"
-./report.py
+./report.py 2>&1 | tee -a $out/nightly.log

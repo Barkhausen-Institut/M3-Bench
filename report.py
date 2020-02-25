@@ -4,6 +4,7 @@ import collections
 import os
 import pprint
 import re
+import sys
 from pathlib import Path
 from datetime import datetime
 
@@ -154,19 +155,23 @@ commits = {}
 for dir in Path('results').glob('tests-*'):
     dirname = str(dir)[14:]
     all_results[dirname] = {}
-    commits[dirname] = file_contents(str(dir) + '/git-commit').strip()
-    for f in os.listdir(dir):
-        match = re_name.match(f)
-        if match:
-            test = match.group(1)
-            petype = match.group(2)
-            isa = match.group(3)
-            bpe = match.group(4)
+    try:
+        commits[dirname] = file_contents(str(dir) + '/git-commit').strip()
+        for f in os.listdir(dir):
+            match = re_name.match(f)
+            if match:
+                test = match.group(1)
+                petype = match.group(2)
+                isa = match.group(3)
+                bpe = match.group(4)
 
-            if test not in all_results[dirname]:
-                all_results[dirname][test] = {}
-            key = "{}-{}-{}".format(petype, isa, bpe)
-            all_results[dirname][test][key] = parse_output(str(dir) + '/' + str(f) + '/output.txt')
+                if test not in all_results[dirname]:
+                    all_results[dirname][test] = {}
+                key = "{}-{}-{}".format(petype, isa, bpe)
+                all_results[dirname][test][key] = parse_output(str(dir) + '/' + str(f) + '/output.txt')
+    except:
+        print("warning: ignoring directory '{}'".format(dirname), file=sys.stderr)
+        del all_results[dirname]
 
 # use only the last NUM_DAYS days
 results = {}
