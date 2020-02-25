@@ -55,7 +55,7 @@ for dir in results/tests-*; do
 done
 
 echo -e "\033[1mBuilding gem5...\033[0m"
-( cd m3/hw/gem5 && CC=gcc-9 CXX=g++-9 scons -j16 build/{X86,ARM}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
+( cd m3/hw/gem5 && CC=gcc-9 CXX=g++-9 scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 
 echo -e "\033[1mRunning tests...\033[0m"

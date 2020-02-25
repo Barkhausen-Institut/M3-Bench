@@ -67,7 +67,7 @@ run_bench() {
     ulimit -v 4000000   # 4GB virt mem
     ulimit -t 3600      # 1h CPU time
 
-    ./b run $M3_GEM5_OUT/boot.gen.xml > $M3_GEM5_OUT/output.txt 2>&1
+    ./b run $M3_GEM5_OUT/boot.gen.xml -n > $M3_GEM5_OUT/output.txt 2>&1
 
     gzip -f $M3_GEM5_OUT/gem5.log
 
@@ -78,7 +78,7 @@ run_bench() {
     fi
 }
 
-for isa in arm x86_64; do
+for isa in riscv arm x86_64; do
     # build everything
     export M3_ISA=$isa
     ./b || exit 1
@@ -100,7 +100,7 @@ benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 
 for bpe in 16 32 64; do
-    for isa in arm x86_64; do
+    for isa in riscv arm x86_64; do
         for pe in a b; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe

@@ -37,7 +37,7 @@ run_bench() {
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-    ./b run $M3_OUT/boot.gen.xml > $M3_OUT/output.txt 2>&1
+    ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
 
     if [ $? -eq 0 ] && [ "`grep 'Shutting down' $M3_OUT/output.txt`" != "" ]; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
