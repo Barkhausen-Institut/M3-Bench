@@ -42,7 +42,7 @@ run_bench() {
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
-            export M3_ARGS="-i 1 -r 4 -w 1 $writer $reader"
+            export M3_ARGS="-d -i 1 -r 4 -w 1 $writer $reader"
             $bootscale > $M3_GEM5_OUT/boot.gen.xml
         elif [[ "$bench" =~ "imgproc" ]]; then
             IFS='-' read -ra parts <<< "$bench"
@@ -55,7 +55,7 @@ run_bench() {
             export M3_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt"
             $bootimgproc > $M3_GEM5_OUT/boot.gen.xml
         else
-            export M3_ARGS="-n 4 -t -u 1 $bench"
+            export M3_ARGS="-n 4 -t -d -u 1 $bench"
             $bootfstrace > $M3_GEM5_OUT/boot.gen.xml
         fi
     fi
