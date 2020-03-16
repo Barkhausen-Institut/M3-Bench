@@ -2,7 +2,7 @@ import os, sys
 
 sys.path.append(os.path.realpath('hw/gem5/configs'))
 sys.path.append(os.path.realpath('hw/gem5/configs/example'))
-from dtu_fs import *
+from tcu_fs import *
 
 options = getOptions()
 root = createRoot(options)
@@ -28,7 +28,7 @@ for i in range(0, num_pes):
                       memPE=mem_pe,
                       l1size='32kB',
                       l2size='256kB',
-                      dtupos=1,
+                      tcupos=1,
                       mmu=2)
     pes.append(pe)
 

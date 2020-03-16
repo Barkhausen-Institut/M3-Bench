@@ -2,7 +2,7 @@ import os, sys
 
 sys.path.append(os.path.realpath('hw/gem5/configs'))
 sys.path.append(os.path.realpath('hw/gem5/configs/example'))
-from dtu_fs import *
+from tcu_fs import *
 
 options = getOptions()
 root = createRoot(options)
@@ -48,9 +48,9 @@ for i in range(0, num_pes):
                       l1size=l1size,
                       l2size=l2size,
                       spmsize=spmsize,
-                      dtupos=0)
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+                      tcupos=0)
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pes.append(pe)
 
 # create the accelerator PEs
@@ -63,8 +63,8 @@ for i in range(0, num_copy):
                        accel='copy',
                        memPE=mem_pe,
                        spmsize='2MB')
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pe.accel.buf_size = '2kB'
     pes.append(pe)
 
@@ -75,8 +75,8 @@ for i in range(0, num_indir):
                        accel='indir',
                        memPE=mem_pe,
                        spmsize='2MB')
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pes.append(pe)
 
 # create the persistent storage PEs
@@ -111,8 +111,8 @@ for i in range(0, num_mem):
                      size='3072MB',
                      image=fsimg if i == 0 else None,
                      imageNum=int(fsimgnum))
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pes.append(pe)
 
 runSimulation(root, options, pes)

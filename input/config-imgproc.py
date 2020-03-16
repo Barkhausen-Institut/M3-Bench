@@ -2,7 +2,7 @@ import os, sys
 
 sys.path.append(os.path.realpath('hw/gem5/configs'))
 sys.path.append(os.path.realpath('hw/gem5/configs/example'))
-from dtu_fs import *
+from tcu_fs import *
 
 options = getOptions()
 root = createRoot(options)
@@ -16,7 +16,7 @@ fsimgnum = os.environ.get('M3_GEM5_FSNUM', '1')
 num_copy = int(os.environ.get('ACCEL_NUM'))
 num_indir = int(os.environ.get('ACCEL_NUM'))
 use_pcie = int(os.environ.get('ACCEL_PCIE')) == 1
-dtupos = int(os.environ.get('M3_GEM5_DTUPOS', 0))
+tcupos = int(os.environ.get('M3_GEM5_DTUPOS', 0))
 isa = os.environ.get('M3_ISA')
 mem_pe = num_pes + num_copy + num_indir
 
@@ -50,9 +50,9 @@ for i in range(0, num_pes):
                       l1size=None if isa == 'arm' else '32kB',
                       l2size=None if isa == 'arm' else '256kB',
                       spmsize='32MB' if isa == 'arm' else None,
-                      dtupos=dtupos)
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+                      tcupos=tcupos)
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pes.append(pe)
 
 # create the accelerator PEs
@@ -65,8 +65,8 @@ for i in range(0, num_copy):
                        accel='copy',
                        memPE=mem_pe,
                        spmsize='2MB')
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pe.accel.buf_size = '2kB'
     pes.append(pe)
 
@@ -77,8 +77,8 @@ for i in range(0, num_indir):
                        accel='indir',
                        memPE=mem_pe,
                        spmsize='2MB')
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pes.append(pe)
 
 # create the memory PEs
@@ -89,8 +89,8 @@ for i in range(0, num_mem):
                      size='3072MB',
                      image=fsimg if i == 0 else None,
                      imageNum=int(fsimgnum))
-    pe.dtu.max_noc_packet_size = '2kB'
-    pe.dtu.buf_size = '2kB'
+    pe.tcu.max_noc_packet_size = '2kB'
+    pe.tcu.buf_size = '2kB'
     pes.append(pe)
 
 runSimulation(root, options, pes)
