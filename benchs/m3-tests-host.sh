@@ -2,6 +2,7 @@
 
 bootscale=`readlink -f input/bench-scale-pipe.cfg`
 bootfstrace=`readlink -f input/fstrace.cfg`
+testhdd=`readlink -f input/test-hdd.img`
 
 cd m3
 
@@ -17,6 +18,9 @@ run_bench() {
 
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
         export M3_FS=default-$bpe.img
+        cp boot/$bench.xml $M3_OUT/boot.gen.xml
+    elif [ "$bench" = "disk-test" ]; then
+        export M3_HDD=$testhdd
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
     else
         export M3_FS=bench-$bpe.img
@@ -64,6 +68,7 @@ benchs+="rust-unittests rust-benchs unittests cpp-benchs"
 benchs+=" bench-netlatency bench-netbandwidth bench-netstream"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
+benchs+=" disk-test"
 
 for bpe in 16 32 64; do
     for build in debug release; do
