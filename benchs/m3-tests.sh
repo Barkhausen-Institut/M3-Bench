@@ -11,7 +11,9 @@ cfg=`readlink -f input/test-config.py`
 cd m3
 export M3_BUILD=release
 
-export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
+if [ -z $M3_GEM5_DBG ]; then
+	export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
+fi
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
 export M3_GEM5_CFG=$cfg
@@ -92,6 +94,23 @@ for isa in riscv arm x86_64; do
 done
 
 jobs_init $2
+
+# run a single test?
+if [ "$M3_TEST" != "" ]; then
+    args=$(
+      python -c '
+import sys
+p = sys.argv[1].split("-")
+if len(p) < 4:
+    sys.exit(1)
+print("{} {} {} {}".format("-".join(p[:-3]), p[-3], p[-2], p[-1]))
+      ' $M3_TEST
+    ) || ( echo "Please set M3_TEST to <bench>-<pe>-<isa>-<bpe>." && exit 1 )
+    echo $args
+    jobs_submit run_bench $1 $args
+    jobs_wait
+    exit 0
+fi
 
 benchs=""
 benchs+="rust-unittests rust-benchs unittests cpp-benchs"
