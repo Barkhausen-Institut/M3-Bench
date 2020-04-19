@@ -18,9 +18,9 @@ TESTS = [
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'bench-netlatency', 'bench-netbandwidth', 'bench-netstream',
 ]
-COLORS = ['red', 'blue', 'green', 'orange', 'purple']
+COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|c|host-debug|host-release)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|host-debug|host-release)-(\S+?)-(\d+)$')
 re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')

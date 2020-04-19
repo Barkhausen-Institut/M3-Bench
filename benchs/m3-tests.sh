@@ -1,11 +1,6 @@
 #!/bin/bash
 
-bootscale=`readlink -f input/bench-scale-pipe.cfg`
-bootfstrace=`readlink -f input/fstrace.cfg`
-bootimgproc=`readlink -f input/imgproc.cfg`
-testhdd=`readlink -f input/test-hdd.img`
-
-cfg=`readlink -f input/test-config.py`
+inputdir=`readlink -f input`
 
 . tools/jobs.sh
 
@@ -17,7 +12,7 @@ if [ -z $M3_GEM5_DBG ]; then
 fi
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
-export M3_GEM5_CFG=$cfg
+export M3_GEM5_CFG=$inputdir/test-config.py
 
 run_bench() {
     export M3_ISA=$4
@@ -28,28 +23,34 @@ run_bench() {
     export M3_GEM5_OUT=$1/$dirname
     mkdir -p $M3_GEM5_OUT
 
+    bootprefix=""
+    if [ "$3" = "sh" ]; then
+        export M3_PETYPE=b
+        bootprefix="shared/"
+    fi
+
     bench=$2
 
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
         export M3_FS=default-$bpe.img
-        cp boot/$bench.xml $M3_GEM5_OUT/boot.gen.xml
+        cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
-        export M3_HDD=$testhdd
-        cp boot/$bench.xml $M3_GEM5_OUT/boot.gen.xml
+        export M3_HDD=$inputdir/test-hdd.img
+        cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
     else
         export M3_FS=bench-$bpe.img
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
         if [[ "$bench" =~ "bench" ]]; then
-            cp boot/$bench.xml $M3_GEM5_OUT/boot.gen.xml
+            cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
             export M3_ARGS="-d -i 1 -r 4 -w 1 $writer $reader"
-            $bootscale > $M3_GEM5_OUT/boot.gen.xml
+            $inputdir/${bootprefix}bench-scale-pipe.cfg > $M3_GEM5_OUT/boot.gen.xml
         elif [[ "$bench" =~ "imgproc" ]]; then
             IFS='-' read -ra parts <<< "$bench"
             if [ "${parts[1]}" = "indir" ]; then
@@ -59,10 +60,10 @@ run_bench() {
             fi
             export M3_ACCEL_COUNT=$((${parts[2]} * 3))
             export M3_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt"
-            $bootimgproc > $M3_GEM5_OUT/boot.gen.xml
+            $inputdir/${bootprefix}imgproc.cfg > $M3_GEM5_OUT/boot.gen.xml
         else
             export M3_ARGS="-n 4 -t -d -u 1 $bench"
-            $bootfstrace > $M3_GEM5_OUT/boot.gen.xml
+            $inputdir/${bootprefix}fstrace.cfg > $M3_GEM5_OUT/boot.gen.xml
         fi
     fi
 
@@ -123,9 +124,9 @@ benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test"
 
-for bpe in 16 32 64; do
+for bpe in 32 64; do
     for isa in riscv arm x86_64; do
-        for pe in a b; do
+        for pe in a b sh; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe
             done
