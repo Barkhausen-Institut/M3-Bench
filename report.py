@@ -17,6 +17,7 @@ TESTS = [
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'bench-netlatency', 'bench-netbandwidth', 'bench-netstream',
+    'abort-test'
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
@@ -89,6 +90,9 @@ def parse_output(file):
         test = ""
         while line != '':
             line = line.strip()
+            # special handling for the TCU abort test
+            if line.startswith("info: "):
+                line = line[6:]
             tmatch = re_test.match(line)
             if tmatch:
                 if test != "":

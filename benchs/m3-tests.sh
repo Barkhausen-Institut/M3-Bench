@@ -38,6 +38,9 @@ run_bench() {
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
+    elif [ "$bench" = "abort-test" ]; then
+        export M3_GEM5_CFG=config/aborttest.py
+        cp boot/hello.xml $M3_GEM5_OUT/boot.gen.xml
     else
         export M3_FS=bench-$bpe.img
         if [ "$5" = "64" ]; then
@@ -122,7 +125,7 @@ benchs+="rust-unittests rust-benchs unittests cpp-benchs"
 benchs+=" bench-netbandwidth bench-netlatency bench-netstream"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
-benchs+=" disk-test"
+benchs+=" disk-test abort-test"
 
 for bpe in 32 64; do
     for isa in riscv arm x86_64; do
