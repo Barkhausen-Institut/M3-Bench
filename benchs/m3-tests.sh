@@ -75,7 +75,7 @@ run_bench() {
 
     # set memory and time limits
     ulimit -v 4000000   # 4GB virt mem
-    ulimit -t 3600      # 1h CPU time
+    ulimit -t 600       # 10min CPU time
 
     ./b run $M3_GEM5_OUT/boot.gen.xml -n > $M3_GEM5_OUT/output.txt 2>&1
 
