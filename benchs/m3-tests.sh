@@ -5,7 +5,6 @@ inputdir=`readlink -f input`
 . tools/jobs.sh
 
 cd m3
-export M3_BUILD=release
 
 if [ -z $M3_GEM5_DBG ]; then
 	export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
@@ -32,7 +31,7 @@ run_bench() {
     bench=$2
 
     export M3_GEM5_CPU=TimingSimpleCPU
-    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
+    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
@@ -88,22 +87,27 @@ run_bench() {
     fi
 }
 
-isas="riscv x86_64"
+build_isas="riscv arm x86_64"
+run_isas="riscv x86_64" # arm is currently broken due to a bug in the rust toolchain
 
-for isa in $isas; do
-    # build everything
-    export M3_ISA=$isa
-    ./b || exit 1
+for btype in debug release; do
+    for isa in $build_isas; do
+        # build everything
+        export M3_ISA=$isa
+        M3_BUILD=$btype ./b || exit 1
 
-    # create FS images
-    build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
-    for bpe in 16 32 64; do
-        $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench 65536 4096 $bpe
-        $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default 16384 512 $bpe
+        # create FS images
+        build=build/$M3_TARGET-$M3_ISA-$btype
+        for bpe in 16 32 64; do
+            $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench 65536 4096 $bpe
+            $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default 16384 512 $bpe
+        done
     done
 done
 
 jobs_init $2
+
+export M3_BUILD=release
 
 # run a single test?
 if [ "$M3_TEST" != "" ]; then
@@ -130,7 +134,7 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
 
 for bpe in 32 64; do
-    for isa in $isas; do
+    for isa in $run_isas; do
         for pe in a b sh; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe
@@ -145,4 +149,15 @@ for bpe in 32 64; do
     done
 done
 
+export M3_BUILD=debug
+
+for bpe in 32 64; do
+    for isa in $run_isas; do
+        for pe in a b sh; do
+            jobs_submit run_bench $1 hello $pe $isa $bpe
+        done
+    done
+done
+
 jobs_wait
+

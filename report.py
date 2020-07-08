@@ -17,7 +17,7 @@ TESTS = [
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'bench-netlatency', 'bench-netbandwidth', 'bench-netstream',
-    'abort-test'
+    'abort-test', 'hello'
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
