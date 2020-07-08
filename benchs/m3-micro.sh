@@ -37,8 +37,7 @@ run_bench() {
     if [ "$5" = "64" ]; then
         export M3_GEM5_CPU=DerivO3CPU
     fi
-    export M3_ARGS="-n 4 -t -d -u 1 $bench"
-    $inputdir/${bootprefix}fstrace-minimal.cfg > $M3_GEM5_OUT/boot.gen.xml
+    cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
 
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
     jobs_started
@@ -58,14 +57,9 @@ run_bench() {
     fi
 }
 
-benchs="find tar untar sqlite leveldb sha256sum sort"
 bpes="64"
 pes="b sh"
 isas="riscv"
-
-# bpes="32 64"
-# pes="a b sh"
-# isas="riscv arm x86_64"
 
 for isa in $isas; do
     # build everything
@@ -85,9 +79,7 @@ jobs_init $2
 for bpe in $bpes; do
     for isa in $isas; do
         for pe in $pes; do
-            for test in $benchs; do
-                jobs_submit run_bench $1 $test $pe $isa $bpe
-            done
+            jobs_submit run_bench $1 rust-benchs $pe $isa $bpe
         done
     done
 done
