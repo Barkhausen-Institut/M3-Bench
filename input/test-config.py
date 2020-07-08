@@ -1,7 +1,7 @@
 import os, sys
 
-sys.path.append(os.path.realpath('hw/gem5/configs'))
-sys.path.append(os.path.realpath('hw/gem5/configs/example'))
+sys.path.append(os.path.realpath('platform/gem5/configs'))
+sys.path.append(os.path.realpath('platform/gem5/configs/example'))
 from tcu_fs import *
 
 options = getOptions()
@@ -62,7 +62,7 @@ for i in range(0, num_copy):
                        no=num_pes + i,
                        accel='copy',
                        memPE=mem_pe,
-                       spmsize='2MB')
+                       spmsize='4MB')
     pe.tcu.max_noc_packet_size = '2kB'
     pe.tcu.buf_size = '2kB'
     pe.accel.buf_size = '2kB'
@@ -74,7 +74,7 @@ for i in range(0, num_indir):
                        no=num_pes + num_copy + i,
                        accel='indir',
                        memPE=mem_pe,
-                       spmsize='2MB')
+                       spmsize='4MB')
     pe.tcu.max_noc_packet_size = '2kB'
     pe.tcu.buf_size = '2kB'
     pes.append(pe)

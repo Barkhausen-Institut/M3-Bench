@@ -88,7 +88,9 @@ run_bench() {
     fi
 }
 
-for isa in riscv arm x86_64; do
+isas="riscv x86_64"
+
+for isa in $isas; do
     # build everything
     export M3_ISA=$isa
     ./b || exit 1
@@ -96,8 +98,8 @@ for isa in riscv arm x86_64; do
     # create FS images
     build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
     for bpe in 16 32 64; do
-        $build/tools/mkm3fs $build/bench-$bpe.img $build/fsdata/bench 65536 4096 $bpe
-        $build/tools/mkm3fs $build/default-$bpe.img $build/fsdata/default 16384 512 $bpe
+        $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench 65536 4096 $bpe
+        $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default 16384 512 $bpe
     done
 done
 
@@ -128,7 +130,7 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
 
 for bpe in 32 64; do
-    for isa in riscv arm x86_64; do
+    for isa in $isas; do
         for pe in a b sh; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe

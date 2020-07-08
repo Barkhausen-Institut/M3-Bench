@@ -58,8 +58,8 @@ for btype in debug release; do
     # create FS images
     build=build/$M3_TARGET-x86_64-$M3_BUILD
     for bpe in 16 32 64; do
-        $build/tools/mkm3fs $build/bench-$bpe.img $build/fsdata/bench $((160 * 1024)) 4096 $bpe
-        $build/tools/mkm3fs $build/default-$bpe.img $build/fsdata/default $((160 * 1024)) 512 $bpe
+        $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $((160 * 1024)) 4096 $bpe
+        $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default $((160 * 1024)) 512 $bpe
     done
 done
 
