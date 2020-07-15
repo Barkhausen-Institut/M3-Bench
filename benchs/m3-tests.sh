@@ -34,6 +34,10 @@ run_bench() {
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
+    elif [ "$bench" = "standalone" ]; then
+        export M3_CORES=4
+        export M3_GEM5_CFG=config/spm.py
+        cp boot/kachel/$bench.xml $M3_GEM5_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
@@ -146,6 +150,8 @@ for bpe in 32 64; do
                 jobs_submit run_bench $1 imgproc-dir-$num $pe $isa $bpe
             done
         done
+
+        jobs_submit run_bench $1 standalone a $isa $bpe
     done
 done
 

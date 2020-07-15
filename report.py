@@ -17,7 +17,7 @@ TESTS = [
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'bench-netlatency', 'bench-netbandwidth', 'bench-netstream',
-    'abort-test', 'hello'
+    'abort-test', 'hello', 'standalone'
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
@@ -25,7 +25,7 @@ re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|host-debug|h
 re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
-re_shdn   = re.compile('^.*\[kernel\s*@0\].*Shutting down$')
+re_shdn   = re.compile('^.*\[\S+\s*@0\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
 re_exit   = re.compile('^.*Child .*? exited with exitcode \d+$')
 
