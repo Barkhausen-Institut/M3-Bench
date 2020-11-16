@@ -146,7 +146,13 @@ for bpe in 32 64; do
             for test in $benchs; do
                 jobs_submit run_bench $1 $test $pe $isa $bpe
             done
+        done
+    done
+done
 
+for bpe in 32 64; do
+    for isa in $run_isas; do
+        for pe in a b sh; do
             # only 1 chain with indirect, because otherwise we would need more than 16 EPs
             jobs_submit run_bench $1 imgproc-indir-1 $pe $isa $bpe
             for num in 1 2 3 4; do
