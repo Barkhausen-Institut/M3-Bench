@@ -77,7 +77,7 @@ run_bench() {
     jobs_started
 
     # set memory and time limits
-    ulimit -v 4000000   # 4GB virt mem
+    ulimit -v 5000000   # 5GB virt mem
     ulimit -t 600       # 10min CPU time
 
     ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
