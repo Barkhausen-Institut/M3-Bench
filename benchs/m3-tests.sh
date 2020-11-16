@@ -125,6 +125,9 @@ print("{} {} {} {}".format("-".join(p[:-3]), p[-3], p[-2], p[-1]))
       ' $M3_TEST
     ) || ( echo "Please set M3_TEST to <bench>-<pe>-<isa>-<bpe>." && exit 1 )
     echo $args
+    if [[ $M3_TEST == hello-* ]]; then
+        export M3_BUILD=debug
+    fi
     jobs_submit run_bench $1 $args
     jobs_wait
     exit 0
