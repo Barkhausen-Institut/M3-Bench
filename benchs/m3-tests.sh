@@ -19,8 +19,8 @@ run_bench() {
     export ACCEL_NUM=0
     dirname=m3-tests-$2-$3-$4-$5
     bpe=$5
-    export M3_GEM5_OUT=$1/$dirname
-    mkdir -p $M3_GEM5_OUT
+    export M3_OUT=$1/$dirname
+    mkdir -p $M3_OUT
 
     bootprefix=""
     if [ "$3" = "sh" ]; then
@@ -33,30 +33,30 @@ run_bench() {
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ]; then
         export M3_FS=default-$bpe.img
-        cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
+        cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ]; then
         export M3_CORES=4
         export M3_GEM5_CFG=config/spm.py
-        cp boot/kachel/$bench.xml $M3_GEM5_OUT/boot.gen.xml
+        cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
-        cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
+        cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "abort-test" ]; then
         export M3_GEM5_CFG=config/aborttest.py
-        cp boot/hello.xml $M3_GEM5_OUT/boot.gen.xml
+        cp boot/hello.xml $M3_OUT/boot.gen.xml
     else
         export M3_FS=bench-$bpe.img
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
         if [[ "$bench" =~ "bench" ]]; then
-            cp boot/${bootprefix}$bench.xml $M3_GEM5_OUT/boot.gen.xml
+            cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
             export M3_ARGS="-d -i 1 -r 4 -w 1 $writer $reader"
-            $inputdir/${bootprefix}bench-scale-pipe.cfg > $M3_GEM5_OUT/boot.gen.xml
+            $inputdir/${bootprefix}bench-scale-pipe.cfg > $M3_OUT/boot.gen.xml
         elif [[ "$bench" =~ "imgproc" ]]; then
             IFS='-' read -ra parts <<< "$bench"
             if [ "${parts[1]}" = "indir" ]; then
@@ -66,10 +66,10 @@ run_bench() {
             fi
             export M3_ACCEL_COUNT=$((${parts[2]} * 3))
             export M3_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt"
-            $inputdir/${bootprefix}imgproc.cfg > $M3_GEM5_OUT/boot.gen.xml
+            $inputdir/${bootprefix}imgproc.cfg > $M3_OUT/boot.gen.xml
         else
             export M3_ARGS="-n 4 -t -d -u 1 $bench"
-            $inputdir/${bootprefix}fstrace.cfg > $M3_GEM5_OUT/boot.gen.xml
+            $inputdir/${bootprefix}fstrace.cfg > $M3_OUT/boot.gen.xml
         fi
     fi
 
@@ -80,11 +80,11 @@ run_bench() {
     ulimit -v 4000000   # 4GB virt mem
     ulimit -t 600       # 10min CPU time
 
-    ./b run $M3_GEM5_OUT/boot.gen.xml -n > $M3_GEM5_OUT/output.txt 2>&1
+    ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
 
-    gzip -f $M3_GEM5_OUT/gem5.log
+    gzip -f $M3_OUT/gem5.log
 
-    if [ $? -eq 0 ] && [ "`grep 'Shutting down' $M3_GEM5_OUT/output.txt`" != "" ]; then
+    if [ $? -eq 0 ] && [ "`grep 'Shutting down' $M3_OUT/output.txt`" != "" ]; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
     else
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"

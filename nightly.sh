@@ -17,7 +17,7 @@ mkdir -p $out
 echo -n > $out/nightly.log
 
 echo -e "\033[1mUpdating repositories...\033[0m"
-( cd m3 && git checkout $branch && git pull os $branch && git submodule update --recursive ) 2>&1 | tee -a $out/nightly.log
+( cd m3 && git checkout $branch && git pull os $branch && git submodule update platform/gem5 ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 
@@ -55,7 +55,7 @@ for dir in results/tests-*; do
 done
 
 echo -e "\033[1mBuilding gem5...\033[0m"
-( cd m3/platform/gem5 && CC=gcc-9 CXX=g++-9 scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
+( cd m3/platform/gem5 && scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 
 echo -e "\033[1mRunning tests...\033[0m"
