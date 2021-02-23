@@ -9,6 +9,7 @@ root = createRoot(options)
 
 cmd_list = options.cmd.split(",")
 
+num_eps = 64 if os.environ.get('M3_TARGET') == 'hw' else 192
 num_mem = 1
 num_sto = 1
 num_nic = 2
@@ -48,7 +49,8 @@ for i in range(0, num_pes):
                       l1size=l1size,
                       l2size=l2size,
                       spmsize=spmsize,
-                      tcupos=0)
+                      tcupos=0,
+                      epCount=num_eps)
     pe.tcu.max_noc_packet_size = '2kB'
     pe.tcu.buf_size = '2kB'
     pes.append(pe)
@@ -62,7 +64,8 @@ for i in range(0, num_copy):
                        no=num_pes + i,
                        accel='copy',
                        memPE=mem_pe,
-                       spmsize='4MB')
+                       spmsize='4MB',
+                       epCount=num_eps)
     pe.tcu.max_noc_packet_size = '2kB'
     pe.tcu.buf_size = '2kB'
     pe.accel.buf_size = '2kB'
@@ -74,7 +77,8 @@ for i in range(0, num_indir):
                        no=num_pes + num_copy + i,
                        accel='indir',
                        memPE=mem_pe,
-                       spmsize='4MB')
+                       spmsize='4MB',
+                       epCount=num_eps)
     pe.tcu.max_noc_packet_size = '2kB'
     pe.tcu.buf_size = '2kB'
     pes.append(pe)
@@ -85,20 +89,23 @@ for i in range(0, num_sto):
                          options=options,
                          no=num_pes + num_copy + num_indir + i,
                          memPE=mem_pe,
-                         img0=hard_disk0)
+                         img0=hard_disk0,
+                         epCount=num_eps)
     pes.append(pe)
 
 # create ether PEs
 ether0 = createEtherPE(noc=root.noc,
                        options=options,
                        no=num_pes + num_copy + num_indir + num_sto + 0,
-                       memPE=mem_pe)
+                       memPE=mem_pe,
+                       epCount=num_eps)
 pes.append(ether0)
 
 ether1 = createEtherPE(noc=root.noc,
                        options=options,
                        no=num_pes + num_copy + num_indir + num_sto + 1,
-                       memPE=mem_pe)
+                       memPE=mem_pe,
+                       epCount=num_eps)
 pes.append(ether1)
 
 linkEtherPEs(ether0, ether1)
@@ -110,7 +117,8 @@ for i in range(0, num_mem):
                      no=mem_pe + i,
                      size='3072MB',
                      image=fsimg if i == 0 else None,
-                     imageNum=int(fsimgnum))
+                     imageNum=int(fsimgnum),
+                     epCount=num_eps)
     pe.tcu.max_noc_packet_size = '2kB'
     pe.tcu.buf_size = '2kB'
     pes.append(pe)

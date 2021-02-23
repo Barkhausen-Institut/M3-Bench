@@ -35,7 +35,7 @@ run_bench() {
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ]; then
-        export M3_CORES=4
+        export M3_CORES=8
         export M3_GEM5_CFG=config/spm.py
         cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
@@ -91,10 +91,11 @@ run_bench() {
     fi
 }
 
+build_types="debug release"
 build_isas="riscv arm x86_64"
-run_isas="riscv x86_64" # arm is currently broken due to a bug in the rust toolchain
+run_isas="riscv arm x86_64"
 
-for btype in debug release; do
+for btype in $build_types; do
     for isa in $build_isas; do
         # build everything
         export M3_ISA=$isa
