@@ -28,6 +28,7 @@ re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) 
 re_shdn   = re.compile('^.*\[\S+\s*@0\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
 re_exit   = re.compile('^.*Child .*? exited with exitcode \d+$')
+re_panic  = re.compile('^.*PANIC at(.*)$')
 
 class PerfResult:
     def __init__(self, name, time, unit, variance, runs):
@@ -119,6 +120,11 @@ def parse_output(file):
                         res.add_failed_test("", line)
                     elif re_fsck.match(line):
                         seen_fsck = re_fsck.match(line).group(1)
+                    else:
+                        panic_match = re_panic.match(line)
+                        if panic_match:
+                            res.add_failed_test("", "PANIC at " + panic_match.group(1))
+                            res.failed_tests += 1
 
             line = reader.readline()
     if not seen_shutdown:
