@@ -5,7 +5,21 @@ cd $root
 
 export M3_TARGET=gem5
 
+testgem5=true
+testhost=true
 branch=dev
+
+while [ $# -gt 0 ]; do
+    if [ "$1" = "--skip-host" ]; then
+        testhost=false
+    elif [ "$1" = "--skip-gem5" ]; then
+        testgem5=false
+    else
+        break
+    fi
+    shift
+done
+
 if [ $# -gt 0 ]; then
     branch=$1
 fi
@@ -54,15 +68,19 @@ for dir in results/tests-*; do
     total=$((total - 1))
 done
 
-echo -e "\033[1mBuilding gem5...\033[0m"
-( cd m3/platform/gem5 && scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
-if [ $? -ne 0 ]; then exit 1; fi
+if $testgem5; then
+    echo -e "\033[1mBuilding gem5...\033[0m"
+    ( cd m3/platform/gem5 && scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
+    if [ $? -ne 0 ]; then exit 1; fi
 
-echo -e "\033[1mRunning tests...\033[0m"
-./run.sh $outname "m3-tests" "" "" 16 2>&1 | tee -a $out/nightly.log
+    echo -e "\033[1mRunning tests...\033[0m"
+    ./run.sh $outname "m3-tests" "" "" 16 2>&1 | tee -a $out/nightly.log
+fi
 
-echo -e "\033[1mRunning host tests...\033[0m"
-./run.sh $outname "m3-tests-host" "" "" 1 2>&1 | tee -a $out/nightly.log
+if $testhost; then
+    echo -e "\033[1mRunning host tests...\033[0m"
+    ./run.sh $outname "m3-tests-host" "" "" 1 2>&1 | tee -a $out/nightly.log
+fi
 
 echo -e "\033[1mGenerating report...\033[0m"
 ./report.py 2>&1 | tee -a $out/nightly.log
