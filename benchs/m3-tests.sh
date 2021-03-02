@@ -93,20 +93,47 @@ run_bench() {
 
 build_types="debug release"
 build_isas="riscv arm x86_64"
+build_targets="gem5 hw"
 run_isas="riscv arm x86_64"
 
-for btype in $build_types; do
-    for isa in $build_isas; do
-        # build everything
-        export M3_ISA=$isa
-        M3_BUILD=$btype ./b || exit 1
+if [ "$M3_TEST" != "" ]; then
+    test_args=$(python -c '
+import sys
+p = sys.argv[1].split("-")
+if len(p) < 4:
+    sys.exit(1)
+print("{} {} {} {}".format("-".join(p[:-3]), p[-3], p[-2], p[-1]))
+' $M3_TEST) || ( echo "Please set M3_TEST to <bench>-<pe>-<isa>-<bpe>." && exit 1 )
+fi
 
-        # create FS images
-        build=build/$M3_TARGET-$M3_ISA-$btype
-        for bpe in 16 32 64; do
-            $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench 65536 4096 $bpe
-            $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default 16384 512 $bpe
-        done
+if [ "$M3_TEST" != "" ]; then
+    build_targets="gem5"
+    build_isas=$(echo $test_args | cut -d ' ' -f 3)
+    if [[ $M3_TEST == hello-* ]]; then
+        build_types="debug"
+    else
+        build_types="release"
+    fi
+fi
+
+for btarget in $build_targets; do
+    for btype in $build_types; do
+        for isa in $build_isas; do
+            if [ "$isa" != "riscv" ] && [ "$btarget" = "hw" ]; then
+                continue;
+            fi
+
+            # build everything
+            export M3_ISA=$isa
+            M3_TARGET=$btarget M3_BUILD=$btype ./b || exit 1
+
+            # create FS images
+            build=build/$btarget-$M3_ISA-$btype
+            for bpe in 16 32 64; do
+                $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench 65536 4096 $bpe
+                $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default 16384 512 $bpe
+            done
+       done
     done
 done
 
@@ -116,20 +143,10 @@ export M3_BUILD=release
 
 # run a single test?
 if [ "$M3_TEST" != "" ]; then
-    args=$(
-      python -c '
-import sys
-p = sys.argv[1].split("-")
-if len(p) < 4:
-    sys.exit(1)
-print("{} {} {} {}".format("-".join(p[:-3]), p[-3], p[-2], p[-1]))
-      ' $M3_TEST
-    ) || ( echo "Please set M3_TEST to <bench>-<pe>-<isa>-<bpe>." && exit 1 )
-    echo $args
     if [[ $M3_TEST == hello-* ]]; then
         export M3_BUILD=debug
     fi
-    jobs_submit run_bench $1 $args
+    jobs_submit run_bench $1 $test_args
     jobs_wait
     exit 0
 fi
