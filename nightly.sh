@@ -6,12 +6,15 @@ cd $root
 export M3_TARGET=gem5
 
 testgem5=true
+testhw=true
 testhost=true
 branch=dev
 
 while [ $# -gt 0 ]; do
     if [ "$1" = "--skip-host" ]; then
         testhost=false
+    elif [ "$1" = "--skip-hw" ]; then
+        testhw=false
     elif [ "$1" = "--skip-gem5" ]; then
         testgem5=false
     else
@@ -75,6 +78,11 @@ if $testgem5; then
 
     echo -e "\033[1mRunning tests...\033[0m"
     ./run.sh $outname "m3-tests" "" "" 16 2>&1 | tee -a $out/nightly.log
+fi
+
+if $testhw; then
+    echo -e "\033[1mRunning hw tests...\033[0m"
+    ./run.sh $outname "m3-tests-hw" "" "" 1 2>&1 | tee -a $out/nightly.log
 fi
 
 if $testhost; then
