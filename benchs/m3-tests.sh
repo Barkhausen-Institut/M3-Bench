@@ -157,6 +157,11 @@ for num in 1 2 3 4; do
     benchs+=" imgproc-dir-$num"
 done
 
+# run user-specified tests?
+if [ "$M3_TESTS" != "" ]; then
+    benchs="$M3_TESTS"
+fi
+
 for bpe in 32 64; do
     for isa in $run_isas; do
         for pe in a b sh; do
