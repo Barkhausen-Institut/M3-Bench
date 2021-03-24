@@ -35,6 +35,9 @@ run_bench() {
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+        if [ "$bench" = "hello" ]; then
+            export M3_BUILD=debug
+        fi
     elif [ "$bench" = "standalone" ]; then
         export M3_CORES=8
         export M3_GEM5_CFG=config/spm.py
@@ -136,9 +139,6 @@ export M3_BUILD=release
 
 # run a single test?
 if [ "$M3_TEST" != "" ]; then
-    if [[ $M3_TEST == hello-* ]]; then
-        export M3_BUILD=debug
-    fi
     jobs_submit run_bench $1 $test_args
     jobs_wait
     exit 0
@@ -150,37 +150,24 @@ benchs+=" bench-netbandwidth bench-netlatency bench-netstream"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
+benchs+=" standalone"
+# only 1 chain with indirect, because otherwise we would need more than 16 EPs
+benchs+=" imgproc-indir-1"
+for num in 1 2 3 4; do
+    benchs+=" imgproc-dir-$num"
+done
 
 for bpe in 32 64; do
     for isa in $run_isas; do
         for pe in a b sh; do
             for test in $benchs; do
+                # standalone works only with SPM
+                if [ "$test" = "standalone" ] && [ "$pe" != "a" ]; then
+                    continue;
+                fi
+
                 jobs_submit run_bench $1 $test $pe $isa $bpe
             done
-        done
-    done
-done
-
-for bpe in 32 64; do
-    for isa in $run_isas; do
-        for pe in a b sh; do
-            # only 1 chain with indirect, because otherwise we would need more than 16 EPs
-            jobs_submit run_bench $1 imgproc-indir-1 $pe $isa $bpe
-            for num in 1 2 3 4; do
-                jobs_submit run_bench $1 imgproc-dir-$num $pe $isa $bpe
-            done
-        done
-
-        jobs_submit run_bench $1 standalone a $isa $bpe
-    done
-done
-
-export M3_BUILD=debug
-
-for bpe in 32 64; do
-    for isa in $run_isas; do
-        for pe in a b sh; do
-            jobs_submit run_bench $1 hello $pe $isa $bpe
         done
     done
 done
