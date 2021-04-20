@@ -86,6 +86,11 @@ for bpe in 32 64; do
         export M3_BUILD=$build
 
         for test in $benchs; do
+            # skip rust-unittests in debug mode, because the code gets to large
+            if [ "$build" = "debug" ] && [ "$test" = "rust-unittests" ]; then
+                continue;
+            fi
+
             run_bench $1 $test hw-$build $M3_ISA $bpe
         done
     done
