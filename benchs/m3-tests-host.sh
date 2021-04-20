@@ -16,7 +16,8 @@ run_bench() {
 
     bench=$2
 
-    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
+    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] ||
+        [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ]; then
         export M3_FS=default-$bpe.img
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
@@ -68,7 +69,7 @@ done
 
 benchs=""
 benchs+="rust-unittests rust-benchs unittests cpp-benchs"
-benchs+=" bench-netlatency bench-netbandwidth bench-netstream"
+benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test"
