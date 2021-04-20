@@ -9,6 +9,7 @@ testgem5=true
 testhw=true
 testhost=true
 branch=dev
+force=false
 
 while [ $# -gt 0 ]; do
     if [ "$1" = "--skip-host" ]; then
@@ -17,6 +18,8 @@ while [ $# -gt 0 ]; do
         testhw=false
     elif [ "$1" = "--skip-gem5" ]; then
         testgem5=false
+    elif [ "$1" = "--force" ]; then
+        force=true
     else
         break
     fi
@@ -39,13 +42,15 @@ if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 
 # don't re-run the tests with the same commit
-for dir in results/tests-*; do
-    if [ "$dir" != "$out" ] && cmp $out/git-commit $dir/git-commit &>/dev/null; then
-        echo "Current commit $(cat $dir/git-commit) has been already tested in $dir. Exiting." | tee -a $out/nightly.log
-	rm -rf $out
-        exit 0
-    fi
-done
+if ! $force; then
+    for dir in results/tests-*; do
+        if [ "$dir" != "$out" ] && cmp $out/git-commit $dir/git-commit &>/dev/null; then
+            echo "Current commit $(cat $dir/git-commit) has been already tested in $dir. Exiting." | tee -a $out/nightly.log
+    	rm -rf $out
+            exit 0
+        fi
+    done
+fi
 
 echo -e "\033[1mStarting garbage collection...\033[0m"
 # only keep the last 30 days in full size; reduce the older ones to the minimum
