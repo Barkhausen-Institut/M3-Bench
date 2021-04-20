@@ -70,6 +70,11 @@ benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test"
 
+# run user-specified tests?
+if [ "$M3_TESTS" != "" ]; then
+    benchs="$M3_TESTS"
+fi
+
 for bpe in 32 64; do
     for build in debug release; do
         export M3_BUILD=$build

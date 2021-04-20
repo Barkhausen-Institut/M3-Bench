@@ -71,6 +71,11 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" standalone memtest standalone-sndrcv"
 benchs+=" hello"
 
+# run user-specified tests?
+if [ "$M3_TESTS" != "" ]; then
+    benchs="$M3_TESTS"
+fi
+
 for bpe in 32 64; do
     for build in debug release; do
         # the *-64 runs are for performance, so don't run in debug mode
