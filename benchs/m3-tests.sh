@@ -43,6 +43,9 @@ run_bench() {
         export M3_CORES=8
         export M3_GEM5_CFG=config/spm.py
         cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
+    elif [ "$bench" = "libctest" ]; then
+        export M3_FS=default-$bpe.img
+        cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
@@ -151,7 +154,7 @@ benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
-benchs+=" standalone"
+benchs+=" standalone libctest"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
 for num in 1 2 3 4; do
