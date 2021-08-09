@@ -12,9 +12,12 @@ export M3_TARGET=hw M3_ISA=riscv
 export M3_HW_SSH=bitest M3_HW_FPGA=1
 export M3_HW_VM=1 M3_HW_RESET=1
 export M3_HW_TIMEOUT=180
-export M3_FS=bench.img
 
 ./b || exit 1
+
+build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
+$build/tools/mkm3fs $build/bench-64.img $build/src/fs/bench 65536 4096 64
+export M3_FS=bench-64.img
 
 reset_bitfile() {
     cmd="cd tcu/fpga_tools/testcases/tc_rocket_boot"
