@@ -19,5 +19,5 @@ run_bench() {
 }
 
 for wl in read insert update scan mixed; do
-    BENCH_CMD="/bench/bin/exec 10 /bench/bin/ycsbserver 192.168.42.15 1337 /bench/$wl-workload.wl /tmp/foo" run_bench $1 ycsb-$wl
+    BENCH_CMD="/bench/bin/exec 10 /bench/bin/ycsbserver 192.168.42.232 1337 /bench/$wl-workload.wl /tmp/foo" run_bench $1 ycsb-$wl
 done
