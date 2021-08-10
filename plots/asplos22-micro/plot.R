@@ -2,7 +2,7 @@ library(extrafont)
 library(RColorBrewer)
 source("tools/helper.R")
 
-scaling <- 1
+scaling <- .9
 colors <- brewer.pal(n = 4, name = "Pastel1")
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -23,7 +23,7 @@ abline(h=c(seq(0, 10, 2)), col="gray80", lwd=2)
 plot = barplot(
     vals,
     add=T,
-    names=c("M³ Remote", "M³ Local", "Lx Syscall", "Lx Yield"),
+    names=c("UCS² Rem", "UCS² Loc", "Lx Syscall", "Lx Yield"),
     space=rep(0.1, 4),
     ylim=c(0, 10),
     col=colors
