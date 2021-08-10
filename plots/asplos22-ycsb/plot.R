@@ -38,17 +38,17 @@ for(i in 1:length(times)) {
     # abline(h=c(seq(0,50,10)), col="gray80", lwd=2)
 
     plot <- barplot(as.matrix(times[[i]]), beside=F, add=F,
-        ylim=if(i == 5) c(0,50) else c(0,8),
+        ylim=if(i == 5) c(0,30) else c(0,5),
         space=rep(0.15, length(names)), axes=F, width=rep(c(0.9), length(names)),
         col=colors, sub=subs[[i]],
         cex.names=namescale, las=3, mgp=c(6, .5, 0),
         names.arg=names)
     if(i == 1) {
-        axis(2, at = seq(0,8,1), las = 2)
+        axis(2, at = seq(0,5,1), las = 2)
         title(ylab = "Time (s)", mgp=c(4, 1, 0))
     }
     else if(i == 5) {
-        axis(2, at = seq(0,50,10), las = 2)
+        axis(2, at = seq(0,30,10), las = 2)
     }
     error.bar(plot, colSums(times[[i]]), stddevs[[i]])
 }

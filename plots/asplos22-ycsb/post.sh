@@ -71,7 +71,7 @@ for wl in read update insert scan mixed; do
     m3shtot=$(extract_m3_time $1 "Totaltime:" $wl-sh)
     lxusr=$(extract_lx_time $1 "Usertime:" $wl)
     lxtot=$(extract_lx_time $1 "Totaltime:" $wl)
-    lxsys=$(($lxtot - $lxusr))
+    lxsys=$(extract_lx_time $1 "Systemtime:" $wl)
     echo "M3iso M3sh Lx" > $1/ycsb-$wl-times.dat
     echo $(($m3extot - $m3exsys)) $(($m3shtot - $m3shsys)) $lxusr >> $1/ycsb-$wl-times.dat
     echo $m3exsys $m3shsys $lxsys >> $1/ycsb-$wl-times.dat
