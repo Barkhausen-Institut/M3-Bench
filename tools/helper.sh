@@ -2,8 +2,13 @@
 
 reset_bitfile() {
     cmd="cd tcu/fpga_tools/testcases/tc_rocket_boot"
-    #cmd="$cmd && source ~/Applications/Xilinx/Vivado_Lab/2019.1/settings64.sh"
-    cmd="$cmd && source /opt/software/Xilinx/Vivado/2019.1/settings64.sh"
+    if [ "$M3_HW_FPGA" = "0" ]; then
+        # sebastian's FPGA
+        cmd="$cmd && source /opt/software/Xilinx/Vivado/2019.1/settings64.sh"
+    else
+        # mine
+        cmd="$cmd && source ~/Applications/Xilinx/Vivado_Lab/2019.1/settings64.sh"
+    fi
     cmd="$cmd && BITFILE=\$HOME/tcu/fpga_tools/bitfiles/fpga_top_v4.4.4.bit make program-fpga"
     ssh -t $M3_HW_SSH $cmd
 }
