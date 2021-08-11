@@ -3,8 +3,8 @@ library(RColorBrewer)
 source("tools/helper.R")
 
 args <- commandArgs(trailingOnly = TRUE)
-scaling <- 2
-namescale <- 2
+scaling <- 1.5
+namescale <- 1.5
 colors <- brewer.pal(n = 3, name = "Pastel1")[1:2]
 
 times   <- list()
@@ -15,20 +15,20 @@ for(i in 1:5) {
 }
 zeros3 <- matrix(rep(c(NA), 3 * 2), nrow=2, ncol=3)
 
-pdf(as.character(args[1]), width=5, height=4)
+pdf(as.character(args[1]), width=5, height=2.2)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
-    widths=c(2,1,1,1,1.7), heights=c(1,1))
+    widths=c(1.7,1,1,1,1.7), heights=c(1,1))
 
-par(mar=c(9.5,6,4,0))
+par(mar=c(6,4,2.5,0))
 
 subs <- c("Read", "Insert", "Update", "Mixed", "Scan")
 for(i in 1:length(times)) {
     if(i == 5)
-        par(mar=c(9.5,4,4,0))
+        par(mar=c(6,3,2.5,0))
     else if(i > 1)
-        par(mar=c(9.5,0,4,0))
+        par(mar=c(6,0,2.5,0))
 
     names <- c("UCS²i", "UCS²s", "Linux")
 
@@ -41,11 +41,11 @@ for(i in 1:length(times)) {
         ylim=if(i == 5) c(0,30) else c(0,5),
         space=rep(0.15, length(names)), axes=F, width=rep(c(0.9), length(names)),
         col=colors, sub=subs[[i]],
-        cex.names=namescale, las=3, mgp=c(6, .5, 0),
+        cex.names=namescale, las=3, mgp=c(3.8, .5, 0),
         names.arg=names)
     if(i == 1) {
         axis(2, at = seq(0,5,1), las = 2)
-        title(ylab = "Time (s)", mgp=c(4, 1, 0))
+        title(ylab = "Time (s)", mgp=c(2.3, 1, 0))
     }
     else if(i == 5) {
         axis(2, at = seq(0,30,10), las = 2)

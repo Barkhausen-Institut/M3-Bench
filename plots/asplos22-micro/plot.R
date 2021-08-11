@@ -2,12 +2,12 @@ library(extrafont)
 library(RColorBrewer)
 source("tools/helper.R")
 
-scaling <- 2
+scaling <- 1.9
 colors <- brewer.pal(n = 4, name = "Pastel1")
 
 args <- commandArgs(trailingOnly = TRUE)
 
-pdf(as.character(args[1]), width=10, height=3)
+pdf(as.character(args[1]), width=10, height=2.5)
 par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 
 par(mar=c(4.5, 10, 1, 2))

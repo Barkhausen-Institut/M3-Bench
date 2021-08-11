@@ -43,9 +43,9 @@ rscript_crop() {
     if [ "$1" = "--clip" ]; then
         clip=$2
         shift && shift
-        Rscript $script $tmp $@ && cp $tmp $dst # && pdfcrop --margins "0 0 $clip 0" $tmp $dst
+        Rscript $script $tmp $@ && cp $tmp $dst && pdfcrop --margins "0 0 $clip 0" $tmp $dst
     else
-        Rscript $script $tmp $@ && cp $tmp $dst # && pdfcrop $tmp $dst
+        Rscript $script $tmp $@ && cp $tmp $dst && pdfcrop $tmp $dst
     fi
     rm $tmp
 }
