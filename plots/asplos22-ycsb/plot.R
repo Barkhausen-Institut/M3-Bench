@@ -21,14 +21,14 @@ par(cex.lab=scaling, cex.axis=scaling, cex.main=scaling, cex.sub=scaling)
 layout(matrix(c(1,2,3,4,5), 1, 5, byrow = TRUE),
     widths=c(1.7,1,1,1,1.7), heights=c(1,1))
 
-par(mar=c(6,4,2.5,0))
+par(mar=c(6,4,1.5,0))
 
 subs <- c("Read", "Insert", "Update", "Mixed", "Scan")
 for(i in 1:length(times)) {
     if(i == 5)
-        par(mar=c(6,3,2.5,0))
+        par(mar=c(6,3,1.5,0))
     else if(i > 1)
-        par(mar=c(6,0,2.5,0))
+        par(mar=c(6,0,1.5,0))
 
     names <- c("UCS²i", "UCS²s", "Linux")
 
