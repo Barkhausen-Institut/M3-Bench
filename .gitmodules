@@ -1,9 +1,9 @@
 [submodule "m3"]
 	path = m3
-	url = https://github.com/TUD-OS/M3
+	url = git@gitlab.com:Nils-TUD/M3.git
 [submodule "bench-lx"]
 	path = bench-lx
-	url = https://github.com/Nils-TUD/bench-lx
+	url = git@gitlab.com:Nils-TUD/bench-lx.git
 [submodule "NRE"]
 	path = NRE
 	url = https://github.com/TUD-OS/NRE.git
