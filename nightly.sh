@@ -10,6 +10,7 @@ testhw=true
 testhost=true
 branch=dev
 force=false
+buildgem5=true
 
 while [ $# -gt 0 ]; do
     if [ "$1" = "--skip-host" ]; then
@@ -20,6 +21,8 @@ while [ $# -gt 0 ]; do
         testgem5=false
     elif [ "$1" = "--force" ]; then
         force=true
+    elif [ "$1" = "--skip-gem5-build" ]; then
+        buildgem5=false
     else
         break
     fi
@@ -78,9 +81,11 @@ for dir in results/tests-*; do
 done
 
 if $testgem5; then
-    echo -e "\033[1mBuilding gem5...\033[0m"
-    ( cd m3/platform/gem5 && scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
-    if [ $? -ne 0 ]; then exit 1; fi
+    if $buildgem5; then
+        echo -e "\033[1mBuilding gem5...\033[0m"
+        ( cd m3/platform/gem5 && scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
+        if [ $? -ne 0 ]; then exit 1; fi
+    fi
 
     echo -e "\033[1mRunning tests...\033[0m"
     ./run.sh $outname "m3-tests" "" "" 16 2>&1 | tee -a $out/nightly.log
