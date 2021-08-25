@@ -20,6 +20,7 @@ run_bench() {
     export ACCEL_NUM=0
     dirname=m3-tests-$2-$3-$4-$5
     bpe=$5
+    bench=$2
     export M3_OUT=$1/$dirname
     mkdir -p $M3_OUT
 
@@ -27,9 +28,9 @@ run_bench() {
     if [ "$3" = "sh" ]; then
         export M3_PETYPE=b
         bootprefix="shared/"
+    elif [[ "$bench" =~ "ycsb-bench" ]]; then
+        bootprefix="kachel/"
     fi
-
-    bench=$2
 
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ] ||
@@ -155,6 +156,7 @@ benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
 benchs+=" standalone libctest"
+benchs+=" ycsb-bench-udp ycsb-bench-tcp"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
 for num in 1 2 3 4; do

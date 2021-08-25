@@ -19,7 +19,8 @@ TESTS = [
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'cpp-net-tests', 'rust-net-tests', 'cpp-net-benchs', 'rust-net-benchs',
     'abort-test', 'hello', 'standalone', 'libctest',
-    'standalone-sndrcv', 'memtest'
+    'standalone-sndrcv', 'memtest',
+    'ycsb-bench-udp', 'ycsb-bench-tcp',
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
