@@ -58,7 +58,7 @@ run_bench() {
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
-        if [[ "$bench" =~ "bench" ]]; then
+        if [[ "$bench" =~ "bench" ]] || [[ "$bench" =~ "voiceassist" ]]; then
             cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
@@ -157,6 +157,7 @@ benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
 benchs+=" standalone libctest"
 benchs+=" ycsb-bench-udp ycsb-bench-tcp"
+benchs+=" voiceassist-udp voiceassist-tcp"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
 for num in 1 2 3 4; do

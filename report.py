@@ -21,6 +21,7 @@ TESTS = [
     'abort-test', 'hello', 'standalone', 'libctest',
     'standalone-sndrcv', 'memtest',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
+    'voiceassist-udp', 'voiceassist-tcp',
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 

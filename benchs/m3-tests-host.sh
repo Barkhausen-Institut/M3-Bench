@@ -26,7 +26,7 @@ run_bench() {
     else
         export M3_FS=bench-$bpe.img
 
-        if [[ "$bench" =~ "bench" ]]; then
+        if [[ "$bench" =~ "bench" ]] || [[ "$bench" =~ "voiceassist" ]]; then
             cp boot/$bench.xml $M3_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
@@ -72,6 +72,7 @@ benchs+="rust-unittests rust-benchs unittests cpp-benchs"
 benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
+benchs+=" voiceassist-udp voiceassist-tcp"
 benchs+=" disk-test"
 
 # run user-specified tests?
