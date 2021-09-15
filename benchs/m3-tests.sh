@@ -89,7 +89,7 @@ run_bench() {
     ulimit -v 5000000   # 5GB virt mem
     ulimit -t 900       # 15min CPU time
 
-    ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
+    ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
 
     gzip -f $M3_OUT/gem5.log
 
