@@ -75,8 +75,8 @@ for dir in Path('results').glob('tests-*'):
                     all_results[dirname][test] = {}
                 key = "{}-{}-{}".format(petype, isa, bpe)
                 all_results[dirname][test][key] = check_result.parse_output(str(dir) + '/' + str(f) + '/output.txt')
-    except:
-        print("warning: ignoring directory '{}'".format(dirname), file=sys.stderr)
+    except Exception as e:
+        print("warning: ignoring directory '{}': {}".format(dirname, e), file=sys.stderr)
         del all_results[dirname]
 
 # use only the last NUM_DAYS days
