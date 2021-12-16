@@ -41,7 +41,7 @@ run_bench() {
             export M3_BUILD=debug
         fi
     elif [ "$bench" = "standalone" ]; then
-        export M3_CORES=8
+        export M3_CORES=7
         export M3_GEM5_CFG=config/spm.py
         cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "libctest" ]; then
@@ -59,6 +59,9 @@ run_bench() {
             export M3_GEM5_CPU=DerivO3CPU
         fi
         if [[ "$bench" =~ "bench" ]] || [[ "$bench" =~ "voiceassist" ]]; then
+            if [ "$bench" = "hashmux-benchs" ]; then
+                export M3_CORES=18
+            fi
             cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
@@ -150,7 +153,7 @@ if [ "$M3_TEST" != "" ]; then
 fi
 
 benchs=""
-benchs+="rust-unittests rust-benchs unittests cpp-benchs"
+benchs+="rust-unittests rust-benchs unittests cpp-benchs hashmux-benchs"
 benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"

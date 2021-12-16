@@ -40,7 +40,7 @@ class Result:
                                       float(pmatch.group(4)),
                                       pmatch.group(5),
                                       float(pmatch.group(6)),
-                                      int(pmatch.group(7)))
+                                      int(pmatch.group(8)))
 
     def __repr__(self):
         str = "{} / {} succeeded".format(self.failed_tests, self.succ_tests + self.failed_tests)
@@ -52,7 +52,7 @@ class Result:
 
 re_test   = re.compile('^Testing "(.*?)" in (.*?):$')
 re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
-re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+) with (\d+) runs\)$')
+re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+)( \S+)? with (\d+) runs\)$')
 re_shdn   = re.compile('^.*\[(PE0:\S+\s*@\s*\d+|\S+\s*@.*?)\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
 re_exit   = re.compile('^.*Child .*? exited with exitcode \d+$')

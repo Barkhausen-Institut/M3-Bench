@@ -13,6 +13,7 @@ num_eps = 64 if os.environ.get('M3_TARGET') == 'hw' else 192
 num_mem = 1
 num_sto = 1
 num_nic = 2
+num_kecacc = 1
 num_pes = int(os.environ.get('M3_GEM5_PES'))
 fsimg = os.environ.get('M3_GEM5_FS')
 fsimgnum = os.environ.get('M3_GEM5_FSNUM', '1')
@@ -35,7 +36,7 @@ else:
     l2size = '256kB'
     spmsize = None
 
-mem_pe = num_pes + num_copy + num_indir + num_sto + num_nic
+mem_pe = num_pes + num_copy + num_indir + num_sto + num_nic + num_kecacc
 
 pes = []
 
@@ -93,17 +94,27 @@ for i in range(0, num_sto):
                          epCount=num_eps)
     pes.append(pe)
 
+for i in range(0, num_kecacc):
+    pe = createKecAccPE(noc=root.noc,
+                        options=options,
+                        no=num_pes + num_copy + num_indir + num_sto + i,
+                        cmdline=cmd_list[1],  # FIXME
+                        memPE=mem_pe,
+                        spmsize='32MB',
+                        epCount=num_eps)
+    pes.append(pe)
+
 # create ether PEs
 ether0 = createEtherPE(noc=root.noc,
                        options=options,
-                       no=num_pes + num_copy + num_indir + num_sto + 0,
+                       no=num_pes + num_copy + num_indir + num_sto + num_kecacc + 0,
                        memPE=mem_pe,
                        epCount=num_eps)
 pes.append(ether0)
 
 ether1 = createEtherPE(noc=root.noc,
                        options=options,
-                       no=num_pes + num_copy + num_indir + num_sto + 1,
+                       no=num_pes + num_copy + num_indir + num_sto + num_kecacc + 1,
                        memPE=mem_pe,
                        epCount=num_eps)
 pes.append(ether1)
