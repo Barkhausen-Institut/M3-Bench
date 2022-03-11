@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
+import math
 import re
 import sys
 
 class PerfResult:
     def __init__(self, name, time, unit, variance, runs):
         self.name = name
-        self.time = time
+        self.time = time if not math.isinf(time) and not math.isnan(time) else 'null'
         self.unit = unit
         self.variance = variance
         self.runs = runs
