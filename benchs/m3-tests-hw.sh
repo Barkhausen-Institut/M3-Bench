@@ -9,6 +9,7 @@ cd m3
 export M3_TARGET=hw M3_ISA=riscv
 export M3_HW_SSH=bitest M3_HW_FPGA=1
 export M3_HW_VM=1 M3_HW_RESET=1
+export M3_HW_TIMEOUT=120
 
 run_bench() {
     bpe=$6
