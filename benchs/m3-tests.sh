@@ -16,7 +16,7 @@ export M3_GEM5_CFG=$inputdir/test-config.py
 
 run_bench() {
     export M3_ISA=$4
-    export M3_PETYPE=$3
+    export M3_TILETYPE=$3
     export ACCEL_NUM=0
     dirname=m3-tests-$2-$3-$4-$5
     bpe=$5
@@ -26,7 +26,7 @@ run_bench() {
 
     bootprefix=""
     if [ "$3" = "sh" ]; then
-        export M3_PETYPE=b
+        export M3_TILETYPE=b
         bootprefix="shared/"
     elif [[ "$bench" =~ "ycsb-bench" ]]; then
         bootprefix="kachel/"
@@ -114,7 +114,7 @@ p = sys.argv[1].split("-")
 if len(p) < 4:
     sys.exit(1)
 print("{} {} {} {}".format("-".join(p[:-3]), p[-3], p[-2], p[-1]))
-' $M3_TEST) || ( echo "Please set M3_TEST to <bench>-<pe>-<isa>-<bpe>." && exit 1 )
+' $M3_TEST) || ( echo "Please set M3_TEST to <bench>-<tiletype>-<isa>-<bpe>." && exit 1 )
 fi
 
 if [ "$M3_TEST" != "" ]; then
@@ -174,14 +174,14 @@ fi
 
 for bpe in 32 64; do
     for isa in $run_isas; do
-        for pe in a b sh; do
+        for tiletype in a b sh; do
             for test in $benchs; do
                 # standalone works only with SPM
-                if [ "$test" = "standalone" ] && [ "$pe" != "a" ]; then
+                if [ "$test" = "standalone" ] && [ "$tiletype" != "a" ]; then
                     continue;
                 fi
 
-                jobs_submit run_bench $1 $test $pe $isa $bpe
+                jobs_submit run_bench $1 $test $tiletype $isa $bpe
             done
         done
     done

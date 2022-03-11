@@ -68,13 +68,13 @@ for dir in Path('results').glob('tests-*'):
             match = re_name.match(f)
             if match:
                 test = match.group(1)
-                petype = match.group(2)
+                tiletype = match.group(2)
                 isa = match.group(3)
                 bpe = match.group(4)
 
                 if test not in all_results[dirname]:
                     all_results[dirname][test] = {}
-                key = "{}-{}-{}".format(petype, isa, bpe)
+                key = "{}-{}-{}".format(tiletype, isa, bpe)
                 all_results[dirname][test][key] = check_result.parse_output(str(dir) + '/' + str(f) + '/output.txt')
     except Exception as e:
         print("warning: ignoring directory '{}': {}".format(dirname, e), file=sys.stderr)
