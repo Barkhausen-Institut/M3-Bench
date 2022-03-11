@@ -9,8 +9,10 @@ reset_bitfile() {
         # mine
         cmd="$cmd && source ~/Applications/Xilinx/Vivado_Lab/2019.1/settings64.sh"
     fi
-    cmd="$cmd && BITFILE=\$HOME/tcu/fpga_tools/bitfiles/fpga_top_v4.4.4.bit make program-fpga"
+    cmd="$cmd && make program-fpga"
     ssh -t $M3_HW_SSH $cmd
+    # wait a bit until the reset
+    sleep 5
 }
 
 bench_succeeded() {
@@ -28,8 +30,6 @@ bench_succeeded() {
         if [ "$(grep 'detected a UDP packet drop' $2)" == "" ] &&
             [ "$(grep 'Kernel is ready' $2)" = "" ]; then
             reset_bitfile
-            # wait a bit until the reset
-            sleep 5
         fi
         false
     fi

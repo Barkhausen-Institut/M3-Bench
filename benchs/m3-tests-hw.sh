@@ -2,6 +2,8 @@
 
 inputdir=`readlink -f input`
 
+. tools/helper.sh
+
 cd m3
 
 export M3_TARGET=hw M3_ISA=riscv
@@ -46,15 +48,28 @@ run_bench() {
         fi
     fi
 
-    /bin/echo -e "\e[1mStarting $dirname\e[0m"
+    i=0
+    while [ $i -lt 2 ]; do
+        /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-    ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
+        ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
 
-    if [ $? -eq 0 ] && ../tools/check_result.py $M3_OUT/output.txt 2>/dev/null; then
-        /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
-    else
-        /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
-    fi
+        if [ $? -eq 0 ] && ../tools/check_result.py $M3_OUT/output.txt 2>/dev/null; then
+            /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
+            break
+        else
+            /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
+            # if the kernel didn't start, we assume that there is something fundamentally wrong and
+            # therefore reinstall the bitfile.
+            if [ "$(grep 'Kernel is ready' $M3_OUT/output.txt)" = "" ]; then
+                reset_bitfile
+            # otherwise, don't repeat the test
+            else
+                break
+            fi
+        fi
+        i=$((i + 1))
+    done
 }
 
 for btype in debug release; do
