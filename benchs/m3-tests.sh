@@ -34,7 +34,8 @@ run_bench() {
 
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ] ||
-        [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ]; then
+        [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ] ||
+        [ "$bench" = "hashmux-tests" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         if [ "$bench" = "hello" ]; then
@@ -153,7 +154,7 @@ if [ "$M3_TEST" != "" ]; then
 fi
 
 benchs=""
-benchs+="rust-unittests rust-benchs unittests cpp-benchs hashmux-benchs"
+benchs+="rust-unittests hashmux-tests rust-benchs unittests cpp-benchs hashmux-benchs"
 benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"

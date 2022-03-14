@@ -25,7 +25,7 @@ run_bench() {
     bench=$2
 
     export M3_HW_VM=1
-    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ]; then
+    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hashmux-tests" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ] || [ "$bench" = "memtest" ] || [ "$bench" = "standalone-sndrcv" ]; then
@@ -88,7 +88,7 @@ for btype in debug release; do
 done
 
 benchs=""
-benchs+="rust-unittests rust-benchs unittests cpp-benchs"
+benchs+="rust-unittests hashmux-tests rust-benchs unittests cpp-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" standalone memtest standalone-sndrcv"
