@@ -5,6 +5,7 @@ import os
 import pprint
 import re
 import sys
+import subprocess
 from pathlib import Path
 from datetime import datetime
 from tools import check_result
@@ -20,7 +21,7 @@ TESTS = [
     'cpp-net-tests', 'rust-net-tests', 'cpp-net-benchs', 'rust-net-benchs',
     'hashmux-benchs',
     'abort-test', 'hello', 'standalone', 'libctest',
-    'standalone-sndrcv', 'memtest',
+    'standalone-sndrcv', 'memtest', 'msgchan',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
     'voiceassist-udp', 'voiceassist-tcp',
 ]
@@ -160,8 +161,14 @@ with open('reports/summary.html', 'w') as report:
     report.write("  <tr>\n")
     report.write("  <th>Tests</th>\n")
     for date in sorted(results.keys()):
-        report.write("    <th><a href=\"log-{}.html\">{}</a><br/>(<span title=\"{}\">{}</span>)</th>\n"
-            .format(date, date, commits[date], commits[date][:8]))
+        report.write("    <th>\n")
+        report.write("      {}<br/>\n".format(date))
+        report.write("      (<span title=\"{}\">{}</span>)<br/>\n".format(commits[date], commits[date][:8]))
+        report.write("      <div style=\"margin-top: 0.2em\">\n")
+        report.write("        <a href=\"log-{}.html\">Errors</a> &middot;\n".format(date))
+        report.write("        <a href=\"cov-{}/index.html\">Coverage</a>\n".format(date))
+        report.write("      </div>\n")
+        report.write("    </th>\n")
     report.write("  <th>Performance History</th>\n")
     report.write("  </tr>\n")
 
@@ -178,7 +185,7 @@ with open('reports/summary.html', 'w') as report:
                     fail += res.failed_tests
             except:
                 pass
-            report.write("    <td class=\"{}\"><a href=\"log-{}-{}.html\">{} / {}</a></td>\n"
+            report.write("    <td align=\"center\" class=\"{}\"><a href=\"log-{}-{}.html\">{} / {}</a></td>\n"
                 .format("success" if fail == 0 else "failed", test, date, succ, fail + succ))
 
         # collect relative performance changes

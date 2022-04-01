@@ -1,6 +1,6 @@
 [submodule "m3"]
 	path = m3
-	url = git@gitlab.com:Nils-TUD/M3.git
+	url = git@github.com:Barkhausen-Institut/M3.git
 [submodule "bench-lx"]
 	path = bench-lx
 	url = git@gitlab.com:Nils-TUD/bench-lx.git

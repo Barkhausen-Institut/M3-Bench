@@ -69,6 +69,8 @@ def parse_output(file):
         test = ""
         while line != '':
             line = line.strip()
+            # remove escape codes from line; otherwise the regular expressions don't work
+            line = re.sub("\033\[.*?m", '', line)
             # special handling for the TCU abort test
             if line.startswith("info: "):
                 line = line[6:]

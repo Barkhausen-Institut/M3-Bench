@@ -18,7 +18,7 @@ run_bench() {
 
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] ||
         [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ] ||
-        [ "$bench" = "hashmux-tests" ]; then
+        [ "$bench" = "hashmux-tests" ] || [ "$bench" = "msgchan" ]; then
         export M3_FS=default-$bpe.img
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
@@ -55,7 +55,11 @@ run_bench() {
     fi
 }
 
-for btype in debug release; do
+# always rebuild everything for coverage to regenerate everything, prevent outdated
+# information and other problems.
+rm -rf build/$M3_TARGET-x86_64-coverage build/rust/x86_64-unknown-host-cov
+
+for btype in debug release coverage; do
     # build everything
     export M3_BUILD=$btype
     ./b || exit 1
@@ -74,7 +78,7 @@ benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" voiceassist-udp voiceassist-tcp"
-benchs+=" disk-test"
+benchs+=" disk-test msgchan"
 
 # run user-specified tests?
 if [ "$M3_TESTS" != "" ]; then
@@ -82,7 +86,7 @@ if [ "$M3_TESTS" != "" ]; then
 fi
 
 for bpe in 32 64; do
-    for build in debug release; do
+    for build in debug release coverage; do
         export M3_BUILD=$build
 
         for test in $benchs; do

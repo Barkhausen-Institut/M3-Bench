@@ -41,7 +41,7 @@ echo -n > $out/nightly.log
 
 echo -e "\033[1mUpdating repositories...\033[0m"
 ( cd m3 && git checkout $branch && git pull os $branch && git submodule update --init \
-  platform/gem5 src/libs/{leveldb,musl,flac} ) 2>&1 | tee -a $out/nightly.log
+  platform/gem5 src/libs/{leveldb,musl,flac,llvmprofile} ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 
@@ -99,6 +99,13 @@ fi
 if $testhost; then
     echo -e "\033[1mRunning host tests...\033[0m"
     ./run.sh $outname "m3-tests-host" "" "" 1 2>&1 | tee -a $out/nightly.log
+
+    echo -e "\033[1mGenerating code-coverage report...\033[0m"
+    (
+        cd m3 && \
+            grcov . -s . --binary-path build -t html \
+                --ignore-not-existing -o ../reports/cov-$(date --iso-8601)
+    ) | tee -a $out/nightly.log
 fi
 
 echo -e "\033[1mGenerating report...\033[0m"
