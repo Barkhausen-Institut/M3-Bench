@@ -47,7 +47,11 @@ run_bench() {
         cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "libctest" ]; then
         export M3_FS=default-$bpe.img
-        cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
+        if [ "$3" = "sh" ]; then
+            cp boot/shared/$bench.xml $M3_OUT/boot.gen.xml
+        else
+            cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
+        fi
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
