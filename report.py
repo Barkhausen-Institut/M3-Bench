@@ -27,7 +27,7 @@ TESTS = [
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|host-debug|host-release|hw-debug|hw-release)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|host-debug|host-release|host-coverage|hw-debug|hw-release)-(\S+?)-(\d+)$')
 
 def file_contents(path):
     with open(path) as f:
@@ -155,7 +155,7 @@ span.failed {
 with open('reports/summary.html', 'w') as report:
     write_html_header(report)
 
-    report.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js\"></script>\n")
+    report.write("<script src=\"https://unpkg.com/chart.js@3\"></script>\n")
 
     report.write("<table>\n")
     report.write("  <tr>\n")
@@ -251,10 +251,10 @@ with open('reports/summary.html', 'w') as report:
         report.write("      data: changeData{},\n".format(chart_name))
         report.write("      options: {\n")
         report.write("        responsive: true,\n")
-        report.write("        legend: { display: false },\n")
+        report.write("        plugins: { legend: { display: false } },\n")
         report.write("        scales: {\n")
-        report.write("          xAxes: [{ display: false }],\n")
-        report.write("          yAxes: [{ ticks: { suggestedMin: 0.9, suggestedMax: 1.1 } }],\n")
+        report.write("          x: { display: false },\n")
+        report.write("          y: { suggestedMin: 0.9, suggestedMax: 1.1 },\n")
         report.write("        },\n")
         report.write("        maintainAspectRatio: false,\n")
         report.write("      },\n")
@@ -270,10 +270,11 @@ for test in TESTS:
     with open('reports/' + test + '.html', 'w') as report:
         write_html_header(report)
 
-        report.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js\"></script>\n")
+        report.write("<script src=\"https://unpkg.com/chart.js@3\"></script>\n")
+        report.write("<script src=\"https://unpkg.com/chartjs-chart-error-bars@3\"></script>\n")
         report.write("<script>\n")
-        report.write("Chart.defaults.global.defaultFontFamily = 'Helvetica';\n")
-        report.write("Chart.defaults.global.defaultFontSize = 16;\n")
+        report.write("Chart.defaults.font.family = 'Helvetica';\n")
+        report.write("Chart.defaults.font.size = 16;\n")
 
         for bench in benchs:
             cfgdata = {}
@@ -286,7 +287,7 @@ for test in TESTS:
                         res = results[date][test][cfg]
                         if bench in res.perfs:
                             perf = res.perfs[bench]
-                            tbenchs[date] = perf.time
+                            tbenchs[date] = (perf.time, perf.variance)
                             label = perf.unit
                 # if none are part of this test, stop
                 if len(tbenchs) == 0:
@@ -296,9 +297,11 @@ for test in TESTS:
                     data = []
                     for date in sorted(results.keys()):
                         if date in tbenchs:
-                            data.append(str(tbenchs[date]))
+                            (time, var) = tbenchs[date]
+                            data.append("{{ y: {}, yMin: {}, yMax: {} }}"
+                                .format(time, time - var, time + var))
                         else:
-                            data.append("null")
+                            data.append("{ y: null, yMin: null, yMax: null }")
                     cfgdata[cfg] = data
 
             # skip benchmarks that are not part of this test
@@ -317,11 +320,16 @@ for test in TESTS:
                 report.write("    {\n")
                 report.write("      label: \"{}\",\n".format(cfg))
                 report.write("      borderColor: \"{}\",\n".format(COLORS[i % len(COLORS)]))
+                report.write("      errorBarColor: \"{}\",\n".format(COLORS[i % len(COLORS)]))
+                report.write("      errorBarWhiskerColor: \"{}\",\n".format(COLORS[i % len(COLORS)]))
                 report.write("      pointRadius: 6,\n")
                 report.write("      pointHoverRadius: 7,\n")
                 report.write("      lineTension: 0.1,\n")
                 report.write("      fill: false,\n")
-                report.write("      data: [{}],\n".format(', '.join(cfgdata[cfg])))
+                report.write("      data: [\n")
+                for line in cfgdata[cfg]:
+                    report.write("        {},\n".format(line))
+                report.write("      ]\n")
                 report.write("    },\n")
                 i += 1
             report.write("  ],\n")
@@ -335,7 +343,7 @@ for test in TESTS:
             report.write("<script>\n")
             report.write("var {0} = document.getElementById(\"chart_{0}\").getContext(\"2d\");\n".format(chart_name))
             report.write("new Chart({}, {{\n".format(chart_name))
-            report.write("  type: 'line',\n")
+            report.write("  type: 'lineWithErrorBars',\n")
             report.write("  data: benchData{},\n".format(chart_name))
             report.write("  options: {\n")
             report.write("    responsive: true,\n")
@@ -343,7 +351,7 @@ for test in TESTS:
             report.write("      position: 'top',\n")
             report.write("    },\n")
             report.write("    scales: {\n")
-            report.write("      yAxes: [{ ticks: { suggestedMin: 0, callback: function(value, index, values) { return value + ' " + label + "'; } } }],\n")
+            report.write("      y: { suggestedMin: 0, callback: function(value, index, values) { return value + ' " + label + "'; } },\n")
             report.write("    },\n")
             report.write("  },\n")
             report.write("})\n")
