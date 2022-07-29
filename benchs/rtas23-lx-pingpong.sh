@@ -12,7 +12,7 @@ export GEM5_CPU=DerivO3CPU GEM5_CPUFREQ=3GHz GEM5_MEMFREQ=1GHz
 cd bench-lx || exit 1
 
 ./b mkapps || exit 1
-# ./b mklx || exit 1
+./b mklx || exit 1
 
 run_bench() {
     outdir=$1/lx-$2
