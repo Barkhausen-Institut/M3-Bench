@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . tools/helper.sh
 
@@ -18,11 +18,17 @@ extract_bg() {
     echo $((total / 7))
 }
 
-for bw in 16K 32K 64K 128K 256K 512K 1024K 0; do
-    fg=$(extract_fg "$1" $bw)
-    bg=$(extract_bg "$1" $bw)
+echo "load limit throughput" > "$1/membw.dat"
+for bw in 16 32 64 128 256 512 1024 -; do
+    if [ $bw = "-" ]; then
+        bw_name="0"
+    else
+        bw_name="${bw}K"
+    fi
+    fg=$(extract_fg "$1" $bw_name)
+    bg=$(extract_bg "$1" $bw_name)
 
-    echo "FG BG" > "$1/membw-$bw.dat"
-    echo "$fg" "$bg" >> "$1/membw-$bw.dat"
+    echo "FG $bw $fg" >> "$1/membw.dat"
+    echo "BG $bw $bg" >> "$1/membw.dat"
     echo $bw $((fg / 1000000)) $((bg / 1000000))
 done

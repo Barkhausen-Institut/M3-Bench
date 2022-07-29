@@ -29,12 +29,12 @@ run_bench() {
         echo "  <dom>"
         echo "    <app args=\"root\">"
         for i in {0..7}; do
+            echo "      <dom>"
             if [ "$i" -ne 7 ] && [ "$limit" != "0" ]; then
-                echo "      <dom mem-bw=\"$limit;16K\">"
+                echo "        <app args=\"memconsumer\" mem-bw=\"$limit\" />"
             else
-                echo "      <dom>"
+                echo "        <app args=\"memconsumer\" />"
             fi
-            echo "        <app args=\"memconsumer\" />"
             echo "      </dom>"
         done
         echo "    </app>"
