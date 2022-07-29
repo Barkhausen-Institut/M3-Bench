@@ -1,20 +1,39 @@
 #!/bin/bash
 
-if [ "$LX_CORES" = "" ]; then
-    echo "Please specify LX_CORES!" >&2
-    exit 1
-fi
+. tools/jobs.sh
 
-# use this gem5 version, because the atomic rwm operations do not work on the new version
-export GEM5_DIR=`readlink -f gem5-lx`
+export GEM5_DIR=$(readlink -f gem5-official)
 
-cd xtensa-linux
+cd bench-lx || exit 1
 
-./b mklx
-./b mkapps
-./b mkbr
+warmup() {
+    isa=$2
+    cores=$3
+    dirname="warmup-$cores-$isa"
 
-# remove old checkpoints
-rm -rf gem5-$LX_CORES/cpt.*
-# create checkpoint
-GEM5_CPU=TimingSimpleCPU ./b warmup
+    /bin/echo -e "\e[1mStarting $dirname\e[0m"
+    jobs_started
+
+    # delete old checkpoints
+    rm -rf run/boot-$LX_ARCH-$LX_CORES/cpt.*
+
+    if LX_CORES="$cores" LX_ARCH="$isa" ./b warmup &> /dev/null; then
+        /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
+    else
+        /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
+    fi
+}
+
+jobs_init "$2"
+
+for isa in riscv64; do
+    # ./b mklx
+    # ./b mkapps
+    # ./b mkbr
+
+    for cores in 2 4 6; do
+        jobs_submit warmup "$1" $isa $cores
+    done
+done
+
+jobs_wait
