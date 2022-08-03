@@ -1,24 +1,31 @@
 #!/bin/bash
 
+cfg=$(readlink -f input/gem5-rtas23.py)
+
+if [ -z $M3_ISA ]; then
+    echo "Please define M3_ISA." >&2
+    exit 1
+fi
+
 . tools/jobs.sh
 
 cd m3 || exit 1
 
 export M3_BUILD=release
-export M3_TARGET=gem5 M3_ISA=x86_64
+export M3_TARGET=gem5
 if [ -z "$M3_GEM5_DBG" ]; then
     export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
 fi
 export M3_GEM5_CPU=DerivO3CPU
-export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
+export M3_GEM5_CPUFREQ=2GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
-export M3_GEM5_CFG=config/caches.py
+export M3_GEM5_CFG="$cfg"
 
 ./b || exit 1
 
 run_bench() {
     type=$2
-    dirname=m3-ipc-gem5-$type
+    dirname=m3-ipc-gem5-$M3_ISA-$type
     export M3_OUT=$1/$dirname
     mkdir -p "$M3_OUT"
 
