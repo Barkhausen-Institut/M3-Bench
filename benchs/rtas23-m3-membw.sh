@@ -9,7 +9,7 @@ export M3_TARGET=gem5 M3_ISA=riscv
 if [ -z "$M3_GEM5_DBG" ]; then
     export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
 fi
-export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
+export M3_GEM5_CPUFREQ=2GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
 export M3_GEM5_CFG=config/caches.py
 

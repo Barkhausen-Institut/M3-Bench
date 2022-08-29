@@ -3,7 +3,7 @@
 . tools/helper.sh
 
 extract_bw() {
-    grep "$2.*PRINT:.*Transferred" "$1/m3-membw-$3/gem5.log" | awk -e '{ print($9) }'
+    grep "$2.*PRINT:.*Transferred" "$1/m3-membw-$3/gem5.log" | awk -e '{ printf("%.0f\n", $9) }'
 }
 
 extract_fg() {
