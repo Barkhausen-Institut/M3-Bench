@@ -63,7 +63,6 @@ data_sum <- data %>%
         max=max(latency),
         sd=sd(latency)
     )
-print(data_sum)
 
 cols <- c("FPGA-M³", "S-RISCV-M³", "S-x86-NOVA", "S-x86-M³", "H-ARM-L4Re", "H-x86-NOVA")
 colnames <- c("FPGA", "S-RISCV", "S-x86", "S-x86", "H-ARM", "H-x86")
@@ -77,7 +76,6 @@ micro_no_outlier <- micro_no_outlier %>%
         sd=sd(latency)
     )
 micro_no_outlier$platformos <- paste(micro_no_outlier$platform, micro_no_outlier$os, sep="-")
-print(micro_no_outlier)
 
 micro_no_outlier <- micro_no_outlier %>%
   mutate(platformos=factor(platformos, levels=cols))
