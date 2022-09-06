@@ -21,6 +21,14 @@ extract_gem5_nova() {
         done
 }
 
+extract_hw_nova() {
+    grep -E "\[pingpong\] ! PingpongXPd.cc:[[:digit:]]+ [[:digit:]]+ ok" \
+            "$1/nre-ipc-hw-$2/log.txt" | awk -e '{ print($4) }' | \
+        while read latency; do
+            echo "H-x86 NOVA remote $latency"
+        done
+}
+
 extract_m3() {
     if [ "$2" = "hw" ]; then
         pl="FPGA"
@@ -46,17 +54,11 @@ for isa in riscv64 x86_64; do
     extract_gem5_linux "$1" $isa 1 >> "$1/pingpong.dat"
 done
 extract_gem5_nova "$1" x86_64 >> "$1/pingpong.dat"
+extract_hw_nova "$1" x86_64 >> "$1/pingpong.dat"
 for type in remote; do
     for pl in hw gem5-riscv gem5-x86_64; do
         extract_m3 "$1" $pl $type >> "$1/pingpong.dat"
     done
-done
-
-# TODO get real numbers
-echo "H-x86 NOVA remote 8000" >> "$1/pingpong.dat"
-echo "H-x86 NOVA remote 12000" >> "$1/pingpong.dat"
-for i in {0..1000}; do
-    echo "H-x86 NOVA remote 8500" >> "$1/pingpong.dat"
 done
 
 extract_sriov "$1" >> "$1/pingpong.dat"
