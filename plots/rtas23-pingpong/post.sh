@@ -43,12 +43,6 @@ extract_m3() {
     done
 }
 
-extract_sriov() {
-    while IFS="," read -r b1 b32 b256 b2032; do
-        echo "H-NIC Linux remote $b1"
-    done < <(tail -n +2 "$1/lx-arm-sriov.csv")
-}
-
 echo "platform os type latency" > "$1/pingpong.dat"
 for isa in riscv64 x86_64; do
     extract_gem5_linux "$1" $isa 1 >> "$1/pingpong.dat"
@@ -60,8 +54,6 @@ for type in remote; do
         extract_m3 "$1" $pl $type >> "$1/pingpong.dat"
     done
 done
-
-extract_sriov "$1" >> "$1/pingpong.dat"
 
 # TODO get real numbers
 echo "H-ARM L4Re remote 1500" >> "$1/pingpong.dat"

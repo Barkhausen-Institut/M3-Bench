@@ -39,8 +39,7 @@ for(po in micro_plos) {
 lx_no_outlier <- data.frame()
 lx_plos <- list(
     c("Linux", "S-RISCV"),
-    c("Linux", "S-x86"),
-    c("Linux", "H-NIC")
+    c("Linux", "S-x86")
 )
 for(po in lx_plos) {
     # remove measurements that are considered outliers for this specific OS and platform
@@ -91,8 +90,8 @@ ggp1 <- ggplot(micro_no_outlier, aes(x=platformos, y=mean, colour=os, fill=os)) 
 
 # ----
 
-cols <- c("S-RISCV-Linux", "S-x86-Linux", "H-NIC-Linux")
-colnames <- c("S-RISCV", "S-x86", "H-NIC")
+cols <- c("S-RISCV-Linux", "S-x86-Linux")
+colnames <- c("S-RISCV", "S-x86")
 
 # build summary for data without outliers (for the plot)
 lx_no_outlier <- lx_no_outlier %>%
@@ -144,7 +143,7 @@ for(po in lx_plos) {
 #     geom_violin() +
 #     theme_bw()
 
-layout <- rbind(c(1,1,1,1,1,2,2,2))
+layout <- rbind(c(1,1,1,1,1,2,2))
 ggsave(
     as.character(args[1]),
     arrangeGrob(ggp1, ggp2, layout_matrix = layout),
