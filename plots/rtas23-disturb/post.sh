@@ -18,7 +18,7 @@ for fgm in compute memory transfers msgs; do
     none=$(extract_time "$1" $fgm "none")
     for bgm in compute memory transfers msgs; do
         dist=$(extract_time "$1" $fgm $bgm)
-        diff=$(echo "scale=4; ($dist. / $none.)" | bc)
+        diff=$(echo "scale=4; ($dist. / $none.) - 1" | bc)
         echo "$fgm $bgm: $none $dist (+/- $(extract_stddev "$1" $fgm $bgm)) --> $diff"
         echo "$fgm $bgm $diff" >> "$1/disturb.dat"
     done
