@@ -25,7 +25,7 @@ micro_plos <- list(
     c("M³", "S-RISCV"),
     c("NOVA", "S-x86"),
     c("M³", "S-x86"),
-    c("L4Re", "H-ARM"),
+    c("L4Re", "H-Arm"),
     c("NOVA", "H-x86")
 )
 for(po in micro_plos) {
@@ -50,7 +50,7 @@ for(po in lx_plos) {
 }
 
 # cols <- c("hw", "gem5-riscv", "gem5-x86_64", "sriov", "arm", "x86pc")
-# colnames <- c("FPGA", "gem5 (RISC-V)", "gem5 (x86-64)", "SR-IOV HW", "ARM HW", "x86 HW")
+# colnames <- c("FPGA", "gem5 (RISC-V)", "gem5 (x86-64)", "SR-IOV HW", "Arm HW", "x86 HW")
 
 # build summary for data with outliers
 data_sum <- data %>%
@@ -63,8 +63,8 @@ data_sum <- data %>%
         sd=sd(latency)
     )
 
-cols <- c("FPGA-M³", "S-RISCV-M³", "S-x86-NOVA", "S-x86-M³", "H-ARM-L4Re", "H-x86-NOVA")
-colnames <- c("FPGA", "S-RISCV", "S-x86", "S-x86", "H-ARM", "H-x86")
+cols <- c("FPGA-M³", "S-RISCV-M³", "S-x86-NOVA", "S-x86-M³", "H-Arm-L4Re", "H-x86-NOVA")
+colnames <- c("FPGA", "S-RISCV", "S-x86", "S-x86", "H-Arm", "H-x86")
 
 # build summary for data without outliers (for the plot)
 micro_no_outlier <- micro_no_outlier %>%

@@ -29,6 +29,12 @@ extract_hw_nova() {
         done
 }
 
+extract_l4re() {
+    while read latency; do
+        echo "H-Arm L4Re remote $latency"
+    done < "$1/l4re-ipc-arm/v3u-mfis-data.txt"
+}
+
 extract_m3() {
     if [ "$2" = "hw" ]; then
         pl="FPGA"
@@ -54,10 +60,11 @@ for type in remote; do
         extract_m3 "$1" $pl $type >> "$1/pingpong.dat"
     done
 done
+extract_l4re "$1" >> "$1/pingpong.dat"
 
-# TODO get real numbers
-echo "H-ARM L4Re remote 1500" >> "$1/pingpong.dat"
-echo "H-ARM L4Re remote 1600" >> "$1/pingpong.dat"
-for i in {0..1000}; do
-    echo "H-ARM L4Re remote 1550" >> "$1/pingpong.dat"
-done
+# # TODO get real numbers
+# echo "H-ARM L4Re remote 1500" >> "$1/pingpong.dat"
+# echo "H-ARM L4Re remote 1600" >> "$1/pingpong.dat"
+# for i in {0..1000}; do
+#     echo "H-ARM L4Re remote 1550" >> "$1/pingpong.dat"
+# done
