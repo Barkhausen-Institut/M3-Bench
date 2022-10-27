@@ -3,6 +3,7 @@
 . tools/jobs.sh
 
 export GEM5_DIR=$(readlink -f gem5-official)
+export LX_PLATFORM=gem5
 
 cd bench-lx || exit 1
 
