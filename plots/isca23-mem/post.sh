@@ -22,14 +22,19 @@ extract_shm() {
     ' "$1/shm-mem/log.txt"
 }
 
+extract_sriov() {
+    tail -n +2 "$1/sriov-mem/results.csv" | while read line; do
+        for i in {1..8}; do
+            time=$(echo "$line" | cut -d ',' -f "$i")
+            if [ $time -ne 0 ]; then
+                echo "SR-IOV+IOMMUs $((1 << ((i - 1) * 4)))b $time"
+            fi
+        done
+    done
+}
+
 echo "platform datasize latency" > "$1/mem.dat"
 extract_m3 "$1" "memcpy" >> "$1/mem.dat"
 extract_m3 "$1" "tcu" >> "$1/mem.dat"
 extract_shm "$1" >> "$1/mem.dat"
-
-i=0
-while [ $i -le 28 ]; do
-    latency=$((3000 + (1 << i) * 100))
-    echo "SR-IOV $((1 << i))b $latency" >> "$1/mem.dat"
-    i=$((i + 4))
-done
+extract_sriov "$1" >> "$1/mem.dat"

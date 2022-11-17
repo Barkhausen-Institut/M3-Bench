@@ -15,7 +15,7 @@ columns <- c("1b", "16b", "256b", "4KiB", "64KiB", "1MiB", "16MiB", "256MiB")
 
 ggplot(data=ipc, mapping=aes(x=datasize, y=latency, fill=platform)) +
   scale_x_discrete(limits=columns) +
-  geom_bar(stat="identity", position=position_dodge(), colour="black", size=.1) +
+  geom_bar(stat="summary", position=position_dodge(), colour="black", size=.1) +
   scale_y_log10() +
   scale_fill_manual(values=colors) +
   labs(x="Data size (bytes)",y="Latency (cycles)") +
