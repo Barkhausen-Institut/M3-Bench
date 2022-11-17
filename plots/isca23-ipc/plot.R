@@ -5,12 +5,15 @@ args <- commandArgs(trailingOnly = TRUE)
 
 ipc <- read.table(header = TRUE, file = as.character(args[2]))
 
+print(ipc)
+
 colors <- brewer.pal(n = 3, name = "Pastel1")
 columns <- c("1b", "4b", "16b", "64b", "256b", "1024b", "2032b")
 
 ggplot(data=ipc, mapping=aes(x=msgsize, y=latency, fill=platform)) +
   scale_x_discrete(limits=columns) +
   geom_bar(stat="identity", position=position_dodge(), colour="black", size=.1) +
+  geom_errorbar(aes(ymin=latency-sd, ymax=latency+sd), width=.4, position=position_dodge(.9)) +
   scale_fill_manual(values=colors) +
   labs(x="Message size (bytes)",y="Latency (cycles)") +
   theme_bw() +
