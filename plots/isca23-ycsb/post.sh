@@ -26,21 +26,51 @@ extract_shm() {
             replay += 1
             if (replay >= 2) {
                 if (match($0, /total: ([0-9]+) cycles, xfer: ([0-9]+) cycles, comp: ([0-9]+) cycles/, m) != 0) {
-                    printf("MMU+IPIs Transfers %d\n", m[2])
-                    printf("MMU+IPIs RPCs %d\n", m[1] - (m[2] + m[3]))
-                    printf("MMU+IPIs Compute %d\n", m[3])
+                    printf("IPIs+MMU Transfers %d\n", m[2])
+                    printf("IPIs+MMU RPCs %d\n", m[1] - (m[2] + m[3]))
+                    printf("IPIs+MMU Compute %d\n", m[3])
                 }
             }
         }
     ' "$1/shm-ycsb/log.txt"
 }
 
+extract_sriov() {
+    declare -A comps
+    c=0
+    while read line; do
+        comps[$c]=$line
+        c=$((c + 1))
+    done < <(grep "compute:" "input/ycsb-read.log" | sed -e 's/compute: //g')
+
+    c=0
+    xfers=0
+    rpcs=0
+    comp=0
+    OLDIFS=$IFS
+    IFS=","
+    tail -n +2 "$1/sriov-ycsb/results.csv" | while read total rdma; do
+        if [ $c -eq ${#comps[@]} ]; then
+            echo "SR-IOV+IOMMUs Transfers $xfers"
+            echo "SR-IOV+IOMMUs RPCs $rpcs"
+            echo "SR-IOV+IOMMUs Compute $comp"
+            xfers=0
+            rpcs=0
+            comp=0
+            c=0
+        fi
+
+        comp=$((comp + comps[$c]))
+        rpc=$((total - (comps[$c] + rdma)))
+        rpcs=$((rpcs + rpc))
+        xfers=$((xfers + rdma))
+
+        c=$((c + 1))
+    done
+    IFS=$OLDIFS
+}
+
 echo "platform type latency" > "$1/ycsb.dat"
 extract_m3 "$1" >> "$1/ycsb.dat"
 extract_shm "$1" >> "$1/ycsb.dat"
-
-for i in 1 2 3 4 5 6 7 8; do
-    echo "SR-IOV Transfers $((20000 * 1000))" >> "$1/ycsb.dat"
-    echo "SR-IOV RPCs $((150000 * 2000))" >> "$1/ycsb.dat"
-    echo "SR-IOV Compute 97660377" >> "$1/ycsb.dat"
-done
+extract_sriov "$1" >> "$1/ycsb.dat"
