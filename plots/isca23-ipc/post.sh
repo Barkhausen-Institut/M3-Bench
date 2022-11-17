@@ -22,11 +22,15 @@ extract_shm() {
     ' "$1/shm-ipc/log.txt"
 }
 
+extract_sriov() {
+    tail -n +2 "$1/sriov-ipc/results.csv" | while read line; do
+        size=$(echo "$line" | cut -d ',' -f 1)
+        time=$(echo "$line" | cut -d ',' -f 2)
+        echo "SR-IOV+IOMMUs ${size}b $time"
+    done
+}
+
 echo "platform msgsize latency" > "$1/ipc.dat"
 extract_m3 "$1" >> "$1/ipc.dat"
 extract_shm "$1" >> "$1/ipc.dat"
-
-for s in 1 2 4 8 16 32 64 128 256 512 1024 2032; do
-    latency=$((150000 + s * 10))
-    echo "SR-IOV ${s}b $latency" >> "$1/ipc.dat"
-done
+extract_sriov "$1" >> "$1/ipc.dat"

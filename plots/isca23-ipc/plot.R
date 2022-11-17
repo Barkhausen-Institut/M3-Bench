@@ -11,7 +11,6 @@ columns <- c("1b", "4b", "16b", "64b", "256b", "1024b", "2032b")
 ggplot(data=ipc, mapping=aes(x=msgsize, y=latency, fill=platform)) +
   scale_x_discrete(limits=columns) +
   geom_bar(stat="identity", position=position_dodge(), colour="black", size=.1) +
-  scale_y_log10() +
   scale_fill_manual(values=colors) +
   labs(x="Message size (bytes)",y="Latency (cycles)") +
   theme_bw() +
