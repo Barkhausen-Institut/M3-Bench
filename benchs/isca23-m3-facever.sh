@@ -31,7 +31,7 @@ run_bench() {
         export M3_GPU_COMP=$gpu
         export M3_STORAGE_COMP=$storage
         export M3_DATA_SIZE=$size
-        export M3_RUNS=110
+        export M3_RUNS=10
 
         "$inputdir/facever.cfg" > "$M3_OUT/boot.gen.xml"
         ./b run "$M3_OUT/boot.gen.xml" -n 2>&1 | tee "$M3_OUT/output.txt"
@@ -45,6 +45,12 @@ run_bench() {
 }
 
 run_bench "$1" 0 0 0 0
-run_bench "$1" $((256 * 1024)) $((3 * 350 * 1000)) $((3 * 50 * 1000)) 10000
-run_bench "$1" $((512 * 1024)) $((3 * 700 * 1000)) $((3 * 100 * 1000)) 10000
-run_bench "$1" $((1024 * 1024)) $((3 * 1400 * 1000)) $((3 * 200 * 1000)) 10000
+
+# the FractOS CPU supposedly didn't run in Turbomode due to too much load and therefore at 2.1GHz
+wl256=$(echo "256 * 2100" | bc)
+wl512=$(echo "512 * 2100" | bc)
+wl1024=$(echo "1024 * 2100" | bc)
+# from the FractOS benchmark scripts: assume 0.3 for storage time, 1.3 for GPU time
+run_bench "$1" $((256 * 1024)) $(printf "%.0f" $(echo "$wl256 * 1.3" | bc)) $(printf "%.0f" $(echo "$wl256 * 0.3" | bc)) 10000
+run_bench "$1" $((512 * 1024)) $(printf "%.0f" $(echo "$wl512 * 1.3" | bc)) $(printf "%.0f" $(echo "$wl512 * 0.3" | bc)) 10000
+run_bench "$1" $((1024 * 1024)) $(printf "%.0f" $(echo "$wl1024 * 1.3" | bc)) $(printf "%.0f" $(echo "$wl1024 * 0.3" | bc)) 10000

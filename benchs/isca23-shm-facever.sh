@@ -26,6 +26,12 @@ run() {
 }
 
 run 0 0 0 0
-run $((256 * 1024)) $((3 * 350 * 1000)) $((3 * 50 * 1000)) 10000
-run $((512 * 1024)) $((3 * 700 * 1000)) $((3 * 100 * 1000)) 10000
-run $((1024 * 1024)) $((3 * 1400 * 1000)) $((3 * 200 * 1000)) 10000
+
+# the FractOS CPU supposedly didn't run in Turbomode due to too much load and therefore at 2.1GHz
+wl256=$(echo "256 * 2100" | bc)
+wl512=$(echo "512 * 2100" | bc)
+wl1024=$(echo "1024 * 2100" | bc)
+# from the FractOS benchmark scripts: assume 0.3 for storage time, 1.3 for GPU time
+run $((256 * 1024)) $(printf "%.0f" $(echo "$wl256 * 1.3" | bc)) $(printf "%.0f" $(echo "$wl256 * 0.3" | bc)) 10000
+run $((512 * 1024)) $(printf "%.0f" $(echo "$wl512 * 1.3" | bc)) $(printf "%.0f" $(echo "$wl512 * 0.3" | bc)) 10000
+run $((1024 * 1024)) $(printf "%.0f" $(echo "$wl1024 * 1.3" | bc)) $(printf "%.0f" $(echo "$wl1024 * 0.3" | bc)) 10000
