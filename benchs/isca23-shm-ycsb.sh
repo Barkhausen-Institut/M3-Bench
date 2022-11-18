@@ -13,7 +13,7 @@ echo
 scp input/ycsb-read.log altra:isca-shm
 ssh altra "source .profile && cd isca-shm; " \
     "echo -n $pwd | sudo -S cpupower frequency-set -g performance &>/dev/null; " \
-    "cargo r --release --bin ycsb -- -w 1 -r 10 -f 2800 ycsb-read.log ;" \
+    "cargo r --release --bin ycsb -- -w 10 -r 1000 -f 2800 ycsb-read.log ;" \
     "echo -n $pwd | sudo -S cpupower frequency-set -g schedutil &>/dev/null" &> "$OUT/log.txt"
 
 /bin/echo -e "\e[1mFinished $dirname\e[0m"

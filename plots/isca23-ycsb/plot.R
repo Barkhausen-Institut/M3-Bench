@@ -9,7 +9,7 @@ data$latency <- data$latency / 1000000
 
 colors <- brewer.pal(n = 3, name = "Pastel1")
 factor_types <- c("Transfers", "RPCs", "Compute")
-platforms <- c("SR-IOV+IOMMUs", "M³", "IPIs+MMU")
+platforms <- c("SR-IOV+IOMMU", "M³", "IPIs+MMU")
 
 errors <- data %>%
     group_by(platform, type) %>%
