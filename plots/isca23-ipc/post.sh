@@ -26,7 +26,7 @@ extract_sriov() {
     tail -n +2 "$1/sriov-ipc/results.csv" | while read line; do
         size=$(echo "$line" | cut -d ',' -f 1)
         time=$(echo "$line" | cut -d ',' -f 2)
-        echo "SR-IOV+IOMMUs ${size}b $time nan"
+        echo "SR-IOV+IOMMU ${size}b $time nan"
     done
 }
 
