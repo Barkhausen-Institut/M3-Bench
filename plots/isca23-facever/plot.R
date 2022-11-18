@@ -37,7 +37,7 @@ ggp1 <- ggplot(data=data_s256, mapping=aes(x=platform, y=latency, fill=factor(ty
   scale_y_continuous(limits = c(0,7)) +
   labs(x="256 KiB",y="Lat. (M cycles)") +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), text=element_text(size=10), legend.position="none")
+  theme(axis.text.x = element_text(angle = 45, vjust = .5, hjust=.5), text=element_text(size=10), legend.position="none")
 
 data_s512 <- filter(data, size == "524288")
 errors_s512 <- get_errors(data_s512)
@@ -49,7 +49,7 @@ ggp2 <- ggplot(data=data_s512, mapping=aes(x=platform, y=latency, fill=factor(ty
   scale_y_continuous(limits = c(0,7)) +
   labs(x="512 KiB",y="Lat. (M cycles)") +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), text=element_text(size=10), legend.position="none")
+  theme(axis.text.x = element_text(angle = 45, vjust = .5, hjust=.5), text=element_text(size=10), legend.position="none")
 
 data_s1024 <- filter(data, size == "1048576")
 errors_s1024 <- get_errors(data_s1024)
@@ -61,11 +61,11 @@ ggp3 <- ggplot(data=data_s1024, mapping=aes(x=platform, y=latency, fill=factor(t
   scale_y_continuous(limits = c(0,7)) +
   labs(x="1024 KiB",y="Lat. (M cycles)") +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), text=element_text(size=10), legend.position="none")
+  theme(axis.text.x = element_text(angle = 45, vjust = .5, hjust=.5), text=element_text(size=10), legend.position="none")
 
 layout <- rbind(c(1,2,3))
 ggsave(
   as.character(args[1]),
   arrangeGrob(ggp1, ggp2, ggp3, layout_matrix = layout),
-  width=10, height=5, units="cm"
+  width=10, height=4, units="cm"
 )

@@ -14,6 +14,7 @@ data <- filter(raw, platform != "SR-IOV+IOMMU")
 sriov <- filter(raw, platform == "SR-IOV+IOMMU")
 
 colors <- brewer.pal(n = 4, name = "Pastel1")
+colors <- c(colors[1], colors[2], colors[4], colors[3])
 columns <- c("1b", "16b", "256b", "4K", "64K", "1M", "16M", "256M")
 
 for(v in columns) {
@@ -36,4 +37,4 @@ ggplot(data=data, mapping=aes(x=datasize, y=latency, fill=platform)) +
   theme_bw() +
   theme(text=element_text(size=10), legend.title=element_blank(), legend.margin=margin(0,0,0,0))
 
-ggsave(as.character(args[1]), width=12, height=5, units="cm")
+ggsave(as.character(args[1]), width=12, height=4, units="cm")
