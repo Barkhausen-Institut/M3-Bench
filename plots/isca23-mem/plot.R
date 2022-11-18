@@ -10,8 +10,8 @@ raw$datasize[raw$datasize == "1048576b"] <- "1M"
 raw$datasize[raw$datasize == "16777216b"] <- "16M"
 raw$datasize[raw$datasize == "268435456b"] <- "256M"
 
-data <- filter(raw, platform != "SR-IOV+IOMMUs")
-sriov <- filter(raw, platform == "SR-IOV+IOMMUs")
+data <- filter(raw, platform != "SR-IOV+IOMMU")
+sriov <- filter(raw, platform == "SR-IOV+IOMMU")
 
 colors <- brewer.pal(n = 4, name = "Pastel1")
 columns <- c("1b", "16b", "256b", "4K", "64K", "1M", "16M", "256M")
@@ -20,7 +20,7 @@ for(v in columns) {
     sub <- filter(sriov, datasize == v)
     avg <- round(mean(sub$latency))
     stddev <- round(sd(sub$latency))
-    data[nrow(data) + 1, 1:2] = c("SR-IOV+IOMMUs", v)
+    data[nrow(data) + 1, 1:2] = c("SR-IOV+IOMMU", v)
     data[nrow(data), 3:4] = c(avg, stddev)
 }
 

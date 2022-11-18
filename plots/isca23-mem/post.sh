@@ -28,7 +28,7 @@ extract_sriov() {
             time=$(echo "$line" | cut -d ',' -f "$i")
             if [ $time -ne 0 ]; then
                 size=$((1 << ((i - 1) * 4)))
-                echo "SR-IOV+IOMMUs ${size}b $time 0"
+                echo "SR-IOV+IOMMU ${size}b $time 0"
             fi
         done
     done
