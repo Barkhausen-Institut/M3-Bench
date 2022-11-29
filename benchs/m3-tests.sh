@@ -25,11 +25,14 @@ run_bench() {
     mkdir -p $M3_OUT
 
     bootprefix=""
+    if [ "$3" = "coverage" ]; then
+        export M3_TILETYPE=b
+    fi
     if [ "$3" = "sh" ]; then
         export M3_TILETYPE=b
         bootprefix="shared/"
     elif [[ "$bench" =~ "ycsb-bench" ]]; then
-        bootprefix="kachel/"
+        bootprefix=""
     fi
 
     export M3_GEM5_CPU=TimingSimpleCPU
@@ -44,13 +47,13 @@ run_bench() {
     elif [ "$bench" = "standalone" ]; then
         export M3_CORES=7
         export M3_GEM5_CFG=config/spm.py
-        cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
-    elif [ "$bench" = "libctest" ]; then
+        cp boot/$bench.xml $M3_OUT/boot.gen.xml
+    elif [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ]; then
         export M3_FS=default-$bpe.img
         if [ "$3" = "sh" ]; then
             cp boot/shared/$bench.xml $M3_OUT/boot.gen.xml
         else
-            cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
+            cp boot/$bench.xml $M3_OUT/boot.gen.xml
         fi
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
@@ -94,8 +97,13 @@ run_bench() {
     jobs_started
 
     # set memory and time limits
-    ulimit -v 5000000   # 5GB virt mem
-    ulimit -t 900       # 15min CPU time
+    if [ "$M3_BUILD" = "coverage" ]; then
+        ulimit -v 6000000   # 5GB virt mem
+        ulimit -t 1500      # 25min CPU time
+    else
+        ulimit -v 5000000   # 5GB virt mem
+        ulimit -t 900       # 15min CPU time
+    fi
 
     ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
 
@@ -108,12 +116,12 @@ run_bench() {
     fi
 }
 
-build_types="debug release"
-build_isas="riscv arm x86_64"
-run_isas="riscv arm x86_64"
+build_types="debug release coverage"
+build_isas="riscv x86_64 arm"
+run_isas="riscv x86_64"
 
 if [ "$M3_TEST" != "" ]; then
-    test_args=$(python -c '
+    test_args=$(python3 -c '
 import sys
 p = sys.argv[1].split("-")
 if len(p) < 4:
@@ -124,31 +132,43 @@ fi
 
 if [ "$M3_TEST" != "" ]; then
     build_isas=$(echo $test_args | cut -d ' ' -f 3)
-    if [[ $M3_TEST == hello-* ]]; then
+    if [[ $test_args == *coverage* ]]; then
+        export M3_BUILD=coverage
+        build_types="coverage"
+    elif [[ $M3_TEST == hello-* ]]; then
+        export M3_BUILD=release
         build_types="debug"
     else
+        export M3_BUILD=release
         build_types="release"
     fi
 fi
 
 for btype in $build_types; do
     for isa in $build_isas; do
+        # we only generate coverage for riscv
+        if [ "$btype" = "coverage" ] && [ "$isa" != "riscv" ]; then
+            continue
+        fi
+
         # build everything
         export M3_ISA=$isa
         M3_BUILD=$btype ./b || exit 1
 
         # create FS images
         build=build/$M3_TARGET-$M3_ISA-$btype
-        for bpe in 16 32 64; do
-            $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench 65536 4096 $bpe
-            $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default 16384 512 $bpe
+        for bpe in 32 64; do
+            case "$btype" in
+                coverage) benchblks=$((160*1024)); defblks=$((160*1024)) ;;
+                *)        benchblks=$((64*1024)); defblks=$((16*1024)) ;;
+            esac
+            $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $benchblks 4096 $bpe
+            $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default $defblks 512 $bpe
         done
    done
 done
 
 jobs_init $2
-
-export M3_BUILD=release
 
 # run a single test?
 if [ "$M3_TEST" != "" ]; then
@@ -163,7 +183,7 @@ benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
-benchs+=" standalone libctest msgchan"
+benchs+=" standalone libctest rust-std-test msgchan"
 benchs+=" ycsb-bench-udp ycsb-bench-tcp"
 benchs+=" voiceassist-udp voiceassist-tcp"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
@@ -177,10 +197,11 @@ if [ "$M3_TESTS" != "" ]; then
     benchs="$M3_TESTS"
 fi
 
+export M3_BUILD=release
 for bpe in 32 64; do
-    for isa in $run_isas; do
-        for tiletype in a b sh; do
-            for test in $benchs; do
+   for isa in $run_isas; do
+       for tiletype in a b sh; do
+           for test in $benchs; do
                 # standalone works only with SPM
                 if [ "$test" = "standalone" ] && [ "$tiletype" != "a" ]; then
                     continue;
@@ -190,6 +211,17 @@ for bpe in 32 64; do
             done
         done
     done
+done
+
+# generate code coverage
+export M3_BUILD=coverage
+for test in $benchs; do
+    # standalone works only with SPM
+    if [ "$test" = "standalone" ]; then
+        continue;
+    fi
+
+    jobs_submit run_bench $1 $test coverage riscv 32
 done
 
 jobs_wait

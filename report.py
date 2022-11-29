@@ -20,14 +20,14 @@ TESTS = [
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'cpp-net-tests', 'rust-net-tests', 'cpp-net-benchs', 'rust-net-benchs',
     'hashmux-benchs',
-    'abort-test', 'hello', 'standalone', 'libctest',
+    'abort-test', 'hello', 'standalone', 'libctest', 'rust-std-test',
     'standalone-sndrcv', 'memtest', 'msgchan',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
     'voiceassist-udp', 'voiceassist-tcp',
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|host-debug|host-release|host-coverage|hw-debug|hw-release)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|cov|hw-debug|hw-release)-(\S+?)-(\d+)$')
 
 def file_contents(path):
     with open(path) as f:

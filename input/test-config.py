@@ -50,7 +50,6 @@ for i in range(0, num_tiles):
                           l1size=l1size,
                           l2size=l2size,
                           spmsize=spmsize,
-                          tcupos=0,
                           epCount=num_eps)
     tile.tcu.max_noc_packet_size = '2kB'
     tile.tcu.buf_size = '2kB'
@@ -65,7 +64,7 @@ for i in range(0, num_copy):
                            no=num_tiles + i,
                            accel='copy',
                            memTile=mem_tile,
-                           spmsize='4MB',
+                           spmsize='32MB',
                            epCount=num_eps)
     tile.tcu.max_noc_packet_size = '2kB'
     tile.tcu.buf_size = '2kB'
@@ -78,7 +77,7 @@ for i in range(0, num_indir):
                            no=num_tiles + num_copy + i,
                            accel='indir',
                            memTile=mem_tile,
-                           spmsize='4MB',
+                           spmsize='32MB',
                            epCount=num_eps)
     tile.tcu.max_noc_packet_size = '2kB'
     tile.tcu.buf_size = '2kB'

@@ -7,15 +7,12 @@ export M3_TARGET=gem5
 
 testgem5=true
 testhw=true
-testhost=true
 branch=dev
 force=false
 buildgem5=true
 
 while [ $# -gt 0 ]; do
-    if [ "$1" = "--skip-host" ]; then
-        testhost=false
-    elif [ "$1" = "--skip-hw" ]; then
+    if [ "$1" = "--skip-hw" ]; then
         testhw=false
     elif [ "$1" = "--skip-gem5" ]; then
         testgem5=false
@@ -40,8 +37,8 @@ mkdir -p $out
 echo -n > $out/nightly.log
 
 echo -e "\033[1mUpdating repositories...\033[0m"
-( cd m3 && git checkout $branch && git pull os $branch && git submodule update --init \
-  platform/gem5 src/libs/{leveldb,musl,flac,llvmprofile} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
+( cd m3 && git checkout $branch && git pull origin $branch && git submodule update --init \
+  platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 
@@ -83,7 +80,7 @@ done
 if $testgem5; then
     if $buildgem5; then
         echo -e "\033[1mBuilding gem5...\033[0m"
-        ( cd m3/platform/gem5 && scons -j16 build/{X86,ARM,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
+        ( cd m3/platform/gem5 && scons -j16 build/{X86,RISCV}/gem5.opt ) 2>&1 | tee -a $out/nightly.log
         if [ $? -ne 0 ]; then exit 1; fi
     fi
 
@@ -96,17 +93,12 @@ if $testhw; then
     ./run.sh $outname "m3-tests-hw" "" "" 1 2>&1 | tee -a $out/nightly.log
 fi
 
-if $testhost; then
-    echo -e "\033[1mRunning host tests...\033[0m"
-    ./run.sh $outname "m3-tests-host" "" "" 1 2>&1 | tee -a $out/nightly.log
-
-    echo -e "\033[1mGenerating code-coverage report...\033[0m"
-    (
-        cd m3 && \
-            grcov . -s . --binary-path build -t html \
-                --ignore-not-existing -o ../reports/cov-$(date --iso-8601)
-    ) | tee -a $out/nightly.log
-fi
+echo -e "\033[1mGenerating code-coverage report...\033[0m"
+(
+    cd m3 && \
+        grcov ../$out/m3-tests-*-cov-riscv-32/coverage-*.profraw -s . --binary-path build/gem5-riscv-coverage/bin -t html \
+            --ignore-not-existing -o ../reports/cov-$(date --iso-8601)
+) | tee -a $out/nightly.log
 
 echo -e "\033[1mGenerating report...\033[0m"
 ./report.py 2>&1 | tee -a $out/nightly.log
