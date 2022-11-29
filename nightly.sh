@@ -95,9 +95,15 @@ fi
 
 echo -e "\033[1mGenerating code-coverage report...\033[0m"
 (
-    cd m3 && \
-        grcov ../$out/m3-tests-*-cov-riscv-32/coverage-*.profraw -s . --binary-path build/gem5-riscv-coverage/bin -t html \
-            --ignore-not-existing -o ../reports/cov-$(date --iso-8601)
+    cd m3
+    covfiles=""
+    for f in ../$out/m3-tests-*-coverage-riscv-32/coverage-*.profraw; do
+        if llvm-profdata-14 show $f >/dev/null; then
+            covfiles="$f $covfiles"
+        fi
+    done
+    grcov $covfiles -s . --binary-path build/gem5-riscv-coverage/bin -t html \
+        --ignore-not-existing -o ../reports/cov-$(date --iso-8601)
 ) | tee -a $out/nightly.log
 
 echo -e "\033[1mGenerating report...\033[0m"
