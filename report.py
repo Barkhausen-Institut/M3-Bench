@@ -14,8 +14,8 @@ pp = pprint.PrettyPrinter()
 
 NUM_DAYS = 10
 TESTS = [
-    'cpp-benchs', 'rust-benchs', 'rust-unittests', 'hashmux-tests', 'unittests', 'disk-test',
-    'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb',
+    'cpp-benchs', 'rust-benchs', 'rust-unittests', 'hashmux-tests', 'unittests', 'disk-test', 'resmngtest',
+    'tar', 'untar', 'find', 'sort', 'sha256sum', 'sqlite', 'leveldb', 'facever',
     'cat_awk', 'cat_wc', 'grep_awk', 'grep_wc',
     'imgproc-indir-1', 'imgproc-dir-1', 'imgproc-dir-2', 'imgproc-dir-3', 'imgproc-dir-4',
     'cpp-net-tests', 'rust-net-tests', 'cpp-net-benchs', 'rust-net-benchs',

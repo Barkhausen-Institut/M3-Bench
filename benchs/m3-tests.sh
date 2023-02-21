@@ -35,21 +35,22 @@ run_bench() {
         bootprefix=""
     fi
 
+    # we always use the FS images generated below
+    export M3_MOD_PATH=build/$M3_TARGET-$M3_ISA-$M3_BUILD/fsimgs-$bpe
+
     export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ] ||
-        [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ] ||
-        [ "$bench" = "hashmux-tests" ] || [ "$bench" = "msgchan" ]; then
-        export M3_FS=default-$bpe.img
+        [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ] || [ "$bench" = "facever" ] ||
+        [ "$bench" = "hashmux-tests" ] || [ "$bench" = "msgchan" ] || [ "$bench" = "resmngtest" ]; then
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         if [ "$bench" = "hello" ]; then
             export M3_BUILD=debug
         fi
     elif [ "$bench" = "standalone" ]; then
-        export M3_CORES=7
+        export M3_CORES=8
         export M3_GEM5_CFG=config/spm.py
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ]; then
-        export M3_FS=default-$bpe.img
         if [ "$3" = "sh" ]; then
             cp boot/shared/$bench.xml $M3_OUT/boot.gen.xml
         else
@@ -62,7 +63,6 @@ run_bench() {
         export M3_GEM5_CFG=config/aborttest.py
         cp boot/hello.xml $M3_OUT/boot.gen.xml
     else
-        export M3_FS=bench-$bpe.img
         if [ "$5" = "64" ]; then
             export M3_GEM5_CPU=DerivO3CPU
         fi
@@ -158,12 +158,16 @@ for btype in $build_types; do
         # create FS images
         build=build/$M3_TARGET-$M3_ISA-$btype
         for bpe in 32 64; do
+            bmoddir=build/$M3_TARGET-$M3_ISA-$btype/fsimgs-$bpe
+            mkdir -p $bmoddir
+
             case "$btype" in
                 coverage) benchblks=$((160*1024)); defblks=$((160*1024)) ;;
                 *)        benchblks=$((64*1024)); defblks=$((16*1024)) ;;
             esac
-            $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $benchblks 4096 $bpe
-            $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default $defblks 512 $bpe
+
+            $build/tools/mkm3fs $bmoddir/bench.img $build/src/fs/bench $benchblks 4096 $bpe
+            $build/tools/mkm3fs $bmoddir/default.img $build/src/fs/default $defblks 512 $bpe
         done
    done
 done
@@ -178,8 +182,8 @@ if [ "$M3_TEST" != "" ]; then
 fi
 
 benchs=""
-benchs+="rust-unittests hashmux-tests rust-benchs unittests cpp-benchs hashmux-benchs"
-benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs"
+benchs+="rust-unittests hashmux-tests rust-benchs unittests cpp-benchs hashmux-benchs resmngtest"
+benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs facever"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
@@ -212,7 +216,7 @@ for bpe in 32 64; do
         done
     done
 done
-
+ 
 # generate code coverage
 export M3_BUILD=coverage
 for test in $benchs; do
