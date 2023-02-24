@@ -9,7 +9,7 @@ reset_bitfile() {
         # mine
         cmd="$cmd && source ~/Applications/Xilinx/Vivado_Lab/2019.1/settings64.sh"
     fi
-    cmd="$cmd && make program-fpga"
+    cmd="$cmd && BITFILE=\$HOME/tcu/fpga_tools/bitfiles/fpga_top_v4.4.11.bit make program-fpga"
     ssh -t $M3_HW_SSH $cmd
     # wait a bit until the reset
     sleep 5
