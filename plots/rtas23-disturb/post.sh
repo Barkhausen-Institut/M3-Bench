@@ -13,7 +13,7 @@ extract_stddev() {
 }
 
 for tgt in hw gem5; do
-    for bw in 0 4K 8K 16K 32K 64K 128K 256K 512K 1024K; do
+    for bw in 0 4K 16K 64K 256K 1024K 4096K; do
         if [ "$tgt" = "hw" ] && [ "$bw" != "0" ]; then
             continue;
         fi

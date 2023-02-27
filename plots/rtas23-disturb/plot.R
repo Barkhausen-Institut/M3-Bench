@@ -11,6 +11,6 @@ ggplot(data, aes(fg, bg, fill=diff)) +
   labs(x="Foreground",y="Background") +
   scale_fill_gradient(low="white", high="darkgray", limits = c(-.1, 5)) +
   theme_bw() +
-  theme(text=element_text(size=10), legend.title=element_blank(), legend.margin=margin(0,0,0,0))
+  theme(text=element_text(size=14), legend.title=element_blank(), legend.margin=margin(0,0,0,0))
 
 ggsave(as.character(args[1]), width=12, height=5, units="cm")
