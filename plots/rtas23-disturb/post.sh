@@ -19,13 +19,17 @@ for tgt in hw gem5; do
         fi
 
         echo "fg bg diff" > "$1/$tgt-$bw-disturb.dat"
+        echo "fg bg baseline disturbed diff stddev" > "$1/$tgt-$bw-disturb-stddev.dat"
         for fgm in compute memory transfers msgs; do
             none=$(extract_time "$1" $tgt $bw $fgm "none")
             for bgm in compute memory transfers msgs; do
                 dist=$(extract_time "$1" $tgt $bw $fgm $bgm)
                 diff=$(echo "scale=4; ($dist. / $none.) - 1" | bc)
-                echo "$fgm $bgm: $none $dist (+/- $(extract_stddev "$1" $tgt $bw $fgm $bgm)) --> $diff"
+                stddev=$(extract_stddev "$1" $tgt $bw $fgm $bgm)
+                relstddev=$(echo "scale=4; $stddev. / $none." | bc)
+                echo "$fgm $bgm $none $dist $diff $stddev" >> "$1/$tgt-$bw-disturb-stddev.dat"
                 echo "$fgm $bgm $diff" >> "$1/$tgt-$bw-disturb.dat"
+                echo $fgm $bgm "$relstddev"
             done
         done
     done
