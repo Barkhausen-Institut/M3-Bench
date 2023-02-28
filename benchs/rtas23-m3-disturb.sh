@@ -50,7 +50,7 @@ run_bench() {
             ./b run "$cfg" -n < /dev/null &> "$M3_OUT/output.txt"
         fi
 
-        if [ $? -eq 0 ] && [ "$(grep 'Shutting down' "$M3_OUT/output.txt")" != "" ]; then
+        if [ $? -eq 0 ] && [ "$(grep 'PERF' "$M3_OUT/output.txt")" != "" ]; then
             /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
             break
         else
@@ -76,7 +76,42 @@ gen_config() {
     echo "<config>"
     echo "    <kernel args=\"kernel\" />"
     echo "    <dom>"
-    echo "        <app args=\"root sem=ready1 sem=ready0 sem=ready2\">"
+    echo "        <app args=\"root sem=ready1 sem=ready0 sem=ready2 sem=init\">"
+
+    if [ "$bgmode" = "msgs" ]; then
+        semdowns=2
+    elif [ "$bgmode" != "none" ]; then
+        if [ "$fgmode" = "msgs" ]; then
+            semdowns=4
+        else
+            semdowns=5
+        fi
+    else
+        semdowns=0
+    fi
+
+    if [ "$fgmode" != "msgs" ]; then
+        echo "            <dom tile=\"boom|core\">"
+        echo "                <app args=\"disturber $fgmode 100 $semdowns\">"
+        echo "                    <sem name=\"init\" />"
+        echo "                </app>"
+        echo "            </dom>"
+    else
+        echo "            <dom tile=\"boom|core\">"
+        echo "                <app args=\"ppsender 10000 100 2032 1 $semdowns\">"
+        echo "                    <sgate lname=\"chan\" gname=\"chan1\" label=\"1\" />"
+        echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
+        echo "                    <sem name=\"init\" />"
+        echo "                </app>"
+        echo "            </dom>"
+        echo "            <dom tile=\"boom|core\">"
+        echo "                <app args=\"ppreceiver 10100 2032\">"
+        echo "                    <rgate lname=\"chan\" gname=\"chan1\" msgsize=\"2048\" slots=\"1\" />"
+        echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
+        echo "                </app>"
+        echo "            </dom>"
+    fi
+
     if [ "$bgmode" != "none" ]; then
         if [ "$fgmode" != "msgs" ]; then
             others=5
@@ -89,35 +124,29 @@ gen_config() {
         i=0
         while [ $i -lt $others ]; do
             if [ "$bgmode" != "msgs" ]; then
-                if [ $((i + 1)) -ge $others ]; then
-                    echo "            <dom tile=\"boom+nic|core\">"
-                else
-                    echo "            <dom>"
-                fi
+                echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"disturber $bgmode 100000\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"disturber $bgmode 100000 0\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"disturber $bgmode 100000\" daemon=\"1\">"
+                    echo "                <app args=\"disturber $bgmode 100000 0\" daemon=\"1\">"
                 fi
+                echo "                    <sem name=\"init\" />"
                 echo "                </app>"
                 echo "            </dom>"
                 i=$((i + 1))
             else
                 echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"ppsender 100000 0 2032 0\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"ppsender 100000 0 2032 0 0\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"ppsender 100000 0 2032 0\" daemon=\"1\">"
+                    echo "                <app args=\"ppsender 100000 0 2032 0 0\" daemon=\"1\">"
                 fi
                 echo "                    <sgate lname=\"chan\" gname=\"chan$i\" label=\"1\" />"
                 echo "                    <sem lname=\"ready\" gname=\"ready$i\" />"
+                echo "                    <sem name=\"init\" />"
                 echo "                </app>"
                 echo "            </dom>"
-                if [ $((i + 2)) -ge $others ]; then
-                    echo "            <dom tile=\"boom+nic|core\">"
-                else
-                    echo "            <dom>"
-                fi
+                echo "            <dom>"
                 if [ "$bw" != "0" ]; then
                     echo "                <app args=\"ppreceiver 100000 2032\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
@@ -131,25 +160,7 @@ gen_config() {
             fi
         done
     fi
-    if [ "$fgmode" != "msgs" ]; then
-        echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"disturber $fgmode 100\">"
-        echo "                </app>"
-        echo "            </dom>"
-    else
-        echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"ppsender 10000 100 2032 1\">"
-        echo "                    <sgate lname=\"chan\" gname=\"chan1\" label=\"1\" />"
-        echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
-        echo "                </app>"
-        echo "            </dom>"
-        echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"ppreceiver 10100 2032\">"
-        echo "                    <rgate lname=\"chan\" gname=\"chan1\" msgsize=\"2048\" slots=\"1\" />"
-        echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
-        echo "                </app>"
-        echo "            </dom>"
-    fi
+
     echo "        </app>"
     echo "    </dom>"
     echo "</config>"
