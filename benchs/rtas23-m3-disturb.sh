@@ -168,7 +168,7 @@ gen_config() {
 
 jobs_init "$2"
 
-for bw in 0 4K 16K 64K 256K 1024K 4096K; do
+for bw in 0 8K 32K 128K 512K 2048K; do
     if [ "$M3_TARGET" = "hw" ] && [ "$bw" != "0" ]; then
         continue
     fi
