@@ -38,7 +38,7 @@ echo -n > $out/nightly.log
 
 echo -e "\033[1mUpdating repositories...\033[0m"
 ( cd m3 && git checkout $branch && git pull origin $branch && git submodule update --init \
-  platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
+  ninjapie cross/buildroot platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 

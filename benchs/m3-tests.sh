@@ -98,12 +98,11 @@ run_bench() {
 
     # set memory and time limits
     if [ "$M3_BUILD" = "coverage" ]; then
-        ulimit -v 6000000   # 5GB virt mem
-        ulimit -t 1500      # 25min CPU time
+        ulimit -v 8000000   # 8GB virt mem
     else
-        ulimit -v 5000000   # 5GB virt mem
-        ulimit -t 900       # 15min CPU time
+        ulimit -v 6000000   # 6GB virt mem
     fi
+    ulimit -t 1500      # 25min CPU time
 
     ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
 
@@ -166,8 +165,8 @@ for btype in $build_types; do
                 *)        benchblks=$((64*1024)); defblks=$((16*1024)) ;;
             esac
 
-            $build/tools/mkm3fs $bmoddir/bench.img $build/src/fs/bench $benchblks 4096 $bpe
-            $build/tools/mkm3fs $bmoddir/default.img $build/src/fs/default $defblks 512 $bpe
+            $build/toolsbin/mkm3fs $bmoddir/bench.img $build/src/fs/bench $benchblks 4096 $bpe
+            $build/toolsbin/mkm3fs $bmoddir/default.img $build/src/fs/default $defblks 512 $bpe
         done
    done
 done
@@ -216,7 +215,7 @@ for bpe in 32 64; do
         done
     done
 done
- 
+
 # generate code coverage
 export M3_BUILD=coverage
 for test in $benchs; do

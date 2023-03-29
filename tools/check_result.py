@@ -4,6 +4,16 @@ import math
 import re
 import sys
 
+def convert_unit(number, dst_unit, src_unit):
+    unit_conv = {
+        'ns': 1_000_000_000.0,
+        'us': 1_000_000.0,
+        'ms': 1_000.0,
+        's': 1.0,
+        'cycles': 1.0,
+    }
+    return number * (unit_conv[dst_unit] / unit_conv[src_unit])
+
 class PerfResult:
     def __init__(self, name, time, unit, variance, runs):
         self.name = name
@@ -37,10 +47,16 @@ class Result:
 
     def add_perf(self, pmatch):
         name = re.sub(r"^.*/([^/]+)$", r"\1", pmatch.group(1)) + ": " + pmatch.group(3)
+        res_unit = pmatch.group(5)
+        var_unit = pmatch.group(7)
+        if res_unit is not None and var_unit is not None:
+            variance = convert_unit(float(pmatch.group(6)), res_unit.strip(), var_unit.strip())
+        else:
+            variance = float(pmatch.group(6))
         self.perfs[name] = PerfResult(name,
                                       float(pmatch.group(4)),
                                       pmatch.group(5),
-                                      float(pmatch.group(6)),
+                                      variance,
                                       int(pmatch.group(8)))
 
     def __repr__(self):
@@ -56,7 +72,7 @@ re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+)( \S+)? with (\d+) runs\)$')
 re_shdn   = re.compile('^.*\[(PE0:\S+\s*@\s*\d+|\S+\s*@.*?)\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
-re_exit   = re.compile('^.*Child .*? exited with exitcode \d+$')
+re_exit   = re.compile('^.*Child .*? exited with exitcode $')
 re_panic  = re.compile('^.*PANIC at(.*)$')
 
 def parse_output(file):

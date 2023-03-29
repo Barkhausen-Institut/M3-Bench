@@ -27,7 +27,7 @@ if not os.path.isfile(hard_disk0):
 if tiletype == 'a':
     l1size = None
     l2size = None
-    spmsize = '32MB'
+    spmsize = '64MB'
 else:
     l1size = '32kB'
     l2size = '256kB'
@@ -96,7 +96,7 @@ for i in range(0, num_kecacc):
                             id=TileId(0, num_tiles + num_copy + num_indir + num_sto + i),
                             cmdline=cmd_list[1],  # FIXME
                             memTile=mem_tile,
-                            spmsize='32MB',
+                            spmsize='64MB',
                             epCount=num_eps)
     tiles.append(tile)
 
