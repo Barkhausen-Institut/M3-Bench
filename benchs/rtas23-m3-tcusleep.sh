@@ -9,8 +9,8 @@ cd m3 || exit 1
 export M3_BUILD=release
 export M3_TARGET=gem5
 export M3_ISA=x86_64
-if [ -z "$M3_GEM5_DBG" ]; then
-    export M3_GEM5_DBG=Thread,Tcu,TcuRegWrite,TcuCmd,TcuConnector
+if [ -z "$M3_GEM5_LOG" ]; then
+    export M3_GEM5_LOG=Thread,Tcu,TcuRegWrite,TcuCmd,TcuConnector
 fi
 export M3_GEM5_CPU=DerivO3CPU
 export M3_GEM5_CPUFREQ=2GHz M3_GEM5_MEMFREQ=1GHz

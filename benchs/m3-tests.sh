@@ -7,8 +7,8 @@ inputdir=`readlink -f input`
 cd m3
 
 export M3_TARGET=gem5
-if [ -z $M3_GEM5_DBG ]; then
-	export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
+if [ -z $M3_GEM5_LOG ]; then
+	export M3_GEM5_LOG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
 fi
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
@@ -115,7 +115,7 @@ run_bench() {
     fi
 }
 
-build_types="debug release coverage"
+build_types="debug bench coverage"
 build_isas="riscv x86_64 arm"
 run_isas="riscv x86_64"
 
@@ -133,14 +133,14 @@ if [ "$M3_TEST" != "" ]; then
     build_isas=$(echo $test_args | cut -d ' ' -f 3)
     if [[ $test_args == *coverage* ]]; then
         export M3_BUILD=coverage
-        build_types="coverage"
     elif [[ $M3_TEST == hello-* ]]; then
+        export M3_BUILD=debug
+    elif [ "$M3_LOG" != "" ]; then
         export M3_BUILD=release
-        build_types="debug"
     else
-        export M3_BUILD=release
-        build_types="release"
+        export M3_BUILD=bench
     fi
+    build_types="$M3_BUILD"
 fi
 
 for btype in $build_types; do
@@ -200,7 +200,7 @@ if [ "$M3_TESTS" != "" ]; then
     benchs="$M3_TESTS"
 fi
 
-export M3_BUILD=release
+export M3_BUILD=bench
 for bpe in 32 64; do
    for isa in $run_isas; do
        for tiletype in a b sh; do

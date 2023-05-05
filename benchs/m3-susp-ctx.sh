@@ -9,7 +9,7 @@ cfg_b=`readlink -f input/config-aladdin.py`
 cd m3
 export M3_BUILD=release
 
-export M3_GEM5_DBG=DtuAccelStream,DtuAccelStreamState,DtuAccelAladdin,DtuAccelAladdinState,Dtu,DtuRegWrite,DtuCmd,DtuConnector
+export M3_GEM5_LOG=DtuAccelStream,DtuAccelStreamState,DtuAccelAladdin,DtuAccelAladdinState,Dtu,DtuRegWrite,DtuCmd,DtuConnector
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_GEM5_MMU=1 M3_GEM5_DTUPOS=2
 # export M3_GEM5_CPU=TimingSimpleCPU

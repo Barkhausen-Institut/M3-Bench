@@ -38,7 +38,7 @@ echo -n > $out/nightly.log
 
 echo -e "\033[1mUpdating repositories...\033[0m"
 ( cd m3 && git checkout $branch && git pull origin $branch && git submodule update --init \
-  ninjapie cross/buildroot platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
+  tools/ninjapie cross/buildroot platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 
@@ -65,7 +65,7 @@ for dir in results/tests-*; do
     echo "$dir: removing unnecessary files and compressing into archive-$dir.tar.xz..."
     # remove everything but the output.txt
     for sub in $dir/*; do
-        if [ -d $sub ]; then
+        if [ -d "$sub" ]; then
             find $sub -mindepth 1 -not -name output.txt -print0 | xargs -0 rm -f
         fi
     done

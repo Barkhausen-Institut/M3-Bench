@@ -7,8 +7,8 @@ inputdir=`readlink -f input`
 cd m3
 export M3_BUILD=release
 
-if [ -z $M3_GEM5_DBG ]; then
-    export M3_GEM5_DBG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
+if [ -z $M3_GEM5_LOG ]; then
+    export M3_GEM5_LOG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
 fi
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
 export M3_CORES=12
