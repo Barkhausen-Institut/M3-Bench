@@ -98,11 +98,12 @@ run_bench() {
 
     # set memory and time limits
     if [ "$M3_BUILD" = "coverage" ]; then
-        ulimit -v 8000000   # 8GB virt mem
+        ulimit -v 12000000   # 12GB virt mem
+        ulimit -t 3000      # 50min CPU time
     else
         ulimit -v 6000000   # 6GB virt mem
+        ulimit -t 1500      # 25min CPU time
     fi
-    ulimit -t 1500      # 25min CPU time
 
     ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
 
