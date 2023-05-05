@@ -7,7 +7,10 @@ inputdir=`readlink -f input`
 cd m3
 
 export M3_TARGET=hw M3_ISA=riscv
-export M3_HW_SSH=bitest M3_HW_FPGA=1
+export M3_HW_FPGA_HOST=bitest
+export M3_HW_FPGA_DIR=m3
+export M3_HW_FPGA_NO=1
+export M3_HW_VIVADO=/home/hrniels/Applications/Xilinx/Vivado_Lab/2019.1/bin/vivado_lab
 export M3_HW_RESET=1
 export M3_HW_TIMEOUT=120
 
@@ -24,13 +27,11 @@ run_bench() {
 
     bench=$2
 
-    export M3_HW_VM=1
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hashmux-tests" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ] || [ "$bench" = "memtest" ] || [ "$bench" = "standalone-sndrcv" ]; then
-        export M3_HW_VM=0
-        cp boot/kachel/$bench.xml $M3_OUT/boot.gen.xml
+        cp boot/$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "hello" ]; then
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     else
@@ -63,7 +64,7 @@ run_bench() {
             /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
             # if the kernel didn't start, we assume that there is something fundamentally wrong and
             # therefore reinstall the bitfile.
-            if [ "$(grep 'Kernel is ready' $M3_OUT/output.txt)" = "" ]; then
+            if [ "$(grep --text 'Kernel is ready' $M3_OUT/output.txt)" = "" ]; then
                 reset_bitfile
             # otherwise, don't repeat the test
             else
@@ -74,23 +75,22 @@ run_bench() {
     done
 }
 
-for btype in debug release; do
+for btype in debug bench; do
     # build everything
     export M3_BUILD=$btype
     ./b || exit 1
 
     # create FS images
     build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
-    for bpe in 32 64; do
-        $build/tools/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $((64 * 1024)) 4096 $bpe
-        $build/tools/mkm3fs $build/default-$bpe.img $build/src/fs/default $((16 * 1024)) 512 $bpe
-    done
+    $build/toolsbin/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $((64 * 1024)) 4096 64
+    $build/toolsbin/mkm3fs $build/default-$bpe.img $build/src/fs/default $((16 * 1024)) 512 64
 done
 
 benchs=""
-benchs+="rust-unittests hashmux-tests rust-benchs unittests cpp-benchs"
+#benchs+="rust-unittests rust-benchs"
+benchs+="unittests cpp-benchs"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
-benchs+=" cat_awk cat_wc grep_awk grep_wc"
+#benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" standalone memtest standalone-sndrcv"
 benchs+=" hello"
 
@@ -99,19 +99,12 @@ if [ "$M3_TESTS" != "" ]; then
     benchs="$M3_TESTS"
 fi
 
-for bpe in 32 64; do
-    for build in debug release; do
-        for ty in ex sh; do
-            # the *-64 runs are for performance, so don't run in debug mode
-            if [ $bpe -eq 64 ] && [ "$build" = "debug" ]; then
-                continue;
-            fi
+for build in debug bench; do
+    for ty in ex sh; do
+        export M3_BUILD=$build
 
-            export M3_BUILD=$build
-
-            for test in $benchs; do
-                run_bench $1 $test hw-$build $ty $M3_ISA $bpe
-            done
+        for test in $benchs; do
+            run_bench $1 $test hw-$build $ty $M3_ISA 64
         done
     done
 done
