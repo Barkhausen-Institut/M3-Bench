@@ -37,8 +37,8 @@ mkdir -p $out
 echo -n > $out/nightly.log
 
 echo -e "\033[1mUpdating repositories...\033[0m"
-( cd m3 && git checkout $branch && git pull origin $branch && git submodule update --init \
-  tools/ninjapie cross/buildroot platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
+( cd m3 && git checkout $branch && git pull origin $branch && git submodule update --init --recursive \
+  src/m3lx tools/ninjapie cross/buildroot platform/gem5 src/libs/{leveldb,musl,flac} src/apps/bsdutils ) 2>&1 | tee -a $out/nightly.log
 if [ $? -ne 0 ]; then exit 1; fi
 ( cd m3 && git rev-parse HEAD ) > $out/git-commit
 
@@ -54,8 +54,8 @@ if ! $force; then
 fi
 
 echo -e "\033[1mStarting garbage collection...\033[0m"
-# only keep the last 30 days in full size; reduce the older ones to the minimum
-num_days=30
+# only keep the last 12 days in full size; reduce the older ones to the minimum
+num_days=12
 total=$(find results -maxdepth 1 -name "tests-*" -type d | wc -l)
 for dir in results/tests-*; do
     if [ $total -le $num_days ]; then

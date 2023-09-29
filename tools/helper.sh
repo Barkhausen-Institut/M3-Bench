@@ -1,7 +1,11 @@
 #!/bin/bash
 
 reset_bitfile() {
-    ./b loadfpga=fpga_top_v4.5.1.bit -n
+    if [ "$M3_TARGET" = "hw" ]; then
+        ./b loadfpga=fpga_top_v4.6.0.bit -n
+    else
+        ./b loadfpga=fpga_top_v4.4.12.bit -n
+    fi
     # wait a bit until the reset
     sleep 3
 }

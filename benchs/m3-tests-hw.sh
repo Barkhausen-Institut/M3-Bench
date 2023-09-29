@@ -6,13 +6,14 @@ inputdir=`readlink -f input`
 
 cd m3
 
-export M3_TARGET=hw M3_ISA=riscv
+export M3_ISA=riscv
 export M3_HW_FPGA_HOST=bitest
 export M3_HW_FPGA_DIR=m3
 export M3_HW_FPGA_NO=1
 export M3_HW_VIVADO=/home/hrniels/Applications/Xilinx/Vivado_Lab/2019.1/bin/vivado_lab
 export M3_HW_RESET=1
 export M3_HW_TIMEOUT=120
+export M3_HW_TTY=/dev/ttyUSB2
 
 run_bench() {
     bpe=$6
@@ -32,6 +33,8 @@ run_bench() {
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ] || [ "$bench" = "memtest" ] || [ "$bench" = "standalone-sndrcv" ]; then
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
+    elif [ "$bench" = "lxbench" ]; then
+        cp boot/linux/bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "hello" ]; then
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     else
@@ -75,16 +78,21 @@ run_bench() {
     done
 }
 
-for btype in debug bench; do
-    # build everything
-    export M3_BUILD=$btype
-    ./b || exit 1
+for target in hw hw22; do
+    for btype in debug bench; do
+        # build everything
+        export M3_BUILD=$btype M3_TARGET=$target
+        ./b || exit 1
 
-    # create FS images
-    build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
-    $build/toolsbin/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $((64 * 1024)) 4096 64
-    $build/toolsbin/mkm3fs $build/default-$bpe.img $build/src/fs/default $((16 * 1024)) 512 64
+        # create FS images
+        build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
+        $build/toolsbin/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $((64 * 1024)) 4096 64
+        $build/toolsbin/mkm3fs $build/default-$bpe.img $build/src/fs/default $((16 * 1024)) 512 64
+    done
 done
+
+# build m3lx
+M3_BUILD=bench ./b mklx -n || exit 1
 
 benchs=""
 #benchs+="rust-unittests rust-benchs"
@@ -93,18 +101,26 @@ benchs+=" find tar untar sqlite leveldb sha256sum sort"
 #benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" standalone memtest standalone-sndrcv"
 benchs+=" hello"
+benchs+=" lxbench"
 
 # run user-specified tests?
 if [ "$M3_TESTS" != "" ]; then
     benchs="$M3_TESTS"
 fi
 
-for build in debug bench; do
-    for ty in ex sh; do
-        export M3_BUILD=$build
+for target in hw hw22; do
+    for build in debug bench; do
+        for ty in ex sh; do
+            export M3_BUILD=$build M3_TARGET=$target
+    
+            for test in $benchs; do
+                # M³Linux is not supported on hw22 because its TCU lacks support for 64-bit virtual addresses
+                if [ "$test" = "lxbench" ] && [ "$M3_TARGET" = "hw22" ]; then
+                    continue
+                fi
 
-        for test in $benchs; do
-            run_bench $1 $test hw-$build $ty $M3_ISA 64
+                run_bench $1 $test $M3_TARGET-$build $ty $M3_ISA 64
+            done
         done
     done
 done

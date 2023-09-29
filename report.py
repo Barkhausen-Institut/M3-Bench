@@ -21,13 +21,14 @@ TESTS = [
     'cpp-net-tests', 'rust-net-tests', 'cpp-net-benchs', 'rust-net-benchs',
     'hashmux-benchs',
     'abort-test', 'hello', 'standalone', 'libctest', 'rust-std-test',
-    'standalone-sndrcv', 'memtest', 'msgchan',
+    'standalone-sndrcv', 'memtest', 'msgchan', 'rust-sndrcv', 'vmtest',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
     'voiceassist-udp', 'voiceassist-tcp',
+    'lxbench',
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|cov|hw-debug|hw-bench)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|cov|hw-debug|hw-bench|hw22-debug|hw22-bench)-(\S+?)-(\d+)$')
 
 def file_contents(path):
     with open(path) as f:
@@ -92,7 +93,7 @@ for date in results:
     for test in results[date]:
         for cfg in results[date][test]:
             # only consider the benchmarks on gem5 with 64 blocks per extent
-            if cfg[-3:] != "-64" or "hw-debug" in cfg:
+            if cfg[-3:] != "-64" or "hw-debug" in cfg or "hw22-debug" in cfg:
                 continue
             res = results[date][test][cfg]
             for pname in res.perfs:

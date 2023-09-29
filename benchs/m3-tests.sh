@@ -34,28 +34,32 @@ run_bench() {
     elif [[ "$bench" =~ "ycsb-bench" ]]; then
         bootprefix=""
     fi
+    if [ "$5" = "64" ]; then
+        export M3_GEM5_CPU=DerivO3CPU
+    else
+        export M3_GEM5_CPU=TimingSimpleCPU
+    fi
 
     # we always use the FS images generated below
     export M3_MOD_PATH=build/$M3_TARGET-$M3_ISA-$M3_BUILD/fsimgs-$bpe
 
-    export M3_GEM5_CPU=TimingSimpleCPU
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hello" ] ||
         [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ] || [ "$bench" = "facever" ] ||
-        [ "$bench" = "hashmux-tests" ] || [ "$bench" = "msgchan" ] || [ "$bench" = "resmngtest" ]; then
-        cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
-        if [ "$bench" = "hello" ]; then
-            export M3_BUILD=debug
-        fi
-    elif [ "$bench" = "standalone" ]; then
-        export M3_CORES=8
-        export M3_GEM5_CFG=config/spm.py
-        cp boot/$bench.xml $M3_OUT/boot.gen.xml
-    elif [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ]; then
-        if [ "$3" = "sh" ]; then
-            cp boot/shared/$bench.xml $M3_OUT/boot.gen.xml
+        [ "$bench" = "hashmux-tests" ] || [ "$bench" = "msgchan" ] || [ "$bench" = "resmngtest" ] ||
+        [ "$bench" = "standalone" ] || [ "$bench" = "vmtest" ] || [ "$bench" = "rust-sndrcv" ] ||
+        [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ]; then
+        if [ -f boot/${bootprefix}$bench.xml ]; then
+            cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         else
             cp boot/$bench.xml $M3_OUT/boot.gen.xml
         fi
+        if [ "$bench" = "hello" ]; then
+            export M3_BUILD=debug
+        elif [ "$bench" = "standalone" ]; then
+            export M3_GEM5_CFG=config/spm.py M3_CORES=8
+        fi
+    elif [ "$bench" = "lxbench" ]; then
+        cp boot/linux/bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
@@ -63,9 +67,6 @@ run_bench() {
         export M3_GEM5_CFG=config/aborttest.py
         cp boot/hello.xml $M3_OUT/boot.gen.xml
     else
-        if [ "$5" = "64" ]; then
-            export M3_GEM5_CPU=DerivO3CPU
-        fi
         if [[ "$bench" =~ "bench" ]] || [[ "$bench" =~ "voiceassist" ]]; then
             if [ "$bench" = "hashmux-benchs" ]; then
                 export M3_CORES=18
@@ -97,7 +98,7 @@ run_bench() {
     jobs_started
 
     # set memory and time limits
-    if [ "$M3_BUILD" = "coverage" ]; then
+    if [ "$M3_BUILD" = "coverage" ] || [ "$M3_GEM5_CPU" = "DerivO3CPU" ]; then
         ulimit -v 12000000   # 12GB virt mem
         ulimit -t 3000      # 50min CPU time
     else
@@ -172,6 +173,11 @@ for btype in $build_types; do
    done
 done
 
+# build m3lx
+if [[ "$build_isas" == *riscv* ]] && ( [ "$M3_TEST" = "" ] || [ "$M3_TEST" = "lxbench" ] ); then
+    M3_ISA=riscv M3_BUILD=bench ./b mklx -n || exit 1
+fi
+
 jobs_init $2
 
 # run a single test?
@@ -187,9 +193,10 @@ benchs+=" rust-net-tests cpp-net-tests rust-net-benchs cpp-net-benchs facever"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" disk-test abort-test"
-benchs+=" standalone libctest rust-std-test msgchan"
+benchs+=" standalone libctest rust-std-test msgchan rust-sndrcv vmtest"
 benchs+=" ycsb-bench-udp ycsb-bench-tcp"
 benchs+=" voiceassist-udp voiceassist-tcp"
+benchs+=" lxbench"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
 for num in 1 2 3 4; do
@@ -208,6 +215,14 @@ for bpe in 32 64; do
            for test in $benchs; do
                 # standalone works only with SPM
                 if [ "$test" = "standalone" ] && [ "$tiletype" != "a" ]; then
+                    continue;
+                fi
+                # rust-sndrcv and vmtest don't run with SPM
+                if ( [ "$test" = "rust-sndrcv" ] || [ "$test" = "vmtest" ] ) && [ "$tiletype" = "a" ]; then
+                    continue;
+                fi
+                # m3lx runs only on riscv and has no shared version
+                if [ "$test" = "lxbench" ] && ( [ "$isa" != "riscv" ] || [ "$tiletype" != "b" ] ); then
                     continue;
                 fi
 
