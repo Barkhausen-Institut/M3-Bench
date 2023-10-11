@@ -24,7 +24,7 @@ TESTS = [
     'standalone-sndrcv', 'memtest', 'msgchan', 'rust-sndrcv', 'vmtest',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
     'voiceassist-udp', 'voiceassist-tcp',
-    'lxbench',
+    'lxbench', 'lxtcutest'
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 

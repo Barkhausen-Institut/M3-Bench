@@ -60,6 +60,8 @@ run_bench() {
         fi
     elif [ "$bench" = "lxbench" ]; then
         cp boot/linux/bench.xml $M3_OUT/boot.gen.xml
+    elif [ "$bench" = "lxtcutest" ]; then
+        cp boot/linux/tcutest.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
@@ -174,7 +176,7 @@ for btype in $build_types; do
 done
 
 # build m3lx
-if [[ "$build_isas" == *riscv* ]] && ( [ "$M3_TEST" = "" ] || [ "$M3_TEST" = "lxbench" ] ); then
+if [[ "$build_isas" == *riscv* ]] && ( [ "$M3_TEST" = "" ] || [[ "$M3_TEST" == lx* ]] ); then
     M3_ISA=riscv M3_BUILD=bench ./b mklx -n || exit 1
 fi
 
@@ -196,7 +198,7 @@ benchs+=" disk-test abort-test"
 benchs+=" standalone libctest rust-std-test msgchan rust-sndrcv vmtest"
 benchs+=" ycsb-bench-udp ycsb-bench-tcp"
 benchs+=" voiceassist-udp voiceassist-tcp"
-benchs+=" lxbench"
+benchs+=" lxbench lxtcutest"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
 for num in 1 2 3 4; do
@@ -222,7 +224,7 @@ for bpe in 32 64; do
                     continue;
                 fi
                 # m3lx runs only on riscv and has no shared version
-                if [ "$test" = "lxbench" ] && ( [ "$isa" != "riscv" ] || [ "$tiletype" != "b" ] ); then
+                if [[ "$test" == lx* ]] && ( [ "$isa" != "riscv" ] || [ "$tiletype" != "b" ] ); then
                     continue;
                 fi
 
