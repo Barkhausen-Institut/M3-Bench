@@ -85,7 +85,7 @@ if $testgem5; then
     fi
 
     echo -e "\033[1mRunning tests...\033[0m"
-    ./run.sh $outname "m3-tests" "" "" 16 2>&1 | tee -a $out/nightly.log
+    ./run.sh $outname "m3-tests" "" "" 32 2>&1 | tee -a $out/nightly.log
 fi
 
 if $testhw; then
