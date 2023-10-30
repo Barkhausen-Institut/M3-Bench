@@ -66,12 +66,20 @@ micro_no_outlier$platformos <- paste(micro_no_outlier$platform, micro_no_outlier
 micro_no_outlier <- micro_no_outlier %>%
   mutate(platformos=factor(platformos, levels=cols))
 print(micro_no_outlier)
-ggp1 <- ggplot(micro_no_outlier, aes(x=platformos, y=mean, colour=os, fill=os)) +
+ggp1 <- micro_no_outlier |>
+  mutate(
+    # place onto bar if the bar is too high to display it on top
+    place = if_else(mean > 14, 1, 0),
+    # add some spacing to labels since we cant use nudge_x anymore
+    human_mean = paste(" ", round(mean, 3), " ")
+  ) |>
+  ggplot(aes(x=platformos, y=mean, colour=os, fill=os)) +
     scale_x_discrete(labels = colnames) +
     scale_fill_brewer(palette = "Pastel1") +
     labs(x="Platform", y="Latency (K cycles)") +
     geom_bar(stat='identity', position="dodge", colour="black", size=.1, show.legend=F) +
     geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=position_dodge(.9), colour="black") +
+    geom_text(aes(label=human_mean, hjust=place), position=position_dodge2(width=.9), colour="black", size=3, angle=90) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 
