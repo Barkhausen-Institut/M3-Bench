@@ -58,10 +58,8 @@ run_bench() {
         elif [ "$bench" = "standalone" ]; then
             export M3_GEM5_CFG=config/spm.py M3_CORES=8
         fi
-    elif [ "$bench" = "lxbench" ]; then
-        cp boot/linux/bench.xml $M3_OUT/boot.gen.xml
-    elif [ "$bench" = "lxtcutest" ]; then
-        cp boot/linux/tcutest.xml $M3_OUT/boot.gen.xml
+    elif [[ "$bench" == lx* ]]; then
+        cp boot/linux/${bench#lx}.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
         export M3_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
@@ -198,7 +196,7 @@ benchs+=" disk-test abort-test"
 benchs+=" standalone libctest rust-std-test msgchan rust-sndrcv vmtest"
 benchs+=" ycsb-bench-udp ycsb-bench-tcp"
 benchs+=" voiceassist-udp voiceassist-tcp"
-benchs+=" lxbench lxtcutest"
+benchs+=" lxrust-benchs lxcpp-benchs lxtcutest"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
 for num in 1 2 3 4; do
