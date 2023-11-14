@@ -51,8 +51,9 @@ def write_html_footer(report):
 def write_results(report, date, test):
     report.write("<h2>Results of {} on {}:</h2>".format(test, date))
     for cfg in results[date][test]:
-        report.write("<h3>{}: (results/tests-{}/m3-tests-{}-{}/output.txt)</h3>"
-            .format(cfg, date, test, cfg))
+        filename = "results/tests-{}/m3-tests-{}-{}/output.txt".format(date, test, cfg)
+        report.write("<h3>{}: (<a href=\"../{}\">{}</a>)</h3>"
+            .format(cfg, filename, filename))
         res = results[date][test][cfg]
         report.write("<ul>\n")
         for failed in res.failures:
