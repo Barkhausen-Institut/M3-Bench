@@ -72,7 +72,7 @@ re_failed = re.compile('^!\s+([^:]+):(\d+)\s+(.*?) FAILED$')
 re_perf   = re.compile('^.*!\s+([^:]+):(\d+)\s+PERF\s+"(.*?)": ([\d\.]+) (\S+?) \(\+/\- ([0-9\-\.]+)( \S+)? with (\d+) runs\)$')
 re_shdn   = re.compile('^.*\[(PE0:\S+\s*@\s*\d+|\S+\s*@.*?)\].*Shutting down$')
 re_fsck   = re.compile('^.*(m3fsck:.*)$')
-re_exit   = re.compile('^.*Child .*? exited with exitcode $')
+re_exit   = re.compile('^.*Child .*? exited with exitcode')
 re_panic  = re.compile('^.*PANIC at(.*)$')
 
 def parse_output(file):
