@@ -22,13 +22,14 @@ TESTS = [
     'hashmux-benchs',
     'abort-test', 'hello', 'standalone', 'libctest', 'rust-std-test',
     'standalone-sndrcv', 'memtest', 'msgchan', 'rust-sndrcv', 'vmtest',
+    'filterchain', 'parchksum', 'bench-shell', 'shell-nested',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
     'voiceassist-udp', 'voiceassist-tcp',
     'lxrust-benchs', 'lxcpp-benchs', 'lxtcutest'
 ]
 COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'black', 'lightgreen', 'lightblue']
 
-re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|cov|hw-debug|hw-bench|hw22-debug|hw22-bench)-(\S+?)-(\d+)$')
+re_name   = re.compile('^m3-tests-(' + '|'.join(TESTS) + ')-(a|b|sh|cov|(?:hw|hw22)-(?:debug|bench)-(?:ex|sh))-(\S+?)-(\d+)$')
 
 def file_contents(path):
     with open(path) as f:

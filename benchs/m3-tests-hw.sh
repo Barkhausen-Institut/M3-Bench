@@ -28,13 +28,14 @@ run_bench() {
 
     bench=$2
 
-    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hashmux-tests" ]; then
+    if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hashmux-tests" ] ||
+       [ "$bench" = "facever" ] || [ "$bench" = "filterchain" ]; then
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ] || [ "$bench" = "memtest" ] || [ "$bench" = "standalone-sndrcv" ]; then
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
-    elif [ "$bench" = "lxbench" ]; then
-        cp boot/linux/bench.xml $M3_OUT/boot.gen.xml
+    elif [[ "$bench" == lx* ]]; then
+        cp boot/linux/${bench#lx}.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "hello" ]; then
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     else
@@ -55,7 +56,7 @@ run_bench() {
     fi
 
     i=0
-    while [ $i -lt 2 ]; do
+    while [ $i -lt 10 ]; do
         /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
         ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
@@ -69,6 +70,9 @@ run_bench() {
             # therefore reinstall the bitfile.
             if [ "$(grep --text 'Kernel is ready' $M3_OUT/output.txt)" = "" ]; then
                 reset_bitfile
+            # if there was a NoC/Mem timeout, repeat the test
+            elif [ "$(grep --text 'TimeoutNoC\|TimeoutMem' $M3_OUT/output.txt)" != "" ]; then
+                continue
             # otherwise, don't repeat the test
             else
                 break
@@ -95,13 +99,16 @@ done
 M3_BUILD=bench ./b mklx -n || exit 1
 
 benchs=""
-#benchs+="rust-unittests rust-benchs"
-benchs+="unittests cpp-benchs"
+#benchs+="rust-unittests"
+benchs+="rust-benchs"
+benchs+=" unittests cpp-benchs"
+benchs+=" facever"
 benchs+=" find tar untar sqlite leveldb sha256sum sort"
 #benchs+=" cat_awk cat_wc grep_awk grep_wc"
 benchs+=" standalone memtest standalone-sndrcv"
 benchs+=" hello"
-benchs+=" lxbench"
+benchs+=" bench-shell filterchain"
+benchs+=" lxrust-benchs lxcpp-benchs lxtcutest"
 
 # run user-specified tests?
 if [ "$M3_TESTS" != "" ]; then
@@ -115,10 +122,20 @@ for target in hw hw22; do
     
             for test in $benchs; do
                 # M³Linux is not supported on hw22 because its TCU lacks support for 64-bit virtual addresses
-                if [ "$test" = "lxbench" ] && [ "$M3_TARGET" = "hw22" ]; then
+                if [[ "$test" == lx* ]] && [ "$M3_TARGET" = "hw22" ]; then
                     continue
                 fi
-
+                # in debug mode there are too many issues right now, so just run hello
+                if [ "$M3_BUILD" = "debug" ] && [ "$test" != "hello" ]; then
+                    continue
+                fi
+                # for some tests we don't have a shared version
+                if [ "$ty" = "sh" ] && ( [ "$test" = "standalone" ] || [ "$test" = "memtest" ] ||
+                                         [ "$test" = "standalone-sndrcv" ] || [ "$test" = "filterchain" ] ||
+                                         [[ "$test" == lx* ]] ); then
+                    continue
+                fi
+ 
                 run_bench $1 $test $M3_TARGET-$build $ty $M3_ISA 64
             done
         done

@@ -47,7 +47,8 @@ run_bench() {
         [ "$bench" = "rust-net-tests" ] || [ "$bench" = "cpp-net-tests" ] || [ "$bench" = "facever" ] ||
         [ "$bench" = "hashmux-tests" ] || [ "$bench" = "msgchan" ] || [ "$bench" = "resmngtest" ] ||
         [ "$bench" = "standalone" ] || [ "$bench" = "vmtest" ] || [ "$bench" = "rust-sndrcv" ] ||
-        [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ]; then
+        [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ] || [ "$bench" = "filterchain" ] ||
+        [ "$bench" = "parchksum" ] || [ "$bench" = "shell-nested" ]; then
         if [ -f boot/${bootprefix}$bench.xml ]; then
             cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
         else
@@ -196,6 +197,7 @@ benchs+=" disk-test abort-test"
 benchs+=" standalone libctest rust-std-test msgchan rust-sndrcv vmtest"
 benchs+=" ycsb-bench-udp ycsb-bench-tcp"
 benchs+=" voiceassist-udp voiceassist-tcp"
+benchs+=" bench-shell shell-nested parchksum filterchain"
 benchs+=" lxrust-benchs lxcpp-benchs lxtcutest"
 # only 1 chain with indirect, because otherwise we would need more than 16 EPs
 benchs+=" imgproc-indir-1"
