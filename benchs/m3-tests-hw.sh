@@ -25,6 +25,11 @@ run_bench() {
     if [ "$4" = "sh" ]; then
         bootprefix="shared/"
     fi
+    if [ "$4" = "spm" ]; then
+        export M3_HW_VM=0
+    else
+        export M3_HW_VM=1
+    fi
 
     bench=$2
 
@@ -117,7 +122,7 @@ fi
 
 for target in hw hw22; do
     for build in debug bench; do
-        for ty in ex sh; do
+        for ty in ex sh spm; do
             export M3_BUILD=$build M3_TARGET=$target
     
             for test in $benchs; do
@@ -133,6 +138,10 @@ for target in hw hw22; do
                 if [ "$ty" = "sh" ] && ( [ "$test" = "standalone" ] || [ "$test" = "memtest" ] ||
                                          [ "$test" = "standalone-sndrcv" ] || [ "$test" = "filterchain" ] ||
                                          [[ "$test" == lx* ]] ); then
+                    continue
+                fi
+                # for now, only run hello with our emulated SPM
+                if [ "$ty" = "spm" ] && [ "$test" != "hello" ]; then
                     continue
                 fi
  
