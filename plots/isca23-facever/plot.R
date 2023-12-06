@@ -67,5 +67,5 @@ layout <- rbind(c(1,2,3))
 ggsave(
   as.character(args[1]),
   arrangeGrob(ggp1, ggp2, ggp3, layout_matrix = layout),
-  width=10, height=4, units="cm"
+  width=10, height=3.2, units="cm"
 )
