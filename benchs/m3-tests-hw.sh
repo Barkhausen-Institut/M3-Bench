@@ -38,6 +38,7 @@ run_bench() {
         export M3_FS=default-$bpe.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "standalone" ] || [ "$bench" = "memtest" ] || [ "$bench" = "standalone-sndrcv" ]; then
+        unset M3_HW_VM
         cp boot/$bench.xml $M3_OUT/boot.gen.xml
     elif [[ "$bench" == lx* ]]; then
         cp boot/linux/${bench#lx}.xml $M3_OUT/boot.gen.xml
