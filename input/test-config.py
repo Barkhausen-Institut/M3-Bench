@@ -33,7 +33,7 @@ else:
     l2size = '256kB'
     spmsize = None
 
-mem_tile = TileId(0, num_tiles + num_copy + num_indir + num_sto + num_nic + num_kecacc)
+mem_tile = TileId(0, num_tiles + num_copy + num_indir)
 
 tiles = []
 
@@ -80,11 +80,22 @@ for i in range(0, num_indir):
     tile.tcu.buf_size = '2kB'
     tiles.append(tile)
 
+# create the memory tile. note that we put it here to make vmtest work, which assumes that the
+# memory tile is a specific place.
+tile = createMemTile(noc=root.noc,
+                     options=options,
+                     id=mem_tile,
+                     size='3072MB',
+                     epCount=num_eps)
+tile.tcu.max_noc_packet_size = '2kB'
+tile.tcu.buf_size = '2kB'
+tiles.append(tile)
+
 # create the persistent storage tiles
 for i in range(0, num_sto):
     tile = createStorageTile(noc=root.noc,
                              options=options,
-                             id=TileId(0, num_tiles + num_copy + num_indir + i),
+                             id=TileId(0, num_tiles + num_copy + num_indir + 1 + i),
                              memTile=None,
                              img0=hard_disk0,
                              epCount=num_eps)
@@ -93,7 +104,7 @@ for i in range(0, num_sto):
 for i in range(0, num_kecacc):
     tile = createKecAccTile(noc=root.noc,
                             options=options,
-                            id=TileId(0, num_tiles + num_copy + num_indir + num_sto + i),
+                            id=TileId(0, num_tiles + num_copy + num_indir + 1 + num_sto + i),
                             cmdline=cmd_list[1],  # FIXME
                             memTile=None,
                             spmsize='64MB',
@@ -103,28 +114,18 @@ for i in range(0, num_kecacc):
 # create ether tiles
 ether0 = createEtherTile(noc=root.noc,
                          options=options,
-                         id=TileId(0, num_tiles + num_copy + num_indir + num_sto + num_kecacc + 0),
+                         id=TileId(0, num_tiles + num_copy + num_indir + 1 + num_sto + num_kecacc + 0),
                          memTile=None,
                          epCount=num_eps)
 tiles.append(ether0)
 
 ether1 = createEtherTile(noc=root.noc,
                          options=options,
-                         id=TileId(0, num_tiles + num_copy + num_indir + num_sto + num_kecacc + 1),
+                         id=TileId(0, num_tiles + num_copy + num_indir + 1 + num_sto + num_kecacc + 1),
                          memTile=None,
                          epCount=num_eps)
 tiles.append(ether1)
 
 linkEthertiles(ether0, ether1)
-
-# create the memory tiles
-tile = createMemTile(noc=root.noc,
-                     options=options,
-                     id=mem_tile,
-                     size='3072MB',
-                     epCount=num_eps)
-tile.tcu.max_noc_packet_size = '2kB'
-tile.tcu.buf_size = '2kB'
-tiles.append(tile)
 
 runSimulation(root, options, tiles)

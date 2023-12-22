@@ -62,7 +62,7 @@ run_bench() {
     elif [[ "$bench" == lx* ]]; then
         cp boot/linux/${bench#lx}.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "disk-test" ]; then
-        export M3_HDD=$inputdir/test-hdd.img
+        export M3_GEM5_HDD=$inputdir/test-hdd.img
         cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
     elif [ "$bench" = "abort-test" ]; then
         export M3_GEM5_CFG=config/aborttest.py
