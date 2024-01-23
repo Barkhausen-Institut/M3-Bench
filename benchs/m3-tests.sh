@@ -103,7 +103,7 @@ run_bench() {
         ulimit -v 12000000   # 12GB virt mem
         ulimit -t 3000      # 50min CPU time
     else
-        ulimit -v 6000000   # 6GB virt mem
+        ulimit -v 7000000   # 6GB virt mem
         ulimit -t 1500      # 25min CPU time
     fi
 

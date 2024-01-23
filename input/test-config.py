@@ -9,7 +9,6 @@ root = createRoot(options)
 
 cmd_list = options.cmd.split(",")
 
-num_eps = 64 if os.environ.get('M3_TARGET') == 'hw' else 192
 num_sto = 1
 num_nic = 2
 num_kecacc = 1
@@ -46,8 +45,7 @@ for i in range(0, num_tiles):
                           memTile=mem_tile if cmd_list[i] != "" else None,
                           l1size=l1size,
                           l2size=l2size,
-                          spmsize=spmsize,
-                          epCount=num_eps)
+                          spmsize=spmsize)
     tile.tcu.max_noc_packet_size = '2kB'
     tile.tcu.buf_size = '2kB'
     tiles.append(tile)
@@ -61,8 +59,7 @@ for i in range(0, num_copy):
                            id=TileId(0, num_tiles + i),
                            accel='copy',
                            memTile=None,
-                           spmsize='32MB',
-                           epCount=num_eps)
+                           spmsize='32MB')
     tile.tcu.max_noc_packet_size = '2kB'
     tile.tcu.buf_size = '2kB'
     tile.accel.buf_size = '2kB'
@@ -74,8 +71,7 @@ for i in range(0, num_indir):
                            id=TileId(0, num_tiles + num_copy + i),
                            accel='indir',
                            memTile=None,
-                           spmsize='32MB',
-                           epCount=num_eps)
+                           spmsize='32MB')
     tile.tcu.max_noc_packet_size = '2kB'
     tile.tcu.buf_size = '2kB'
     tiles.append(tile)
@@ -85,8 +81,7 @@ for i in range(0, num_indir):
 tile = createMemTile(noc=root.noc,
                      options=options,
                      id=mem_tile,
-                     size='3072MB',
-                     epCount=num_eps)
+                     size='3072MB')
 tile.tcu.max_noc_packet_size = '2kB'
 tile.tcu.buf_size = '2kB'
 tiles.append(tile)
@@ -97,8 +92,7 @@ for i in range(0, num_sto):
                              options=options,
                              id=TileId(0, num_tiles + num_copy + num_indir + 1 + i),
                              memTile=None,
-                             img0=hard_disk0,
-                             epCount=num_eps)
+                             img0=hard_disk0)
     tiles.append(tile)
 
 for i in range(0, num_kecacc):
@@ -107,23 +101,20 @@ for i in range(0, num_kecacc):
                             id=TileId(0, num_tiles + num_copy + num_indir + 1 + num_sto + i),
                             cmdline=cmd_list[1],  # FIXME
                             memTile=None,
-                            spmsize='64MB',
-                            epCount=num_eps)
+                            spmsize='64MB')
     tiles.append(tile)
 
 # create ether tiles
 ether0 = createEtherTile(noc=root.noc,
                          options=options,
                          id=TileId(0, num_tiles + num_copy + num_indir + 1 + num_sto + num_kecacc + 0),
-                         memTile=None,
-                         epCount=num_eps)
+                         memTile=None)
 tiles.append(ether0)
 
 ether1 = createEtherTile(noc=root.noc,
                          options=options,
                          id=TileId(0, num_tiles + num_copy + num_indir + 1 + num_sto + num_kecacc + 1),
-                         memTile=None,
-                         epCount=num_eps)
+                         memTile=None)
 tiles.append(ether1)
 
 linkEthertiles(ether0, ether1)
