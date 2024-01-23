@@ -107,7 +107,7 @@ run_bench() {
         ulimit -t 1500      # 25min CPU time
     fi
 
-    ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
+    nice ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
 
     gzip -f $M3_OUT/gem5.log
 
