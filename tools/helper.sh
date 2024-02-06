@@ -1,7 +1,7 @@
 #!/bin/bash
 
 reset_bitfile() {
-    if [ "$M3_TARGET" = "hw" ]; then
+    if [ "$M3_TARGET" = "hw23" ]; then
         ./b loadfpga=fpga_top_v4.6.0.bit -n
     else
         ./b loadfpga=fpga_top_v4.4.12.bit -n

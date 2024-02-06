@@ -88,7 +88,7 @@ run_bench() {
     done
 }
 
-for target in hw hw22; do
+for target in hw22 hw23; do
     for btype in debug bench; do
         # build everything
         export M3_BUILD=$btype M3_TARGET=$target
@@ -121,7 +121,7 @@ if [ "$M3_TESTS" != "" ]; then
     benchs="$M3_TESTS"
 fi
 
-for target in hw hw22; do
+for target in hw22 hw23; do
     for build in debug bench; do
         for ty in ex sh spm; do
             export M3_BUILD=$build M3_TARGET=$target

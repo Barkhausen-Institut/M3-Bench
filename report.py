@@ -21,6 +21,7 @@ TESTS = [
     'cpp-net-tests', 'rust-net-tests', 'cpp-net-benchs', 'rust-net-benchs',
     'hashmux-benchs',
     'abort-test', 'hello', 'standalone', 'libctest', 'rust-std-test',
+    'chantests',
     'standalone-sndrcv', 'memtest', 'msgchan', 'rust-sndrcv', 'vmtest',
     'filterchain', 'parchksum', 'bench-shell', 'shell-nested',
     'ycsb-bench-udp', 'ycsb-bench-tcp',
