@@ -6,12 +6,16 @@ sigusr1() {
     is_running=1
 }
 
-sigint() {
+term() {
     echo "Terminating running jobs (`jobs -p -r | wc -l`)..."
     # kill the whole process group to kill also the childs in an easy and reliable way.
     for pid in `jobs -p -r`; do
         kill -INT -$pid
     done
+}
+
+sigint() {
+    term
     exit 1
 }
 
@@ -23,7 +27,8 @@ jobs_init() {
 
     # let the spawned jobs signal us
     trap sigusr1 USR1
-    trap sigint INT TERM EXIT ERR
+    trap sigint INT TERM ERR
+    trap term EXIT
 }
 
 jobs_submit() {
