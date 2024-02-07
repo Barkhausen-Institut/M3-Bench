@@ -6,7 +6,6 @@ cd m3 || exit 1
 
 export M3_BUILD=release
 export M3_TARGET=hw M3_ISA=riscv
-export M3_HW_SSH=bitest M3_HW_FPGA=1
 export M3_HW_VM=1 M3_HW_RESET=1
 export M3_HW_TIMEOUT=30
 
@@ -18,13 +17,12 @@ trap 'rm -rf -- "$tmpdir"' EXIT
 run_bench() {
     clients=$2
     prios=$3
-    app=$4
-    dirname=m3-sendprios-hw-$clients-$prios-$app
+    dirname=m3-sendprios-hw-$clients-$prios
     export M3_OUT=$1/$dirname
     mkdir -p "$M3_OUT"
 
     cfg="$tmpdir/disturb-$clients-$prios.xml"
-    gen_config "$clients" "$prios" "$app" > "$cfg"
+    gen_config "$clients" "$prios" > "$cfg"
 
     while true; do
         /bin/echo -e "\e[1mStarting $dirname\e[0m"
@@ -47,19 +45,11 @@ run_bench() {
 gen_config() {
     clients=$1
     prios=$2
-    app=$3
 
-    if [ "$app" = "bomber" ]; then
-        reqtime=0
-        c1slots=1
-        c2slots=32
-        postwait=1
-    else
-        reqtime=1000
-        c1slots=$clients
-        c2slots=$clients
-        postwait=0
-    fi
+    reqtime=1000
+    c1slots=$clients
+    c2slots=$clients
+    postwait=0
     runs=1000
     warmup=10
 
@@ -85,18 +75,9 @@ gen_config() {
         else
             prio=1
         fi
-        if [ "$prios" -eq 2 ] && [ "$app" = "bomber" ]; then
-            cmd="priobomber $prio"
-            credits=$((32 / ("$clients" - 1)))
-            daemon=1
-        else
-            cmd="priosender $prio $runs $warmup 0 1"
-            credits=1
-            daemon=0
-        fi
         echo "        <dom>"
-        echo "            <app args=\"$cmd\" daemon=\"$daemon\">"
-        echo "                <sgate name=\"chan$prio\" label=\"2\" credits=\"$credits\" />"
+        echo "            <app args=\"priosender $prio $runs $warmup 0 1\">"
+        echo "                <sgate name=\"chan$prio\" label=\"2\" credits=\"1\" />"
         echo "                <sem name=\"ready\" />"
         echo "            </app>"
         echo "        </dom>"
@@ -109,7 +90,6 @@ gen_config() {
 }
 
 for c in {1..6}; do
-    run_bench "$1" "$c" 1 "sender"
-    run_bench "$1" "$c" 2 "sender"
-    run_bench "$1" "$c" 2 "bomber"
+    run_bench "$1" "$c" 1
+    run_bench "$1" "$c" 2
 done

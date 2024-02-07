@@ -9,16 +9,11 @@ fi
 
 export LX_PLATFORM=gem5
 export LX_BUILD=release
-export LX_CORES=2
 
-gem5dir=$(readlink -f gem5-official)
-export GEM5_DIR="$gem5dir"
 export GEM5_CP=1 GEM5_FLAGS="Faults,Thread,PseudoInst"
 export GEM5_CPU=DerivO3CPU GEM5_CPUFREQ=2GHz GEM5_MEMFREQ=1GHz GEM5_L2=1024
 
 cd bench-lx || exit 1
-
-./b mkapps || exit 1
 
 run_bench() {
     user="$2"

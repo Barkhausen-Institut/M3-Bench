@@ -20,7 +20,7 @@ run_bench() {
     while true; do
         /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-        ./b run "boot/bench-pingpong-$type.xml" -n 2>&1 | tee "$M3_OUT/output.txt"
+        ./b run "boot/bench-pingpong-$type.xml" -n &> "$M3_OUT/output.txt"
 
         sed --in-place -e 's/\x1b\[0m//g' "$M3_OUT/output.txt"
 

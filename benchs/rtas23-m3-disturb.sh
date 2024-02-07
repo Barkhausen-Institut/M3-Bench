@@ -12,7 +12,6 @@ cd m3 || exit 1
 export M3_BUILD=release
 export M3_ISA=riscv
 if [ "$M3_TARGET" = "hw" ]; then
-    export M3_HW_SSH=bitest M3_HW_FPGA=1
     export M3_HW_RESET=1
     export M3_HW_TIMEOUT=120
 else
@@ -73,6 +72,12 @@ gen_config() {
     fgmode=$2
     bgmode=$3
 
+    # was originally: warmup=100, repeats=100, msgrepeats=10000, bgrepeats=100000
+    warmup=10
+    repeats=10
+    msgrepeats=100
+    bgrepeats=1000
+
     echo "<config>"
     echo "    <kernel args=\"kernel\" />"
     echo "    <dom>"
@@ -92,20 +97,20 @@ gen_config() {
 
     if [ "$fgmode" != "msgs" ]; then
         echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"disturber $fgmode 100 $semdowns\">"
+        echo "                <app args=\"disturber $fgmode $repeats $semdowns\">"
         echo "                    <sem name=\"init\" />"
         echo "                </app>"
         echo "            </dom>"
     else
         echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"ppsender 10000 100 2032 1 $semdowns\">"
+        echo "                <app args=\"ppsender $msgrepeats $warmup 2032 1 $semdowns\">"
         echo "                    <sgate lname=\"chan\" gname=\"chan1\" label=\"1\" />"
         echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
         echo "                    <sem name=\"init\" />"
         echo "                </app>"
         echo "            </dom>"
         echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"ppreceiver 10100 2032\">"
+        echo "                <app args=\"ppreceiver $((msgrepeats + warmup)) 2032\">"
         echo "                    <rgate lname=\"chan\" gname=\"chan1\" msgsize=\"2048\" slots=\"1\" />"
         echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
         echo "                </app>"
@@ -126,9 +131,9 @@ gen_config() {
             if [ "$bgmode" != "msgs" ]; then
                 echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"disturber $bgmode 100000 0\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"disturber $bgmode $bgrepeats 0\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"disturber $bgmode 100000 0\" daemon=\"1\">"
+                    echo "                <app args=\"disturber $bgmode $bgrepeats 0\" daemon=\"1\">"
                 fi
                 echo "                    <sem name=\"init\" />"
                 echo "                </app>"
@@ -137,9 +142,9 @@ gen_config() {
             else
                 echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"ppsender 100000 0 2032 0 0\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"ppsender $bgrepeats 0 2032 0 0\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"ppsender 100000 0 2032 0 0\" daemon=\"1\">"
+                    echo "                <app args=\"ppsender $bgrepeats 0 2032 0 0\" daemon=\"1\">"
                 fi
                 echo "                    <sgate lname=\"chan\" gname=\"chan$i\" label=\"1\" />"
                 echo "                    <sem lname=\"ready\" gname=\"ready$i\" />"
@@ -148,9 +153,9 @@ gen_config() {
                 echo "            </dom>"
                 echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"ppreceiver 100000 2032\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"ppreceiver $bgrepeats 2032\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"ppreceiver 100000 2032\" daemon=\"1\">"
+                    echo "                <app args=\"ppreceiver $bgrepeats 2032\" daemon=\"1\">"
                 fi
                 echo "                    <rgate lname=\"chan\" gname=\"chan$i\" msgsize=\"2048\" slots=\"1\" />"
                 echo "                    <sem lname=\"ready\" gname=\"ready$i\" />"
@@ -176,9 +181,9 @@ for bw in 0 8K 32K 128K 512K 2048K; do
     for fgm in compute memory transfers msgs; do
         for bgm in compute memory transfers msgs none; do
             if [ "$M3_TARGET" = "hw" ]; then
-                run_bench "$1" $bw $fgm $bgm
+                run_bench "$1" "$bw" "$fgm" "$bgm"
             else
-                jobs_submit run_bench "$1" $bw $fgm $bgm
+                jobs_submit run_bench "$1" "$bw" "$fgm" "$bgm"
             fi
         done
     done
