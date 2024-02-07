@@ -1,6 +1,6 @@
 [submodule "m3"]
 	path = m3
-	url = git@github.com:Barkhausen-Institut/M3.git
+	url = https://github.com/Barkhausen-Institut/M3.git
 [submodule "bench-lx"]
 	path = bench-lx
 	url = https://github.com/Barkhausen-Institut/bench-lx.git
