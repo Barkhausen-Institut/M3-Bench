@@ -72,11 +72,12 @@ gen_config() {
     fgmode=$2
     bgmode=$3
 
-    # was originally: warmup=100, repeats=100, msgrepeats=10000, bgrepeats=100000
+    # was originally: warmup=100, repeats=100, msgrepeats=10000, bgrepeats=100000 bgmsgrepeats=100000
     warmup=10
     repeats=10
     msgrepeats=100
-    bgrepeats=1000
+    bgrepeats=20
+    bgmsgrepeats=200
 
     echo "<config>"
     echo "    <kernel args=\"kernel\" />"
@@ -142,9 +143,9 @@ gen_config() {
             else
                 echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"ppsender $bgrepeats 0 2032 0 0\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"ppsender $bgmsgrepeats 0 2032 0 0\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"ppsender $bgrepeats 0 2032 0 0\" daemon=\"1\">"
+                    echo "                <app args=\"ppsender $bgmsgrepeats 0 2032 0 0\" daemon=\"1\">"
                 fi
                 echo "                    <sgate lname=\"chan\" gname=\"chan$i\" label=\"1\" />"
                 echo "                    <sem lname=\"ready\" gname=\"ready$i\" />"
@@ -153,9 +154,9 @@ gen_config() {
                 echo "            </dom>"
                 echo "            <dom>"
                 if [ "$bw" != "0" ]; then
-                    echo "                <app args=\"ppreceiver $bgrepeats 2032\" daemon=\"1\" mem-bw=\"$bw\">"
+                    echo "                <app args=\"ppreceiver $bgmsgrepeats 2032\" daemon=\"1\" mem-bw=\"$bw\">"
                 else
-                    echo "                <app args=\"ppreceiver $bgrepeats 2032\" daemon=\"1\">"
+                    echo "                <app args=\"ppreceiver $bgmsgrepeats 2032\" daemon=\"1\">"
                 fi
                 echo "                    <rgate lname=\"chan\" gname=\"chan$i\" msgsize=\"2048\" slots=\"1\" />"
                 echo "                    <sem lname=\"ready\" gname=\"ready$i\" />"
