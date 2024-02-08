@@ -63,8 +63,6 @@ ln -sf "$(readlink -f m3/platform/gem5/util/git-pre-commit.py)" \
 /bin/echo -e "\e[1m==> Installing Bitfile ...\e[0m"
 (
     cd m3
-    M3_TARGET=gem5 M3_ISA=riscv ./b
-    M3_TARGET=gem5 M3_ISA=x86_64 ./b
     M3_TARGET=hw ./b loadfpga=fpga_top_v4.4.11.bit
 )
 /bin/echo -e "\e[1m==> Bitfile installed.\e[0m"
