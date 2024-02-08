@@ -15,7 +15,7 @@ extract_gem5_linux() {
 
 extract_gem5_nova() {
     grep -E "\[pingpong\] ! PingpongXPd.cc:[[:digit:]]+ [[:digit:]]+ ok" \
-            "$1/nre-ipc-gem5-$2/system.pc.com_1.device" | awk -e '{ print($4) }' | \
+            "$1/nre-ipc-gem5/system.pc.com_1.device" | awk -e '{ print($4) }' | \
         while read latency; do
             echo "S-x86 NOVA remote $latency"
         done
@@ -23,7 +23,7 @@ extract_gem5_nova() {
 
 extract_hw_nova() {
     grep -E "\[pingpong\] ! PingpongXPd.cc:[[:digit:]]+ [[:digit:]]+ ok" \
-            "$1/nre-ipc-hw-$2/log.txt" | awk -e '{ print($4) }' | \
+            "plots/rtas23-pingpong/nre-ipc-hw-x86_64.log" | awk -e '{ print($4) }' | \
         while read latency; do
             echo "H-x86 NOVA remote $latency"
         done
@@ -32,7 +32,7 @@ extract_hw_nova() {
 extract_l4re() {
     while read latency; do
         echo "H-Arm L4Re remote $latency"
-    done < "$1/l4re-ipc-arm/v3u-mfis-data.txt"
+    done < "plots/rtas23-pingpong/l4re-ipc-arm.log"
 }
 
 extract_m3() {
@@ -61,10 +61,3 @@ for type in remote; do
     done
 done
 extract_l4re "$1" >> "$1/pingpong.dat"
-
-# # TODO get real numbers
-# echo "H-ARM L4Re remote 1500" >> "$1/pingpong.dat"
-# echo "H-ARM L4Re remote 1600" >> "$1/pingpong.dat"
-# for i in {0..1000}; do
-#     echo "H-ARM L4Re remote 1550" >> "$1/pingpong.dat"
-# done

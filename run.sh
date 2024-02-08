@@ -25,8 +25,9 @@ bench rtas23-m3-ipc-hw
 LX_ARCH=x86_64 bench rtas23-lx-mwait
 LX_ARCH=riscv64 bench rtas23-lx-pingpong
 LX_ARCH=x86_64 bench rtas23-lx-pingpong
+bench rtas24-nre-pingpong
 
-plots="rtas23-disturb rtas24-sendprios rtas23-mwait"
+plots="rtas23-disturb rtas24-sendprios rtas23-mwait rtas23-pingpong"
 
 for p in $plots; do
     /bin/echo -e "\e[1mStarting $p post processing...\e[0m"
