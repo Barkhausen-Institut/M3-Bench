@@ -39,31 +39,23 @@ run_bench() {
     gen_config "$bw" "$fgm" "$bgm" > "$cfg"
     jobs_started
 
-    i=0
-    while [ $i -lt 2 ]; do
+    while true; do
         /bin/echo -e "\e[1mStarting $dirname\e[0m"
    
         if [ "$M3_TARGET" = "hw" ]; then 
             ./b run "$cfg" -n &> "$M3_OUT/output.txt"
-        else
-            ./b run "$cfg" -n < /dev/null &> "$M3_OUT/output.txt"
-        fi
-
-        if [ $? -eq 0 ] && [ "$(grep 'PERF' "$M3_OUT/output.txt")" != "" ]; then
-            /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
-            break
-        else
-            /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
-            # if the kernel didn't start, we assume that there is something fundamentally wrong and
-            # therefore reinstall the bitfile.
-            if [ "$M3_TARGET" = "hw" ] && [ "$(grep 'Kernel is ready' "$M3_OUT/output.txt")" = "" ]; then
-                reset_bitfile
-            # otherwise, don't repeat the test
-            else
+            if bench_succeeded "$dirname" "$M3_OUT/output.txt" 'PERF'; then
                 break
             fi
+        else
+            ./b run "$cfg" -n < /dev/null &> "$M3_OUT/output.txt"
+            if [ "$(grep PERF "$M3_OUT/output.txt")" != "" ]; then
+                /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
+            else
+                /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
+            fi
+            break
         fi
-        i=$((i + 1))
     done
 }
 
