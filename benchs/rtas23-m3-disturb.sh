@@ -72,12 +72,20 @@ gen_config() {
     fgmode=$2
     bgmode=$3
 
-    # was originally: warmup=100, repeats=100, msgrepeats=10000, bgrepeats=100000 bgmsgrepeats=100000
-    warmup=10
-    repeats=10
-    msgrepeats=100
-    bgrepeats=20
-    bgmsgrepeats=200
+    if [ "$M3_TARGET" = "gem5" ]; then
+        # was originally as below for M3_TARGET=hw
+        warmup=10
+        repeats=10
+        msgrepeats=100
+        bgrepeats=20
+        bgmsgrepeats=200
+    else
+        warmup=100
+        repeats=100
+        msgrepeats=10000
+        bgrepeats=100000
+        bgmsgrepeats=100000
+    fi
 
     echo "<config>"
     echo "    <kernel args=\"kernel\" />"
