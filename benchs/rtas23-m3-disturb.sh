@@ -84,27 +84,15 @@ gen_config() {
     echo "    <dom>"
     echo "        <app args=\"root sem=ready1 sem=ready0 sem=ready2 sem=init\">"
 
-    if [ "$bgmode" = "msgs" ]; then
-        semdowns=2
-    elif [ "$bgmode" != "none" ]; then
-        if [ "$fgmode" = "msgs" ]; then
-            semdowns=4
-        else
-            semdowns=5
-        fi
-    else
-        semdowns=0
-    fi
-
     if [ "$fgmode" != "msgs" ]; then
         echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"disturber $fgmode $repeats $semdowns\">"
+        echo "                <app args=\"disturber $fgmode $repeats 1\">"
         echo "                    <sem name=\"init\" />"
         echo "                </app>"
         echo "            </dom>"
     else
         echo "            <dom tile=\"boom|core\">"
-        echo "                <app args=\"ppsender $msgrepeats $warmup 2032 1 $semdowns\">"
+        echo "                <app args=\"ppsender $msgrepeats $warmup 2032 1\">"
         echo "                    <sgate lname=\"chan\" gname=\"chan1\" label=\"1\" />"
         echo "                    <sem lname=\"ready\" gname=\"ready1\" />"
         echo "                    <sem name=\"init\" />"
