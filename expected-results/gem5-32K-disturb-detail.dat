@@ -1,0 +1,17 @@
+fg bg baseline disturbed diff stddev
+compute compute 400000 400000 0 1
+compute memory 400000 400000 0 1
+compute transfers 400000 400000 0 1
+compute msgs 400000 400000 0 1
+memory compute 578469 578282 -.0004 5514
+memory memory 578469 586369 .0136 5981
+memory transfers 578469 585556 .0122 5369
+memory msgs 578469 583318 .0083 26997
+transfers compute 489384 489384 0 227
+transfers memory 489384 499264 .0201 6661
+transfers transfers 489384 494353 .0101 920
+transfers msgs 489384 492677 .0067 19034
+msgs compute 468 468 0 0
+msgs memory 468 468 0 0
+msgs transfers 468 468 0 0
+msgs msgs 468 468 0 0

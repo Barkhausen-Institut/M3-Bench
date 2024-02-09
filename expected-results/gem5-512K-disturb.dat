@@ -1,0 +1,17 @@
+fg bg diff
+compute compute 0
+compute memory 0
+compute transfers 0
+compute msgs 0
+memory compute .0015
+memory memory .3172
+memory transfers .2160
+memory msgs .0128
+transfers compute 0
+transfers memory .1721
+transfers transfers .2354
+transfers msgs 0
+msgs compute 0
+msgs memory 0
+msgs transfers 0
+msgs msgs 0
