@@ -65,17 +65,16 @@ gen_config() {
     bgmode=$3
 
     if [ "$M3_TARGET" = "gem5" ]; then
-        # was originally as below for M3_TARGET=hw
-        warmup=10
-        repeats=10
-        msgrepeats=100
-        bgrepeats=20
-        bgmsgrepeats=200
+        warmup=100
+        repeats=100
+        msgrepeats=1000
+        bgrepeats=200
+        bgmsgrepeats=400
     else
         warmup=100
         repeats=100
-        msgrepeats=10000
-        bgrepeats=100000
+        msgrepeats=100000
+        bgrepeats=10000
         bgmsgrepeats=100000
     fi
 
