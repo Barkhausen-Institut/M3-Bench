@@ -43,7 +43,6 @@ ln -sf "$(readlink -f m3/platform/gem5/util/git-pre-commit.py)" \
 /bin/echo -e "\e[1m==> Creating Linux checkpoints ...\e[0m"
 (
     cd bench-lx
-    rm -rf run/boot-*/cpt.*
     LX_ARCH=riscv64 ./b warmup &
     LX_ARCH=x86_64 ./b warmup &
     wait
