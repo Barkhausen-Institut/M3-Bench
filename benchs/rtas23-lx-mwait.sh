@@ -2,7 +2,7 @@
 
 . tools/jobs.sh
 
-if [ -z $LX_ARCH ]; then
+if [ -z "$LX_ARCH" ]; then
     echo "Please define LX_ARCH." >&2
     exit 1
 fi

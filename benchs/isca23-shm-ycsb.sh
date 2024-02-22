@@ -5,7 +5,7 @@ export OUT=$1/$dirname
 mkdir -p "$OUT"
 
 echo -n "Enter sudo password on Altra machine: "
-read -s pwd
+read -r -s pwd
 echo
 
 /bin/echo -e "\e[1mStarting $dirname\e[0m"

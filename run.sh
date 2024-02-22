@@ -1,10 +1,4 @@
-#!/bin/sh
-
-export XTENSA_DIR=/home/hrniels/Applications/xtensa
-export GEM5_DIR=/home/hrniels/m3bench/m3/hw/gem5
-
-# TODO until we have support for scons 3.1
-export SCONS_LIB_DIR=/home/nils/scons-3.0.5/engine
+#!/bin/bash
 
 M3_GEM5_OUT=${M3_GEM5_OUT:-run}
 
@@ -19,20 +13,20 @@ posts=$3
 plots=$4
 
 mkdir -p results
-res=$(readlink -f results/$name)
-mkdir -p $res
+res=$(readlink -f "results/$name")
+mkdir -p "$res"
 
 # increase number of file descriptors
 ulimit -n 16384
 
 for b in $benchs; do
-    ./benchs/$b.sh $res $5
+    "./benchs/$b.sh" "$res" "$5"
 done
 
 for p in $posts; do
-    ./plots/$p/post.sh $res
+    "./plots/$p/post.sh" "$res"
 done
 
 for p in $plots; do
-    ./plots/$p/plot.sh $res
+    "./plots/$p/plot.sh" "$res"
 done

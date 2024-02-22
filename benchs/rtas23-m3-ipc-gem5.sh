@@ -2,7 +2,7 @@
 
 cfg=$(readlink -f input/gem5-rtas23.py)
 
-if [ -z $M3_ISA ]; then
+if [ -z "$M3_ISA" ]; then
     echo "Please define M3_ISA." >&2
     exit 1
 fi
@@ -32,9 +32,7 @@ run_bench() {
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
     jobs_started
 
-    ./b run "boot/bench-pingpong-$type.xml" -n < /dev/null &> "$M3_OUT/output.txt"
-
-    if [ $? -eq 0 ]; then
+    if ./b run "boot/bench-pingpong-$type.xml" -n < /dev/null &> "$M3_OUT/output.txt"; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
     else
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"

@@ -27,9 +27,7 @@ run_bench() {
     /bin/echo -e "\e[1mStarting $dirname\e[0m"
     jobs_started
 
-    ./b run "boot/bench-tcusleep.xml" -n < /dev/null &> "$M3_OUT/output.txt"
-
-    if [ $? -eq 0 ]; then
+    if ./b run "boot/bench-tcusleep.xml" -n < /dev/null &> "$M3_OUT/output.txt"; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
     else
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
