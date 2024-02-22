@@ -1,9 +1,9 @@
 [submodule "bench-lx"]
 	path = bench-lx
-	url = git@github.com:Barkhausen-Institut/bench-lx.git
+	url = https://github.com/Barkhausen-Institut/bench-lx.git
 [submodule "NRE"]
 	path = NRE
-	url = git@github.com:Barkhausen-Institut/NRE.git
+	url = https://github.com/Barkhausen-Institut/NRE.git
 [submodule "m3"]
 	path = m3
-	url = git@github.com:Barkhausen-Institut/M3.git
+	url = https://github.com/Barkhausen-Institut/M3.git
