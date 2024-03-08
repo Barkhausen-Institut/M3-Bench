@@ -63,6 +63,10 @@ micro_no_outlier <- micro_no_outlier %>%
     )
 micro_no_outlier$platformos <- paste(micro_no_outlier$platform, micro_no_outlier$os, sep="-")
 
+colors <- brewer.pal(n=4,"Blues")
+colors <- c(colors[4], colors[2], colors[1], colors[3])
+print(colors)
+
 micro_no_outlier <- micro_no_outlier %>%
   mutate(platformos=factor(platformos, levels=cols))
 print(micro_no_outlier)
@@ -75,9 +79,9 @@ ggp1 <- micro_no_outlier |>
   ) |>
   ggplot(aes(x=platformos, y=mean, colour=os, fill=os)) +
     scale_x_discrete(labels = colnames) +
-    scale_fill_brewer(palette = "Pastel1") +
+    scale_fill_manual(values = colors) +
     labs(x="Platform", y="Latency (K cycles)") +
-    geom_bar(stat='identity', position="dodge", colour="black", size=.1, show.legend=F) +
+    geom_bar(stat='identity', position="dodge", colour="black", size=.3, show.legend=F) +
     geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=position_dodge(.9), colour="black") +
     geom_text(aes(label=human_mean, hjust=place), position=position_dodge2(width=.9), colour="black", size=3, angle=90) +
     theme_bw() +

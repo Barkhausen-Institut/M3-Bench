@@ -10,7 +10,7 @@ membw <- membw %>%
     summarize(time = round(max(time), 3))
 print(membw)
 
-colors <- brewer.pal(n = 4, name = "Pastel1")
+colors <- brewer.pal(n = 4, name = "Blues")
 
 membw |>
   mutate(
