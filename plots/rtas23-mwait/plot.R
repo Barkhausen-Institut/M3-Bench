@@ -18,4 +18,4 @@ ggplot(data=df, mapping=aes(x=mechanism, y=latency, fill=forcats::fct_rev(op))) 
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE)) +
   theme(text=element_text(size=10), legend.title=element_blank(), legend.margin=margin(0,0,0,0))
-ggsave(as.character(args[1]), width=12, height=2.4, units="cm")
+ggsave(as.character(args[1]), width=12, height=2.4, units="cm", device=cairo_pdf)

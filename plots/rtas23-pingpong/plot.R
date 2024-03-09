@@ -101,5 +101,6 @@ layout <- rbind(c(1,1,1,1,1,2,2))
 ggsave(
     as.character(args[1]),
     ggp1,
-    width=14, height=7, units="cm"
+    width=14, height=7, units="cm",
+    device=cairo_pdf
 )
