@@ -1,10 +1,10 @@
 #!/bin/bash
 
-inputdir=`readlink -f input`
+inputdir=$(readlink -f input)
 
 . tools/helper.sh
 
-cd m3
+cd m3 || exit 1
 
 export M3_ISA=riscv
 export M3_HW_FPGA_HOST=bitest
@@ -19,7 +19,7 @@ run_bench() {
     bpe=$6
     dirname=m3-tests-$2-$3-$4-$5-$6
     export M3_OUT=$1/$dirname
-    mkdir -p $M3_OUT
+    mkdir -p "$M3_OUT"
 
     bootprefix=""
     if [ "$4" = "sh" ]; then
@@ -36,28 +36,28 @@ run_bench() {
     if [ "$bench" = "unittests" ] || [ "$bench" = "rust-unittests" ] || [ "$bench" = "hashmux-tests" ] ||
        [ "$bench" = "facever" ] || [ "$bench" = "filterchain" ]; then
         export M3_FS=default-$bpe.img
-        cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+        cp "boot/${bootprefix}$bench.xml" "$M3_OUT/boot.gen.xml"
     elif [ "$bench" = "standalone" ] || [ "$bench" = "memtest" ] || [ "$bench" = "standalone-sndrcv" ]; then
         unset M3_HW_VM
-        cp boot/$bench.xml $M3_OUT/boot.gen.xml
+        cp "boot/$bench.xml" "$M3_OUT/boot.gen.xml"
     elif [[ "$bench" == lx* ]]; then
-        cp boot/linux/${bench#lx}.xml $M3_OUT/boot.gen.xml
+        cp "boot/linux/${bench#lx}.xml" "$M3_OUT/boot.gen.xml"
     elif [ "$bench" = "hello" ]; then
-        cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+        cp "boot/${bootprefix}$bench.xml" "$M3_OUT/boot.gen.xml"
     else
         export M3_FS=bench-$bpe.img
 
         if [[ "$bench" =~ "bench" ]]; then
-            cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+            cp "boot/${bootprefix}$bench.xml" "$M3_OUT/boot.gen.xml"
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
             export M3_ACCEL_COUNT=0 M3_ARGS="-i 1 -r 2 -w 1 $writer $reader"
-            $inputdir/${bootprefix}bench-scale-pipe.cfg > $M3_OUT/boot.gen.xml
+            "$inputdir/${bootprefix}bench-scale-pipe.cfg" > "$M3_OUT/boot.gen.xml"
         else
             export M3_ARGS="-n 4 -t -u 1 $bench"
-            $inputdir/${bootprefix}fstrace.cfg > $M3_OUT/boot.gen.xml
+            "$inputdir/${bootprefix}fstrace.cfg" > "$M3_OUT/boot.gen.xml"
         fi
     fi
 
@@ -65,19 +65,18 @@ run_bench() {
     while [ $i -lt 10 ]; do
         /bin/echo -e "\e[1mStarting $dirname\e[0m"
 
-        ./b run $M3_OUT/boot.gen.xml -n > $M3_OUT/output.txt 2>&1
-
-        if [ $? -eq 0 ] && ../tools/check_result.py $M3_OUT/output.txt 2>/dev/null; then
+        if ./b run "$M3_OUT/boot.gen.xml" -n > "$M3_OUT/output.txt" 2>&1 \
+            && ../tools/check_result.py "$M3_OUT/output.txt" 2>/dev/null; then
             /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
             break
         else
             /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
             # if the kernel didn't start, we assume that there is something fundamentally wrong and
             # therefore reinstall the bitfile.
-            if [ "$(grep --text 'Kernel is ready' $M3_OUT/output.txt)" = "" ]; then
+            if [ "$(grep --text 'Kernel is ready' "$M3_OUT/output.txt")" = "" ]; then
                 reset_bitfile
             # if there was a NoC/Mem timeout, repeat the test
-            elif [ "$(grep --text 'TimeoutNoC\|TimeoutMem' $M3_OUT/output.txt)" != "" ]; then
+            elif [ "$(grep --text 'TimeoutNoC\|TimeoutMem' "$M3_OUT/output.txt")" != "" ]; then
                 continue
             # otherwise, don't repeat the test
             else
@@ -96,8 +95,8 @@ for target in hw22 hw23; do
 
         # create FS images
         build=build/$M3_TARGET-$M3_ISA-$M3_BUILD
-        $build/toolsbin/mkm3fs $build/bench-$bpe.img $build/src/fs/bench $((64 * 1024)) 4096 64
-        $build/toolsbin/mkm3fs $build/default-$bpe.img $build/src/fs/default $((16 * 1024)) 512 64
+        $build/toolsbin/mkm3fs "$build/bench-$bpe.img" "$build/src/fs/bench" $((64 * 1024)) 4096 64
+        $build/toolsbin/mkm3fs "$build/default-$bpe.img" "$build/src/fs/default" $((16 * 1024)) 512 64
     done
 done
 
@@ -136,9 +135,9 @@ for target in hw22 hw23; do
                     continue
                 fi
                 # for some tests we don't have a shared version
-                if [ "$ty" = "sh" ] && ( [ "$test" = "standalone" ] || [ "$test" = "memtest" ] ||
+                if [ "$ty" = "sh" ] && { [ "$test" = "standalone" ] || [ "$test" = "memtest" ] ||
                                          [ "$test" = "standalone-sndrcv" ] || [ "$test" = "filterchain" ] ||
-                                         [[ "$test" == lx* ]] ); then
+                                         [[ "$test" == lx* ]]; }; then
                     continue
                 fi
                 # for now, only run hello with our emulated SPM
@@ -146,7 +145,7 @@ for target in hw22 hw23; do
                     continue
                 fi
  
-                run_bench $1 $test $M3_TARGET-$build $ty $M3_ISA 64
+                run_bench "$1" "$test" "$M3_TARGET-$build" "$ty" "$M3_ISA" 64
             done
         done
     done

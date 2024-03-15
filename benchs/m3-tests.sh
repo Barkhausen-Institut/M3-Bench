@@ -1,13 +1,13 @@
 #!/bin/bash
 
-inputdir=`readlink -f input`
+inputdir=$(readlink -f input)
 
 . tools/jobs.sh
 
-cd m3
+cd m3 || exit 1
 
 export M3_TARGET=gem5
-if [ -z $M3_GEM5_LOG ]; then
+if [ -z "$M3_GEM5_LOG" ]; then
 	export M3_GEM5_LOG=Tcu,TcuRegWrite,TcuCmd,TcuConnector
 fi
 export M3_GEM5_CPUFREQ=3GHz M3_GEM5_MEMFREQ=1GHz
@@ -22,7 +22,7 @@ run_bench() {
     bpe=$5
     bench=$2
     export M3_OUT=$1/$dirname
-    mkdir -p $M3_OUT
+    mkdir -p "$M3_OUT"
 
     bootprefix=""
     if [ "$3" = "coverage" ]; then
@@ -49,10 +49,10 @@ run_bench() {
         [ "$bench" = "standalone" ] || [ "$bench" = "vmtest" ] || [ "$bench" = "rust-sndrcv" ] ||
         [ "$bench" = "libctest" ] || [ "$bench" = "rust-std-test" ] || [ "$bench" = "filterchain" ] ||
         [ "$bench" = "parchksum" ] || [ "$bench" = "shell-nested" ] || [ "$bench" = "chantests" ]; then
-        if [ -f boot/${bootprefix}$bench.xml ]; then
-            cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+        if [ -f "boot/${bootprefix}$bench.xml" ]; then
+            cp "boot/${bootprefix}$bench.xml" "$M3_OUT/boot.gen.xml"
         else
-            cp boot/$bench.xml $M3_OUT/boot.gen.xml
+            cp "boot/$bench.xml" "$M3_OUT/boot.gen.xml"
         fi
         if [ "$bench" = "hello" ]; then
             export M3_BUILD=debug
@@ -60,25 +60,25 @@ run_bench() {
             export M3_GEM5_CFG=config/spm.py M3_CORES=8
         fi
     elif [[ "$bench" == lx* ]]; then
-        cp boot/linux/${bench#lx}.xml $M3_OUT/boot.gen.xml
+        cp "boot/linux/${bench#lx}.xml" "$M3_OUT/boot.gen.xml"
     elif [ "$bench" = "disk-test" ]; then
         export M3_GEM5_HDD=$inputdir/test-hdd.img
-        cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+        cp "boot/${bootprefix}$bench.xml" "$M3_OUT/boot.gen.xml"
     elif [ "$bench" = "abort-test" ]; then
         export M3_GEM5_CFG=config/aborttest.py
-        cp boot/hello.xml $M3_OUT/boot.gen.xml
+        cp boot/hello.xml "$M3_OUT/boot.gen.xml"
     else
         if [[ "$bench" =~ "bench" ]] || [[ "$bench" =~ "voiceassist" ]]; then
             if [ "$bench" = "hashmux-benchs" ]; then
                 export M3_CORES=18
             fi
-            cp boot/${bootprefix}$bench.xml $M3_OUT/boot.gen.xml
+            cp "boot/${bootprefix}$bench.xml" "$M3_OUT/boot.gen.xml"
         elif [[ "$bench" =~ "_" ]]; then
             IFS='_' read -ra parts <<< "$bench"
             writer=${parts[0]}_${parts[1]}_${parts[0]}
             reader=${parts[0]}_${parts[1]}_${parts[1]}
             export M3_ARGS="-d -i 1 -r 4 -w 1 $writer $reader"
-            $inputdir/${bootprefix}bench-scale-pipe.cfg > $M3_OUT/boot.gen.xml
+            "$inputdir/${bootprefix}bench-scale-pipe.cfg" > "$M3_OUT/boot.gen.xml"
         elif [[ "$bench" =~ "imgproc" ]]; then
             IFS='-' read -ra parts <<< "$bench"
             if [ "${parts[1]}" = "indir" ]; then
@@ -86,12 +86,12 @@ run_bench() {
             else
                 export M3_ACCEL_TYPE="copy"
             fi
-            export M3_ACCEL_COUNT=$((${parts[2]} * 3))
+            export M3_ACCEL_COUNT=$((parts[2] * 3))
             export M3_ARGS="-m ${parts[1]} -n ${parts[2]} -w 1 -r 4 /large.txt"
-            $inputdir/${bootprefix}imgproc.cfg > $M3_OUT/boot.gen.xml
+            "$inputdir/${bootprefix}imgproc.cfg" > "$M3_OUT/boot.gen.xml"
         else
             export M3_ARGS="-n 4 -t -d -u 1 $bench"
-            $inputdir/${bootprefix}fstrace.cfg > $M3_OUT/boot.gen.xml
+            "$inputdir/${bootprefix}fstrace.cfg" > "$M3_OUT/boot.gen.xml"
         fi
     fi
 
@@ -107,15 +107,14 @@ run_bench() {
         ulimit -t 1500      # 25min CPU time
     fi
 
-    nice ./b run $M3_OUT/boot.gen.xml -n < /dev/null > $M3_OUT/output.txt 2>&1
-
-    gzip -f $M3_OUT/gem5.log
-
-    if [ $? -eq 0 ] && ../tools/check_result.py $M3_OUT/output.txt 2>/dev/null; then
+    if nice ./b run "$M3_OUT/boot.gen.xml" -n < /dev/null > "$M3_OUT/output.txt" 2>&1 \
+        && ../tools/check_result.py "$M3_OUT/output.txt" 2>/dev/null; then
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;32mSUCCESS\e[0m"
     else
         /bin/echo -e "\e[1mFinished $dirname:\e[0m \e[1;31mFAILED\e[0m"
     fi
+
+    gzip -f "$M3_OUT/gem5.log"
 }
 
 build_types="debug bench coverage"
@@ -129,11 +128,11 @@ p = sys.argv[1].split("-")
 if len(p) < 4:
     sys.exit(1)
 print("{} {} {} {}".format("-".join(p[:-3]), p[-3], p[-2], p[-1]))
-' $M3_TEST) || ( echo "Please set M3_TEST to <bench>-<tiletype>-<isa>-<bpe>." && exit 1 )
+' "$M3_TEST") || ( echo "Please set M3_TEST to <bench>-<tiletype>-<isa>-<bpe>." && exit 1 )
 fi
 
 if [ "$M3_TEST" != "" ]; then
-    build_isas=$(echo $test_args | cut -d ' ' -f 3)
+    build_isas=$(echo "$test_args" | cut -d ' ' -f 3)
     if [[ $test_args == *coverage* ]]; then
         export M3_BUILD=coverage
     elif [[ $M3_TEST == hello-* ]]; then
@@ -161,29 +160,29 @@ for btype in $build_types; do
         build=build/$M3_TARGET-$M3_ISA-$btype
         for bpe in 32 64; do
             bmoddir=build/$M3_TARGET-$M3_ISA-$btype/fsimgs-$bpe
-            mkdir -p $bmoddir
+            mkdir -p "$bmoddir"
 
             case "$btype" in
                 coverage) benchblks=$((160*1024)); defblks=$((160*1024)) ;;
                 *)        benchblks=$((64*1024)); defblks=$((16*1024)) ;;
             esac
 
-            $build/toolsbin/mkm3fs $bmoddir/bench.img $build/src/fs/bench $benchblks 4096 $bpe
-            $build/toolsbin/mkm3fs $bmoddir/default.img $build/src/fs/default $defblks 512 $bpe
+            "$build/toolsbin/mkm3fs" "$bmoddir/bench.img" "$build/src/fs/bench" $benchblks 4096 $bpe
+            "$build/toolsbin/mkm3fs" "$bmoddir/default.img" "$build/src/fs/default" $defblks 512 $bpe
         done
    done
 done
 
 # build m3lx
-if [[ "$build_isas" == *riscv* ]] && ( [ "$M3_TEST" = "" ] || [[ "$M3_TEST" == lx* ]] ); then
+if [[ "$build_isas" == *riscv* ]] && { [ "$M3_TEST" = "" ] || [[ "$M3_TEST" == lx* ]]; }; then
     M3_ISA=riscv M3_BUILD=bench ./b mklx -n || exit 1
 fi
 
-jobs_init $2
+jobs_init "$2"
 
 # run a single test?
 if [ "$M3_TEST" != "" ]; then
-    jobs_submit run_bench $1 $test_args
+    jobs_submit run_bench "$1" "$test_args"
     jobs_wait
     exit 0
 fi
@@ -221,15 +220,15 @@ for bpe in 32 64; do
                     continue;
                 fi
                 # rust-sndrcv and vmtest don't run with SPM
-                if ( [ "$test" = "rust-sndrcv" ] || [ "$test" = "vmtest" ] ) && [ "$tiletype" = "a" ]; then
+                if { [ "$test" = "rust-sndrcv" ] || [ "$test" = "vmtest" ]; } && [ "$tiletype" = "a" ]; then
                     continue;
                 fi
                 # m3lx runs only on riscv and has no shared version
-                if [[ "$test" == lx* ]] && ( [ "$isa" != "riscv" ] || [ "$tiletype" != "b" ] ); then
+                if [[ "$test" == lx* ]] && { [ "$isa" != "riscv" ] || [ "$tiletype" != "b" ]; }; then
                     continue;
                 fi
 
-                jobs_submit run_bench $1 $test $tiletype $isa $bpe
+                jobs_submit run_bench "$1" "$test" "$tiletype" "$isa" "$bpe"
             done
         done
     done
