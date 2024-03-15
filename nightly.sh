@@ -43,6 +43,7 @@ echo -e "\033[1mUpdating repositories...\033[0m"
     cd m3
     git checkout "$branch"
     git pull origin "$branch"
+    git submodule sync
     git submodule update --init --recursive \
         src/m3lx tools/ninjapie cross/buildroot platform/gem5 platform/hw \
         src/libs/{leveldb,musl,flac} src/apps/bsdutils \
