@@ -41,4 +41,4 @@ ggplot(data=raw, mapping=aes(x=datasize, y=latency, fill=proto)) +
   theme_bw() +
   theme(text=element_text(size=10), legend.title=element_blank(), legend.margin=margin(0,0,0,0))
 
-ggsave(as.character(args[1]), width=12, height=6, units="cm")
+ggsave(as.character(args[1]), width=12, height=6, units="cm", device=cairo_pdf)
