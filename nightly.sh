@@ -95,12 +95,12 @@ if $testgem5; then
         echo -e "\033[1mBuilding gem5...\033[0m"
         (
             cd m3/platform/gem5
-            scons -j16 build/{X86,RISCV}/gem5.opt
+            scons "-j$(nproc)" build/{X86,RISCV}/gem5.opt
         ) 2>&1 | tee -a "$out/nightly.log"
     fi
 
     echo -e "\033[1mRunning tests...\033[0m"
-    ./run.sh "$outname" "m3-tests" "" "" 32 2>&1 | tee -a "$out/nightly.log"
+    ./run.sh "$outname" "m3-tests" "" "" "$(nproc)" 2>&1 | tee -a "$out/nightly.log"
 fi
 
 if $testhw; then
