@@ -6,7 +6,7 @@ inputdir=$(readlink -f input)
 
 cd m3 || exit 1
 
-export M3_ISA=riscv
+export M3_ISA=riscv64
 export M3_HW_FPGA_HOST=bitest
 export M3_HW_FPGA_DIR=m3
 export M3_HW_FPGA_NO=1
@@ -124,7 +124,7 @@ for target in hw22 hw23; do
     for build in debug bench; do
         for ty in ex sh spm; do
             export M3_BUILD=$build M3_TARGET=$target
-    
+
             for test in $benchs; do
                 # M³Linux is not supported on hw22 because its TCU lacks support for 64-bit virtual addresses
                 if [[ "$test" == lx* ]] && [ "$M3_TARGET" = "hw22" ]; then
@@ -144,7 +144,7 @@ for target in hw22 hw23; do
                 if [ "$ty" = "spm" ] && [ "$test" != "hello" ]; then
                     continue
                 fi
- 
+
                 run_bench "$1" "$test" "$M3_TARGET-$build" "$ty" "$M3_ISA" 64
             done
         done

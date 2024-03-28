@@ -117,9 +117,9 @@ run_bench() {
     gzip -f "$M3_OUT/gem5.log"
 }
 
-build_types="debug bench coverage"
-build_isas="riscv x86_64 arm"
-run_isas="riscv x86_64"
+build_types="debug bench"
+build_isas="riscv32 riscv64 x86_64"
+run_isas="riscv32 riscv64 x86_64"
 
 if [ "$M3_TEST" != "" ]; then
     test_args=$(python3 -c '
@@ -147,8 +147,8 @@ fi
 
 for btype in $build_types; do
     for isa in $build_isas; do
-        # we only generate coverage for riscv
-        if [ "$btype" = "coverage" ] && [ "$isa" != "riscv" ]; then
+        # we only generate coverage for riscv64
+        if [ "$btype" = "coverage" ] && [ "$isa" != "riscv64" ]; then
             continue
         fi
 
@@ -174,15 +174,15 @@ for btype in $build_types; do
 done
 
 # build m3lx
-if [[ "$build_isas" == *riscv* ]] && { [ "$M3_TEST" = "" ] || [[ "$M3_TEST" == lx* ]]; }; then
-    M3_ISA=riscv M3_BUILD=bench ./b mklx -n || exit 1
+if [[ "$build_isas" == *riscv64* ]] && { [ "$M3_TEST" = "" ] || [[ "$M3_TEST" == lx* ]]; }; then
+    M3_ISA=riscv64 M3_BUILD=bench ./b mklx -n || exit 1
 fi
 
 jobs_init "$2"
 
 # run a single test?
 if [ "$M3_TEST" != "" ]; then
-    jobs_submit run_bench "$1" "$test_args"
+    jobs_submit run_bench "$1" $test_args
     jobs_wait
     exit 0
 fi
@@ -215,6 +215,11 @@ for bpe in 32 64; do
    for isa in $run_isas; do
        for tiletype in a b sh; do
            for test in $benchs; do
+                # riscv32 does not support VM
+                if [ "$isa" == "riscv32" ] && [ "$tiletype" != "a" ]; then
+                    continue;
+                fi
+
                 # standalone works only with SPM
                 if [ "$test" = "standalone" ] && [ "$tiletype" != "a" ]; then
                     continue;
@@ -223,8 +228,8 @@ for bpe in 32 64; do
                 if { [ "$test" = "rust-sndrcv" ] || [ "$test" = "vmtest" ]; } && [ "$tiletype" = "a" ]; then
                     continue;
                 fi
-                # m3lx runs only on riscv and has no shared version
-                if [[ "$test" == lx* ]] && { [ "$isa" != "riscv" ] || [ "$tiletype" != "b" ]; }; then
+                # m3lx runs only on riscv64 and has no shared version
+                if [[ "$test" == lx* ]] && { [ "$isa" != "riscv64" ] || [ "$tiletype" != "b" ]; }; then
                     continue;
                 fi
 
