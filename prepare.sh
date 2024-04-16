@@ -67,13 +67,6 @@ ln -sf "$(readlink -f m3/platform/gem5/util/git-pre-commit.py)" \
 )
 /bin/echo -e "\e[1m==> M³ is built.\e[0m"
 
-/bin/echo -e "\e[1m==> Installing Bitfile ...\e[0m"
-(
-    cd m3
-    M3_TARGET=hw ./b loadfpga=fpga_top_v4.4.11.bit
-)
-/bin/echo -e "\e[1m==> Bitfile installed.\e[0m"
-
 /bin/echo -e "\e[1m==> Building gem5 ...\e[0m"
 ln -sf "$(readlink -f m3/platform/gem5/ext/git-commit-msg)" \
     .git/modules/m3/modules/hw/gem5/hooks/commit-msg
