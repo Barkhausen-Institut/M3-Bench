@@ -3,7 +3,7 @@
 . tools/helper.sh
 
 extract_m3() {
-    awk -e '
+    gawk -e '
     function ticksToCycles(ticks) {
         return ticks * (2000 / 1000000)
     }
@@ -34,7 +34,7 @@ extract_m3() {
 }
 
 extract_lx_umwait() {
-    awk -e '
+    gawk -e '
     function ticksToCycles(ticks) {
         return ticks * (2000 / 1000000)
     }
@@ -67,7 +67,7 @@ extract_lx_umwait() {
 }
 
 lx_avg() {
-    extract_lx_umwait "$1" 0 | tail -n +20 | grep "$2" | awk '
+    extract_lx_umwait "$1" 0 | tail -n +20 | grep "$2" | gawk '
     {
         sum += $3;
         n += 1
@@ -81,7 +81,7 @@ extract_lx_mwait() {
     wakeup_avg=$(lx_avg "$1" "Wakeup")
     suspend_avg=$(lx_avg "$1" "Suspend")
 
-    awk -v wakeup="$wakeup_avg" -v suspend="$suspend_avg" -e '
+    gawk -v wakeup="$wakeup_avg" -v suspend="$suspend_avg" -e '
     function ticksToCycles(ticks) {
         return ticks * (2000 / 1000000)
     }

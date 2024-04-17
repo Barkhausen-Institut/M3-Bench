@@ -6,10 +6,10 @@ extract_perf() {
     grep ".*PERF \".*\":" "$1/m3-disturb-$2-$3-$4-$5/output.txt"
 }
 extract_time() {
-    extract_perf "$1" "$2" "$3" "$4" "$5" | awk -e '{ print($5) }'
+    extract_perf "$1" "$2" "$3" "$4" "$5" | gawk -e '{ print($5) }'
 }
 extract_stddev() {
-    extract_perf "$1" "$2" "$3" "$4" "$5" | awk -e '{ print($8) }'
+    extract_perf "$1" "$2" "$3" "$4" "$5" | gawk -e '{ print($8) }'
 }
 
 for tgt in hw gem5; do

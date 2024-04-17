@@ -15,7 +15,7 @@ extract_gem5_linux() {
 
 extract_gem5_nova() {
     grep -E "\[pingpong\] ! PingpongXPd.cc:[[:digit:]]+ [[:digit:]]+ ok" \
-            "$1/nre-ipc-gem5/system.pc.com_1.device" | awk -e '{ print($4) }' | \
+            "$1/nre-ipc-gem5/system.pc.com_1.device" | gawk -e '{ print($4) }' | \
         while read latency; do
             echo "S-x86 NOVA remote $latency"
         done
@@ -23,7 +23,7 @@ extract_gem5_nova() {
 
 extract_hw_nova() {
     grep -E "\[pingpong\] ! PingpongXPd.cc:[[:digit:]]+ [[:digit:]]+ ok" \
-            "plots/rtas23-pingpong/nre-ipc-hw-x86_64.log" | awk -e '{ print($4) }' | \
+            "plots/rtas23-pingpong/nre-ipc-hw-x86_64.log" | gawk -e '{ print($4) }' | \
         while read latency; do
             echo "H-x86 NOVA remote $latency"
         done
