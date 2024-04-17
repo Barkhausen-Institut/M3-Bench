@@ -1,4 +1,8 @@
 #!/bin/sh
+
+export RUSTUP_HOME=$(readlink -f "$(dirname "$0")")/.rustup
+export CARGO_HOME=$(readlink -f "$(dirname "$0")")/.cargo
+
 export LX_HW_SSH=localhost
 export M3_HW_FPGA_HOST=localhost
 export M3_HW_FPGA_DIR=m3
