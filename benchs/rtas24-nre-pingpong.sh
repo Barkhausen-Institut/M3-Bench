@@ -2,6 +2,9 @@
 
 set -e
 
+rm -rf /tmp/nre-cross-x86_64
+tar xfvJ nre-cross-arch-x86_64-x86_64.tar.xz -C /
+
 cd NRE/nre
 
 dirname="nre-ipc-gem5"

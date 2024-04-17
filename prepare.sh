@@ -13,9 +13,6 @@ export LX_CORES=2 LX_PLATFORM=gem5 GEM5_DIR
 
 /bin/echo -e "\e[1m==> Downloading NRE compiler ...\e[0m"
 wget -c http://os.inf.tu-dresden.de/~nils/nre-cross-arch-x86_64-x86_64.tar.xz
-rm -rf /tmp/nre-cross-x86_64
-tar xfvJ nre-cross-arch-x86_64-x86_64.tar.xz -C /
-rm -f nre-cross-arch-x86_64-x86_64.tar.xz
 /bin/echo -e "\e[1m==> NRE compiler is ready.\e[0m"
 
 /bin/echo -e "\e[1m==> Building Linux ...\e[0m"
