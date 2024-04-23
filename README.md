@@ -8,20 +8,13 @@ M³ requires a custom hardware platform, which we provide in form of a bitfile f
 
 Use the following steps to run the benchmarks:
 
-### 1. Clone the respository
-
-```
-git clone https://github.com/Barkhausen-Institut/M3-Bench.git --branch rtas24
-cd M3-Bench
-```
-
-### 2. Build the container
+### 1. Build the container
 
 ```
 docker build -t m3-rtas24 docker
 ```
 
-### 3. Prepare infrastructure
+### 2. Prepare infrastructure
 
 Start the container and run the `prepare.sh` in it. The container needs the just cloned M3-Bench directory as working directory, mounted at `/m3bench`. Furthermore, it needs access to the Xilinx installation at `/Xilinx` containing Vivado-Lab.
 
