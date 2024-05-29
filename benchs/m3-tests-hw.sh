@@ -121,6 +121,13 @@ if [ "$M3_TESTS" != "" ]; then
 fi
 
 for target in hw22 hw23; do
+    # load the correct bitfile upfront in case we have one that is somewhat but not fully compatible
+    if [ "$target" = "hw23" ]; then
+        ./b loadfpga=fpga_top_v4.6.0.bit -n
+    elif [ "$target" = "hw22" ]; then
+        ./b loadfpga=fpga_top_v4.4.12.bit -n
+    fi
+
     for build in debug bench; do
         for ty in ex sh spm; do
             export M3_BUILD=$build M3_TARGET=$target
