@@ -133,7 +133,9 @@ fi
 
 if [ "$M3_TEST" != "" ]; then
     build_isas=$(echo "$test_args" | cut -d ' ' -f 3)
-    if [[ $test_args == *coverage* ]]; then
+    if [ "$M3_BUILD" != "" ]; then
+        export M3_BUILD=$M3_BUILD
+    elif [[ $test_args == *coverage* ]]; then
         export M3_BUILD=coverage
     elif [[ $M3_TEST == hello-* ]]; then
         export M3_BUILD=debug
